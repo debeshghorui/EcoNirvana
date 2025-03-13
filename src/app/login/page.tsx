@@ -165,7 +165,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                    className="block w-full pl-10 pr-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 bg-white placeholder-gray-500"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -187,7 +187,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                    className="block w-full pl-10 pr-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 bg-white placeholder-gray-500"
                   />
                 </div>
               </div>
@@ -200,7 +200,7 @@ export default function LoginPage() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-2 border-gray-300 rounded"
                   />
                   <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                     Remember me
@@ -218,8 +218,8 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting || isDemoLoggingIn}
-                  className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors ${
-                    isSubmitting || isDemoLoggingIn ? 'opacity-70 cursor-not-allowed' : ''
+                  className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                    (isSubmitting || isDemoLoggingIn) ? 'opacity-70 cursor-not-allowed' : ''
                   }`}
                 >
                   {isSubmitting ? 'Signing in...' : 'Sign in'}
@@ -266,10 +266,11 @@ export default function LoginPage() {
                 className="mt-4"
               >
                 <button
+                  type="button"
                   onClick={handleDemoLogin}
                   disabled={isSubmitting || isDemoLoggingIn}
-                  className={`w-full flex justify-center items-center py-2 px-4 border border-green-600 rounded-md shadow-sm text-sm font-medium text-green-700 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors ${
-                    isSubmitting || isDemoLoggingIn ? 'opacity-70 cursor-not-allowed' : ''
+                  className={`w-full flex justify-center items-center py-2 px-4 border-2 border-green-600 rounded-md shadow-sm text-sm font-medium text-green-700 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                    (isSubmitting || isDemoLoggingIn) ? 'opacity-70 cursor-not-allowed' : ''
                   }`}
                 >
                   <FaUserAlt className="mr-2" />
