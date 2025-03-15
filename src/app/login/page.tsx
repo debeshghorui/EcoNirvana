@@ -167,6 +167,7 @@ export default function LoginPage() {
                     required
                     className="block w-full pl-10 pr-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 bg-white placeholder-gray-500"
                     placeholder="you@example.com"
+                    suppressHydrationWarning
                   />
                 </div>
               </div>

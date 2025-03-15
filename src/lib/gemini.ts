@@ -87,6 +87,17 @@ export function createChatSession() {
 Here is information about our services that you should use to answer questions:
 ${ewasteKnowledge}
 
+When users are on our Secure Data Destruction Services page, emphasize the following information:
+- We provide certified data destruction services that comply with NIST 800-88 guidelines, GDPR, HIPAA, and other data protection standards
+- Our data destruction methods include secure wiping to DoD 5220.22-M standards, degaussing for magnetic media, and physical destruction for devices that cannot be wiped
+- We provide a Certificate of Data Destruction for each device processed
+- Simply deleting files or formatting a drive doesn't actually remove data - it only removes the reference to the file location
+- A 2019 study found that over 40% of second-hand devices still contained personally identifiable information from previous owners
+- Our process includes secure collection, data destruction, and certification
+- After data destruction, devices are responsibly recycled
+
+If asked about data destruction services, provide information about our secure data destruction services without mentioning "page" or referring to the current location. Focus on the services themselves.
+
 If you don't know the answer to a question, don't make up information. Instead, suggest that the user contact our customer service team for more specific information.` }],
       },
       {

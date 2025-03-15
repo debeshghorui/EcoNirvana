@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
@@ -14,7 +14,12 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
   const { user, logout } = useAuth();
+
+  // Check if we're on the data destruction page to use blue theme
+  const isDataDestructionPage = pathname.includes('/services/data-destruction');
+  const themeColor = isDataDestructionPage ? 'blue' : 'green';
 
   // Handle scroll effect
   useEffect(() => {
@@ -66,7 +71,7 @@ const Navbar = () => {
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled 
           ? 'bg-white shadow-md py-2' 
-          : 'bg-gradient-to-r from-green-700 to-green-600 py-3'
+          : `bg-gradient-to-r from-${themeColor}-700 to-${themeColor}-600 py-3`
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,12 +82,13 @@ const Navbar = () => {
                 <Image 
                   src="/logo.svg" 
                   alt="EcoRecycle Logo" 
-                  fill
-                  style={{ objectFit: "contain" }}
+                  width={40}
+                  height={40}
+                  priority
                   className={scrolled ? '' : 'filter brightness-0 invert'}
                 />
               </div>
-              <span className={`text-xl font-bold ${scrolled ? 'text-green-700' : 'text-white'}`}>
+              <span className={`text-xl font-bold ${scrolled ? `text-${themeColor}-700` : 'text-white'}`}>
                 EcoRecycle
               </span>
             </Link>
@@ -96,8 +102,8 @@ const Navbar = () => {
                   href="/dashboard" 
                   className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     scrolled 
-                      ? 'text-gray-700 hover:text-green-600 hover:bg-green-50' 
-                      : 'text-white hover:bg-green-600'
+                      ? `text-gray-700 hover:text-${themeColor}-600 hover:bg-${themeColor}-50` 
+                      : `text-white hover:bg-${themeColor}-600`
                   }`}
                 >
                   <FaHome className="mr-1.5 h-4 w-4" />
@@ -107,8 +113,8 @@ const Navbar = () => {
                   href="/recycle" 
                   className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     scrolled 
-                      ? 'text-gray-700 hover:text-green-600 hover:bg-green-50' 
-                      : 'text-white hover:bg-green-600'
+                      ? `text-gray-700 hover:text-${themeColor}-600 hover:bg-${themeColor}-50` 
+                      : `text-white hover:bg-${themeColor}-600`
                   }`}
                 >
                   <FaRecycle className="mr-1.5 h-4 w-4" />
@@ -118,8 +124,8 @@ const Navbar = () => {
                   href="/rewards" 
                   className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     scrolled 
-                      ? 'text-gray-700 hover:text-green-600 hover:bg-green-50' 
-                      : 'text-white hover:bg-green-600'
+                      ? `text-gray-700 hover:text-${themeColor}-600 hover:bg-${themeColor}-50` 
+                      : `text-white hover:bg-${themeColor}-600`
                   }`}
                 >
                   <FaChartLine className="mr-1.5 h-4 w-4" />
@@ -134,28 +140,28 @@ const Navbar = () => {
                   onClick={toggleProfileMenu}
                   className={`flex items-center rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     scrolled 
-                      ? 'focus:ring-green-500 text-gray-700 hover:text-green-600' 
+                      ? `focus:ring-${themeColor}-500 text-gray-700 hover:text-${themeColor}-600` 
                       : 'focus:ring-white text-white'
                   }`}
                 >
                   <span className="sr-only">Open user menu</span>
-                  <div className={`flex items-center ${scrolled ? 'bg-green-100' : 'bg-green-600'} rounded-full p-0.5`}>
+                  <div className={`flex items-center ${scrolled ? `bg-${themeColor}-100` : `bg-${themeColor}-600`} rounded-full p-0.5`}>
                     <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white">
                       {user.name ? (
                         <div className={`w-full h-full flex items-center justify-center text-lg font-medium ${
-                          scrolled ? 'bg-green-200 text-green-800' : 'bg-green-500 text-white'
+                          scrolled ? `bg-${themeColor}-200 text-${themeColor}-800` : `bg-${themeColor}-500 text-white`
                         }`}>
                           {user.name.charAt(0).toUpperCase()}
                         </div>
                       ) : (
-                        <FaUser className={`w-full h-full p-1 ${scrolled ? 'text-green-600' : 'text-white'}`} />
+                        <FaUser className={`w-full h-full p-1 ${scrolled ? `text-${themeColor}-600` : 'text-white'}`} />
                       )}
                     </div>
                     <span className={`ml-2 mr-1 text-sm font-medium ${scrolled ? 'text-gray-700' : 'text-white'}`}>
                       {user.name.split(' ')[0]}
                     </span>
                     <svg 
-                      className={`h-4 w-4 ${scrolled ? 'text-gray-500' : 'text-green-200'}`} 
+                      className={`h-4 w-4 ${scrolled ? 'text-gray-500' : `text-${themeColor}-200`}`} 
                       xmlns="http://www.w3.org/2000/svg" 
                       viewBox="0 0 20 20" 
                       fill="currentColor" 
@@ -184,21 +190,21 @@ const Navbar = () => {
                         href="/dashboard" 
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                       >
-                        <FaHome className="mr-3 text-green-600" />
+                        <FaHome className={`mr-3 text-${themeColor}-600`} />
                         Dashboard
                       </Link>
                       <Link 
                         href="/recycle" 
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                       >
-                        <FaRecycle className="mr-3 text-green-600" />
+                        <FaRecycle className={`mr-3 text-${themeColor}-600`} />
                         Recycle Now
                       </Link>
                       <Link 
                         href="/settings" 
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                       >
-                        <FaCog className="mr-3 text-green-600" />
+                        <FaCog className={`mr-3 text-${themeColor}-600`} />
                         Settings
                       </Link>
                       <div className="border-t border-gray-100 my-1"></div>
@@ -206,7 +212,7 @@ const Navbar = () => {
                         onClick={handleLogout}
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                       >
-                        <FaSignOutAlt className="mr-3 text-green-600" />
+                        <FaSignOutAlt className={`mr-3 text-${themeColor}-600`} />
                         Sign out
                       </button>
                     </motion.div>
@@ -219,8 +225,8 @@ const Navbar = () => {
                   href="/login" 
                   className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                     scrolled 
-                      ? 'text-green-600 border border-green-600 hover:bg-green-50' 
-                      : 'text-white border border-white hover:bg-green-600'
+                      ? `text-${themeColor}-600 border border-${themeColor}-600 hover:bg-${themeColor}-50` 
+                      : 'text-white border border-white hover:bg-${themeColor}-600'
                   }`}
                 >
                   Log in
@@ -229,8 +235,8 @@ const Navbar = () => {
                   href="/signup" 
                   className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                     scrolled 
-                      ? 'bg-green-600 text-white hover:bg-green-700' 
-                      : 'bg-white text-green-700 hover:bg-green-50'
+                      ? `bg-${themeColor}-600 text-white hover:bg-${themeColor}-700` 
+                      : `bg-white text-${themeColor}-700 hover:bg-${themeColor}-50`
                   }`}
                 >
                   Sign up
@@ -245,8 +251,8 @@ const Navbar = () => {
               onClick={toggleMenu}
               className={`inline-flex items-center justify-center p-2 rounded-md focus:outline-none ${
                 scrolled 
-                  ? 'text-gray-700 hover:text-green-600 hover:bg-gray-100' 
-                  : 'text-white hover:bg-green-600'
+                  ? `text-gray-700 hover:text-${themeColor}-600 hover:bg-gray-100` 
+                  : `text-white hover:bg-${themeColor}-600`
               }`}
               aria-expanded="false"
             >
@@ -276,8 +282,8 @@ const Navbar = () => {
                 <>
                   <div className="px-3 py-3 border-b border-gray-200 mb-2">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                        <span className="text-green-700 font-semibold text-lg">
+                      <div className={`w-10 h-10 bg-${themeColor}-100 rounded-full flex items-center justify-center mr-3`}>
+                        <span className={`text-${themeColor}-700 font-semibold text-lg`}>
                           {user.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
@@ -289,38 +295,38 @@ const Navbar = () => {
                   </div>
                   <Link 
                     href="/dashboard" 
-                    className="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 block px-3 py-2 rounded-md text-base font-medium"
+                    className={`flex items-center text-gray-700 hover:text-${themeColor}-600 hover:bg-${themeColor}-50 block px-3 py-2 rounded-md text-base font-medium`}
                   >
-                    <FaHome className="mr-3 text-green-600" />
+                    <FaHome className={`mr-3 text-${themeColor}-600`} />
                     Dashboard
                   </Link>
                   <Link 
                     href="/recycle" 
-                    className="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 block px-3 py-2 rounded-md text-base font-medium"
+                    className={`flex items-center text-gray-700 hover:text-${themeColor}-600 hover:bg-${themeColor}-50 block px-3 py-2 rounded-md text-base font-medium`}
                   >
-                    <FaRecycle className="mr-3 text-green-600" />
+                    <FaRecycle className={`mr-3 text-${themeColor}-600`} />
                     Recycle Now
                   </Link>
                   <Link 
                     href="/rewards" 
-                    className="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 block px-3 py-2 rounded-md text-base font-medium"
+                    className={`flex items-center text-gray-700 hover:text-${themeColor}-600 hover:bg-${themeColor}-50 block px-3 py-2 rounded-md text-base font-medium`}
                   >
-                    <FaChartLine className="mr-3 text-green-600" />
+                    <FaChartLine className={`mr-3 text-${themeColor}-600`} />
                     Rewards
                   </Link>
                   <Link 
                     href="/settings" 
-                    className="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 block px-3 py-2 rounded-md text-base font-medium"
+                    className={`flex items-center text-gray-700 hover:text-${themeColor}-600 hover:bg-${themeColor}-50 block px-3 py-2 rounded-md text-base font-medium`}
                   >
-                    <FaCog className="mr-3 text-green-600" />
+                    <FaCog className={`mr-3 text-${themeColor}-600`} />
                     Settings
                   </Link>
                   <div className="border-t border-gray-200 my-2"></div>
                   <button 
                     onClick={handleLogout}
-                    className="flex items-center w-full text-left text-gray-700 hover:text-green-600 hover:bg-green-50 px-3 py-2 rounded-md text-base font-medium"
+                    className={`flex items-center w-full text-left text-gray-700 hover:text-${themeColor}-600 hover:bg-${themeColor}-50 px-3 py-2 rounded-md text-base font-medium`}
                   >
-                    <FaSignOutAlt className="mr-3 text-green-600" />
+                    <FaSignOutAlt className={`mr-3 text-${themeColor}-600`} />
                     Sign out
                   </button>
                 </>
@@ -329,13 +335,13 @@ const Navbar = () => {
                   <div className="grid grid-cols-2 gap-2 p-2">
                     <Link 
                       href="/login" 
-                      className="flex justify-center items-center text-green-600 border border-green-600 hover:bg-green-50 px-3 py-2 rounded-md text-base font-medium"
+                      className={`flex justify-center items-center text-${themeColor}-600 border border-${themeColor}-600 hover:bg-${themeColor}-50 px-3 py-2 rounded-md text-base font-medium`}
                     >
                       Log in
                     </Link>
                     <Link 
                       href="/signup" 
-                      className="flex justify-center items-center bg-green-600 text-white hover:bg-green-700 px-3 py-2 rounded-md text-base font-medium"
+                      className={`flex justify-center items-center bg-${themeColor}-600 text-white hover:bg-${themeColor}-700 px-3 py-2 rounded-md text-base font-medium`}
                     >
                       Sign up
                     </Link>

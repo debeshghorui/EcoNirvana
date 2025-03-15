@@ -16,9 +16,9 @@ const recyclingStats = {
 };
 
 const recentActivities = [
-  { id: 1, type: 'Recycled', item: 'Laptop', date: '2 days ago', points: 50 },
-  { id: 2, type: 'Recycled', item: 'Smartphone', date: '1 week ago', points: 30 },
-  { id: 3, type: 'Recycled', item: 'Printer', date: '2 weeks ago', points: 40 },
+  { id: 1, type: 'Recycled', item: 'Laptop', date: '2 days ago', points: 50, category: 'Electronics' },
+  { id: 2, type: 'Recycled', item: 'Smartphone', date: '1 week ago', points: 30, category: 'Electronics' },
+  { id: 3, type: 'Recycled', item: 'Printer', date: '2 weeks ago', points: 40, category: 'Electronics' },
 ];
 
 const upcomingEvents = [
@@ -49,16 +49,16 @@ const environmentalImpact = {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, justLoggedOut } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showContactModal, setShowContactModal] = useState(false);
   
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && !justLoggedOut) {
       router.push('/login');
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, justLoggedOut]);
   
   // Handle logout
   const handleLogout = () => {
@@ -269,6 +269,11 @@ export default function DashboardPage() {
                           <div>
                             <p className="font-medium text-gray-900">{activity.type} {activity.item}</p>
                             <p className="text-sm text-gray-500">{activity.date}</p>
+                            {activity.category && (
+                              <span className="inline-block mt-1 px-3 py-1 text-xs font-medium bg-green-50 text-green-800 rounded-full border border-green-300 shadow-sm">
+                                {activity.category}
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="text-green-600 font-medium">+{activity.points} pts</div>

@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, justLoggedOut } = useAuth();
   
   const [activeTab, setActiveTab] = useState('profile');
   const [name, setName] = useState('');
@@ -24,14 +24,14 @@ export default function SettingsPage() {
   
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && !justLoggedOut) {
       router.push('/login');
     } else if (user) {
       // Populate form with user data
       setName(user.name);
       setEmail(user.email);
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, justLoggedOut]);
   
   // Handle profile update
   const handleProfileUpdate = async (e: FormEvent) => {
@@ -256,6 +256,7 @@ export default function SettingsPage() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          suppressHydrationWarning
                         />
                       </div>
                     </div>

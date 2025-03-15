@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { createChatSession } from '@/lib/gemini';
+import { usePathname } from 'next/navigation';
 
 // Define message type
 export type Message = {
@@ -37,6 +38,27 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatSession, setChatSession] = useState<any>(null);
+  const pathname = usePathname();
+
+  // Reset chat session when navigating to data destruction page
+  useEffect(() => {
+    if (pathname.includes('/services/data-destruction')) {
+      // Add a welcome message specific to the data destruction page
+      const dataDestructionWelcome: Message = {
+        id: Date.now().toString(),
+        role: 'bot',
+        content: "Welcome to our Secure Data Destruction Services! I can help answer questions about our data destruction methods, security standards, and how we protect your sensitive information. How can I assist you today?",
+        timestamp: new Date(),
+      };
+      
+      // Only add the welcome message if there are no messages yet
+      if (messages.length === 0) {
+        setMessages([dataDestructionWelcome]);
+        // Save this welcome message to localStorage to persist it
+        localStorage.setItem('chatMessages', JSON.stringify([dataDestructionWelcome]));
+      }
+    }
+  }, [pathname, messages.length]);
 
   // Initialize chat session
   useEffect(() => {

@@ -17,6 +17,7 @@ type AuthContextType = {
   signup: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   error: string | null;
+  justLoggedOut: boolean;
 };
 
 // Create context with default values
@@ -27,6 +28,7 @@ const AuthContext = createContext<AuthContextType>({
   signup: async () => false,
   logout: () => {},
   error: null,
+  justLoggedOut: false,
 });
 
 // Custom hook to use auth context
@@ -36,6 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [justLoggedOut, setJustLoggedOut] = useState(false);
 
   // Check if user is logged in on initial load
   useEffect(() => {
@@ -124,6 +127,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    setJustLoggedOut(true);
+    
+    // Reset the flag after a short delay
+    setTimeout(() => {
+      setJustLoggedOut(false);
+    }, 1000);
   };
 
   const value = {
@@ -133,6 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signup,
     logout,
     error,
+    justLoggedOut,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -35,7 +35,7 @@ export default function RootLayout({
         <AuthProvider>
           <ChatProvider>
             <Navbar />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow pt-16">{children}</main>
             <Footer />
             <ChatBot />
           </ChatProvider>

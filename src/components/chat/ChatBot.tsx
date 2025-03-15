@@ -83,11 +83,24 @@ const ChatBot: React.FC = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
   };
 
+  // Check if we're on the data destruction page to use blue theme
+  const isDataDestructionPage = pathname.includes('/services/data-destruction');
+  const themeColor = isDataDestructionPage ? 'blue' : 'green';
+
+  // Set default welcome message based on current page
+  useEffect(() => {
+    if (messages.length === 0 && isOpen) {
+      if (isDataDestructionPage) {
+        sendMessage("Show me information about data destruction services");
+      }
+    }
+  }, [isOpen, isDataDestructionPage, messages.length]);
+
   return (
     <>
       {/* Chat toggle button */}
       <motion.button
-        className="fixed bottom-6 right-6 bg-green-600 text-white rounded-full p-4 shadow-lg z-50 hover:bg-green-700 transition-colors border-2 border-white"
+        className={`fixed bottom-6 right-6 bg-${themeColor}-600 text-white rounded-full p-4 shadow-lg z-50 hover:bg-${themeColor}-700 transition-colors border-2 border-white`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
@@ -108,7 +121,7 @@ const ChatBot: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             {/* Chat header */}
-            <div className="bg-green-600 text-white p-4 flex justify-between items-center">
+            <div className={`bg-${themeColor}-600 text-white p-4 flex justify-between items-center`}>
               <div className="flex items-center">
                 <FaRobot className="mr-2" size={20} />
                 <h3 className="font-medium">EcoBot</h3>
@@ -126,7 +139,7 @@ const ChatBot: React.FC = () => {
             <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-gray-500">
-                  <FaRobot size={48} className="mb-4 text-green-500" />
+                  <FaRobot size={48} className={`mb-4 text-${themeColor}-500`} />
                   <p className="text-center mb-2">Hi! I'm EcoBot, your e-waste recycling assistant.</p>
                   <p className="text-center text-sm">Ask me anything about e-waste recycling, our services, or environmental impact.</p>
                 </div>
@@ -140,7 +153,7 @@ const ChatBot: React.FC = () => {
                       initial="hidden"
                       animate="visible"
                     >
-                      <div className={`max-w-[80%] ${message.role === 'user' ? 'bg-green-600 text-white' : 'bg-white border border-gray-200 text-gray-800'} rounded-lg px-4 py-2 shadow-sm`}>
+                      <div className={`max-w-[80%] ${message.role === 'user' ? `bg-${themeColor}-600 text-white` : 'bg-white border border-gray-200 text-gray-800'} rounded-lg px-4 py-2 shadow-sm`}>
                         <div className="flex items-center mb-1">
                           {message.role === 'user' ? (
                             <FaUser size={12} className="mr-2" />
@@ -173,17 +186,17 @@ const ChatBot: React.FC = () => {
                     </div>
                     <div className="flex space-x-1 mt-2">
                       <motion.div 
-                        className="w-2 h-2 bg-green-600 rounded-full"
+                        className={`w-2 h-2 bg-${themeColor}-600 rounded-full`}
                         animate={{ y: [0, -5, 0] }}
                         transition={{ repeat: Infinity, duration: 0.8, delay: 0 }}
                       />
                       <motion.div 
-                        className="w-2 h-2 bg-green-600 rounded-full"
+                        className={`w-2 h-2 bg-${themeColor}-600 rounded-full`}
                         animate={{ y: [0, -5, 0] }}
                         transition={{ repeat: Infinity, duration: 0.8, delay: 0.2 }}
                       />
                       <motion.div 
-                        className="w-2 h-2 bg-green-600 rounded-full"
+                        className={`w-2 h-2 bg-${themeColor}-600 rounded-full`}
                         animate={{ y: [0, -5, 0] }}
                         transition={{ repeat: Infinity, duration: 0.8, delay: 0.4 }}
                       />
@@ -202,12 +215,12 @@ const ChatBot: React.FC = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Type your message here..."
-                  className="flex-1 border-2 border-gray-300 rounded-l-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 bg-white placeholder-gray-500"
+                  className={`flex-1 border-2 border-gray-300 rounded-l-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-${themeColor}-500 focus:border-${themeColor}-500 text-gray-800 bg-white placeholder-gray-500`}
                   disabled={isLoading}
                 />
                 <button
                   type="submit"
-                  className={`bg-green-600 text-white rounded-r-lg py-2 px-4 ${isLoading || !input.trim() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'}`}
+                  className={`bg-${themeColor}-600 text-white rounded-r-lg py-2 px-4 ${isLoading || !input.trim() ? 'opacity-50 cursor-not-allowed' : `hover:bg-${themeColor}-700`}`}
                   disabled={isLoading || !input.trim()}
                 >
                   <FaPaperPlane />
