@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTree } from 'react-icons/fa';
+import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTree, FaTruck } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
 // Mock data for the dashboard
@@ -145,31 +145,53 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="mb-8 bg-gradient-to-r from-green-600 to-green-500 rounded-xl shadow-lg overflow-hidden"
+          className="mb-8 bg-green-500 rounded-xl shadow-lg overflow-hidden"
         >
           <div className="p-6 text-white">
-            <h2 className="text-xl font-bold mb-4">Your Environmental Impact</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold">Your Recycling Impact</h2>
+              <Link href="/impact" className="text-white hover:text-green-100 font-medium flex items-center">
+                View Details
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <div className="text-center">
-                <div className="bg-white/20 rounded-full p-3 w-14 h-14 flex items-center justify-center mx-auto mb-2">
-                  <FaTree className="h-7 w-7" />
+                <div className="bg-green-400/30 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-2">
+                  <FaRecycle className="h-8 w-8" />
                 </div>
-                <div className="text-2xl font-bold">{environmentalImpact.treesPlanted}</div>
-                <div className="text-sm text-green-100">Trees Equivalent</div>
+                <div className="text-3xl font-bold">{recyclingStats.itemsRecycled}</div>
+                <div className="text-sm">Items Recycled</div>
               </div>
               <div className="text-center">
-                <div className="bg-white/20 rounded-full p-3 w-14 h-14 flex items-center justify-center mx-auto mb-2">
-                  <FaLightbulb className="h-7 w-7" />
+                <div className="bg-green-400/30 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-2">
+                  <FaLeaf className="h-8 w-8" />
                 </div>
-                <div className="text-2xl font-bold">{environmentalImpact.energySaved}%</div>
-                <div className="text-sm text-green-100">Energy Saved</div>
+                <div className="text-3xl font-bold">{recyclingStats.co2Saved} kg</div>
+                <div className="text-sm">CO<sub>2</sub> Saved</div>
               </div>
               <div className="text-center">
-                <div className="bg-white/20 rounded-full p-3 w-14 h-14 flex items-center justify-center mx-auto mb-2">
-                  <FaTrophy className="h-7 w-7" />
+                <div className="bg-green-400/30 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-2">
+                  <FaTrophy className="h-8 w-8" />
                 </div>
-                <div className="text-2xl font-bold">{recyclingStats.pointsEarned}</div>
-                <div className="text-sm text-green-100">Points Earned</div>
+                <div className="text-3xl font-bold">{recyclingStats.pointsEarned}</div>
+                <div className="text-sm">Points Earned</div>
+              </div>
+              <div className="text-center">
+                <div className="bg-green-400/30 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-2">
+                  <FaTree className="h-8 w-8" />
+                </div>
+                <div className="text-3xl font-bold">{environmentalImpact.treesPlanted}</div>
+                <div className="text-sm">Trees Equivalent</div>
+              </div>
+              <div className="text-center">
+                <div className="bg-green-400/30 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-2">
+                  <FaLightbulb className="h-8 w-8" />
+                </div>
+                <div className="text-3xl font-bold">{environmentalImpact.energySaved}%</div>
+                <div className="text-sm">Energy Saved</div>
               </div>
             </div>
           </div>
@@ -178,37 +200,65 @@ export default function DashboardPage() {
         {/* Quick Actions */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link href="/recycle" className="bg-white rounded-xl shadow-sm p-5 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group">
-              <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-3 w-14 h-14 flex items-center justify-center mx-auto mb-3">
-                <FaRecycle className="h-7 w-7 text-green-600" />
+          <div className="flex flex-nowrap overflow-x-auto gap-4 pb-2">
+            <Link href="/recycle" className="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group flex-shrink-0 w-48">
+              <div className="flex items-center">
+                <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-2 w-10 h-10 flex items-center justify-center mr-3">
+                  <FaRecycle className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-medium text-gray-900">Recycle Now</h3>
+                  <p className="text-xs text-gray-500">Log your recycling</p>
+                </div>
               </div>
-              <h3 className="font-medium text-gray-900">Recycle Now</h3>
-              <p className="text-sm text-gray-500 mt-1">Log your recycling</p>
             </Link>
             
-            <Link href="/locations" className="bg-white rounded-xl shadow-sm p-5 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group">
-              <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-3 w-14 h-14 flex items-center justify-center mx-auto mb-3">
-                <FaMapMarkerAlt className="h-7 w-7 text-green-600" />
+            <Link href="/locations" className="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group flex-shrink-0 w-48">
+              <div className="flex items-center">
+                <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-2 w-10 h-10 flex items-center justify-center mr-3">
+                  <FaMapMarkerAlt className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-medium text-gray-900">Find Locations</h3>
+                  <p className="text-xs text-gray-500">Drop-off centers</p>
+                </div>
               </div>
-              <h3 className="font-medium text-gray-900">Find Locations</h3>
-              <p className="text-sm text-gray-500 mt-1">Drop-off centers</p>
             </Link>
             
-            <Link href="/activity" className="bg-white rounded-xl shadow-sm p-5 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group">
-              <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-3 w-14 h-14 flex items-center justify-center mx-auto mb-3">
-                <FaHistory className="h-7 w-7 text-green-600" />
+            <Link href="/doorstep" className="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group flex-shrink-0 w-48">
+              <div className="flex items-center">
+                <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-2 w-10 h-10 flex items-center justify-center mr-3">
+                  <FaTruck className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-medium text-gray-900">Doorstep Collection</h3>
+                  <p className="text-xs text-gray-500">Schedule a pickup</p>
+                </div>
               </div>
-              <h3 className="font-medium text-gray-900">My Activity</h3>
-              <p className="text-sm text-gray-500 mt-1">View your history</p>
             </Link>
             
-            <Link href="/rewards" className="bg-white rounded-xl shadow-sm p-5 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group">
-              <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-3 w-14 h-14 flex items-center justify-center mx-auto mb-3">
-                <FaChartLine className="h-7 w-7 text-green-600" />
+            <Link href="/activity" className="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group flex-shrink-0 w-48">
+              <div className="flex items-center">
+                <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-2 w-10 h-10 flex items-center justify-center mr-3">
+                  <FaHistory className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-medium text-gray-900">My Activity</h3>
+                  <p className="text-xs text-gray-500">View your history</p>
+                </div>
               </div>
-              <h3 className="font-medium text-gray-900">Rewards</h3>
-              <p className="text-sm text-gray-500 mt-1">Redeem your points</p>
+            </Link>
+            
+            <Link href="/rewards" className="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group flex-shrink-0 w-48">
+              <div className="flex items-center">
+                <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-2 w-10 h-10 flex items-center justify-center mr-3">
+                  <FaChartLine className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-medium text-gray-900">Rewards</h3>
+                  <p className="text-xs text-gray-500">Redeem your points</p>
+                </div>
+              </div>
             </Link>
           </div>
         </div>
@@ -217,35 +267,6 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Recycling Stats */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white rounded-xl shadow-sm overflow-hidden"
-            >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Your Recycling Impact</h3>
-                  <Link href="/impact" className="text-sm text-green-600 hover:text-green-700 font-medium">View Details</Link>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-2xl font-bold text-gray-900">{recyclingStats.itemsRecycled}</div>
-                    <div className="text-sm text-gray-500">Items Recycled</div>
-                  </div>
-                  <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-2xl font-bold text-gray-900">{recyclingStats.co2Saved} kg</div>
-                    <div className="text-sm text-gray-500">CO₂ Saved</div>
-                  </div>
-                  <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-2xl font-bold text-gray-900">{recyclingStats.pointsEarned}</div>
-                    <div className="text-sm text-gray-500">Points Earned</div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-            
             {/* Recent Activity */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
