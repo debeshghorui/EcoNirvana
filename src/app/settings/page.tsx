@@ -3,7 +3,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaUser, FaEnvelope, FaLock, FaBell, FaShieldAlt, FaTrash } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaBell, FaShieldAlt, FaTrash, FaArrowLeft } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
 export default function SettingsPage() {
@@ -139,6 +139,18 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Back button */}
+        <div className="mb-6">
+          <button 
+            onClick={() => router.back()}
+            className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+            aria-label="Go back"
+          >
+            <FaArrowLeft className="h-5 w-5 mr-2" />
+            <span className="font-medium">Back</span>
+          </button>
+        </div>
+        
         <div className="md:flex md:gap-8">
           {/* Sidebar */}
           <div className="md:w-1/4">

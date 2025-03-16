@@ -41,7 +41,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section - Made shorter */}
-      <section className="relative bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white overflow-hidden -mt-[1px]">
+      <section className="relative bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white overflow-hidden">
         {/* Animated background pattern */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-0 opacity-10">

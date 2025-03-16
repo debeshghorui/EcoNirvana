@@ -150,12 +150,6 @@ export default function DashboardPage() {
           <div className="p-6 text-white">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold">Your Recycling Impact</h2>
-              <Link href="/impact" className="text-white hover:text-green-100 font-medium flex items-center">
-                View Details
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-              </Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <div className="text-center">

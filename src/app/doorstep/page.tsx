@@ -129,6 +129,13 @@ export default function DoorstepCollectionPage() {
       <div className="bg-gradient-to-r from-green-700 to-green-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center">
+            <button 
+              onClick={() => router.back()}
+              className="mr-4 text-white/80 hover:text-white transition-colors"
+              aria-label="Go back"
+            >
+              <FaArrowLeft className="h-6 w-6" />
+            </button>
             <div className="bg-green-600 rounded-full p-3 mr-4">
               <FaTruck className="h-8 w-8" />
             </div>
