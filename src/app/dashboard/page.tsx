@@ -200,65 +200,45 @@ export default function DashboardPage() {
         {/* Quick Actions */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="flex flex-nowrap overflow-x-auto gap-4 pb-2">
-            <Link href="/recycle" className="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group flex-shrink-0 w-48">
-              <div className="flex items-center">
-                <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-2 w-10 h-10 flex items-center justify-center mr-3">
-                  <FaRecycle className="h-5 w-5 text-green-600" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-medium text-gray-900">Recycle Now</h3>
-                  <p className="text-xs text-gray-500">Log your recycling</p>
-                </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <Link href="/recycle" className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all hover:translate-y-[-2px] group flex flex-col items-center text-center h-32">
+              <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-3 w-14 h-14 flex items-center justify-center mb-3">
+                <FaRecycle className="h-6 w-6 text-green-600" />
               </div>
+              <h3 className="font-medium text-gray-900">Recycle Now</h3>
+              <p className="text-xs text-gray-500 mt-1">Log your recycling</p>
             </Link>
             
-            <Link href="/locations" className="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group flex-shrink-0 w-48">
-              <div className="flex items-center">
-                <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-2 w-10 h-10 flex items-center justify-center mr-3">
-                  <FaMapMarkerAlt className="h-5 w-5 text-green-600" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-medium text-gray-900">Find Locations</h3>
-                  <p className="text-xs text-gray-500">Drop-off centers</p>
-                </div>
+            <Link href="/locations" className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all hover:translate-y-[-2px] group flex flex-col items-center text-center h-32">
+              <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-3 w-14 h-14 flex items-center justify-center mb-3">
+                <FaMapMarkerAlt className="h-6 w-6 text-green-600" />
               </div>
+              <h3 className="font-medium text-gray-900">Find Locations</h3>
+              <p className="text-xs text-gray-500 mt-1">Drop-off centers</p>
             </Link>
             
-            <Link href="/doorstep" className="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group flex-shrink-0 w-48">
-              <div className="flex items-center">
-                <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-2 w-10 h-10 flex items-center justify-center mr-3">
-                  <FaTruck className="h-5 w-5 text-green-600" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-medium text-gray-900">Doorstep Collection</h3>
-                  <p className="text-xs text-gray-500">Schedule a pickup</p>
-                </div>
+            <Link href="/doorstep" className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all hover:translate-y-[-2px] group flex flex-col items-center text-center h-32">
+              <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-3 w-14 h-14 flex items-center justify-center mb-3">
+                <FaTruck className="h-6 w-6 text-green-600" />
               </div>
+              <h3 className="font-medium text-gray-900">Doorstep Collection</h3>
+              <p className="text-xs text-gray-500 mt-1">Schedule a pickup</p>
             </Link>
             
-            <Link href="/activity" className="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group flex-shrink-0 w-48">
-              <div className="flex items-center">
-                <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-2 w-10 h-10 flex items-center justify-center mr-3">
-                  <FaHistory className="h-5 w-5 text-green-600" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-medium text-gray-900">My Activity</h3>
-                  <p className="text-xs text-gray-500">View your history</p>
-                </div>
+            <Link href="/activity" className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all hover:translate-y-[-2px] group flex flex-col items-center text-center h-32">
+              <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-3 w-14 h-14 flex items-center justify-center mb-3">
+                <FaHistory className="h-6 w-6 text-green-600" />
               </div>
+              <h3 className="font-medium text-gray-900">My Activity</h3>
+              <p className="text-xs text-gray-500 mt-1">View your history</p>
             </Link>
             
-            <Link href="/rewards" className="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition-all hover:translate-y-[-2px] group flex-shrink-0 w-48">
-              <div className="flex items-center">
-                <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-2 w-10 h-10 flex items-center justify-center mr-3">
-                  <FaChartLine className="h-5 w-5 text-green-600" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-medium text-gray-900">Rewards</h3>
-                  <p className="text-xs text-gray-500">Redeem your points</p>
-                </div>
+            <Link href="/rewards" className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all hover:translate-y-[-2px] group flex flex-col items-center text-center h-32">
+              <div className="bg-green-100 group-hover:bg-green-200 transition-colors rounded-full p-3 w-14 h-14 flex items-center justify-center mb-3">
+                <FaChartLine className="h-6 w-6 text-green-600" />
               </div>
+              <h3 className="font-medium text-gray-900">Rewards</h3>
+              <p className="text-xs text-gray-500 mt-1">Redeem your points</p>
             </Link>
           </div>
         </div>
@@ -344,45 +324,11 @@ export default function DashboardPage() {
           
           {/* Right Column */}
           <div className="space-y-8">
-            {/* User Profile Summary */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white rounded-xl shadow-sm overflow-hidden"
-            >
-              <div className="p-6">
-                <div className="flex items-center mb-4">
-                  <div className="bg-green-100 rounded-full p-3 mr-4">
-                    <FaUserEdit className="h-6 w-6 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Your Profile</h3>
-                    <p className="text-sm text-gray-500">{user.email}</p>
-                  </div>
-                </div>
-                <div className="mt-4 space-y-2">
-                  <Link 
-                    href="/settings" 
-                    className="block w-full text-center border border-green-600 text-green-600 hover:bg-green-50 py-2 px-4 rounded-md font-medium transition-colors"
-                  >
-                    Edit Profile
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-center border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-md font-medium transition-colors"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-            
             {/* Upcoming Events */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
+              transition={{ duration: 0.3 }}
               className="bg-white rounded-xl shadow-sm overflow-hidden"
             >
               <div className="p-6">

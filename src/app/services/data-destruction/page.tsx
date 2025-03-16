@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaArrowLeft, FaShieldAlt, FaCheck, FaInfoCircle, FaLock, FaRecycle, FaFileAlt, FaTools } from 'react-icons/fa';
+import { FaArrowLeft, FaShieldAlt, FaCheck, FaInfoCircle, FaLock, FaRecycle, FaFileAlt, FaTools, FaTrash, FaArrowRight } from 'react-icons/fa';
 
 export default function DataDestructionPage() {
   const router = useRouter();
@@ -45,237 +45,195 @@ export default function DataDestructionPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white pt-4">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-700 to-blue-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-center mb-6">
-            <button 
-              onClick={() => router.push('/dashboard')}
-              className="mr-4 text-white/80 hover:text-white transition-colors"
-            >
-              <FaArrowLeft className="h-5 w-5" />
-            </button>
-            <h1 className="text-3xl font-bold">Secure Data Destruction Services</h1>
-          </div>
-          <p className="text-xl text-blue-100 max-w-3xl">
-            Protect your privacy and prevent identity theft with our professional data destruction services.
-          </p>
-        </div>
-      </div>
-      
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Introduction */}
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-12">
-          <div className="md:flex">
-            <div className="md:flex-1 p-6 md:p-8">
-              <div className="flex items-center mb-4">
-                <div className="bg-blue-100 rounded-full p-3 mr-4">
-                  <FaShieldAlt className="h-6 w-6 text-blue-600" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900">Why Data Security Matters</h2>
-              </div>
-              
-              <p className="text-gray-600 mb-6">
-                When recycling electronic devices, your personal data can remain on storage media even after standard deletion. 
-                This data can be recovered using specialized tools, potentially leading to identity theft, financial fraud, or privacy breaches.
-              </p>
-              
-              <p className="text-gray-600 mb-6">
-                At EcoRecycle, we take your data security seriously. Our certified data destruction services ensure that all personal 
-                information is permanently and irretrievably removed from your devices before recycling.
-              </p>
-              
-              <div className="space-y-3 mb-6">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <FaCheck className="h-5 w-5 text-green-500" />
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-gray-700 font-medium">Certified data wiping to DoD standards</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <FaCheck className="h-5 w-5 text-green-500" />
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-gray-700 font-medium">Physical destruction for non-erasable media</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <FaCheck className="h-5 w-5 text-green-500" />
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-gray-700 font-medium">Certificate of destruction provided</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <FaCheck className="h-5 w-5 text-green-500" />
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-gray-700 font-medium">Compliant with privacy regulations</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-8">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      {/* Hero Section */}
+      <section className="bg-blue-600 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="md:w-1/2 mb-8 md:mb-0">
+              <motion.h1 
+                className="text-4xl md:text-5xl font-bold mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                Secure Data Destruction Services
+              </motion.h1>
+              <motion.p 
+                className="text-xl text-blue-100 mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                Protect your privacy and prevent identity theft with our professional data destruction services.
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
                 <Link 
-                  href="/contact" 
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  href="/schedule-service"
+                  className="bg-white text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-lg font-semibold text-lg inline-flex items-center shadow-lg transition-all duration-300"
                 >
-                  Schedule Data Destruction
+                  Schedule Service
+                  <FaArrowRight className="ml-2 h-5 w-5" />
                 </Link>
-              </div>
+              </motion.div>
             </div>
-            
-            <div className="md:flex-1 bg-blue-50 p-6 md:p-8 flex items-center justify-center">
-              <div className="max-w-md">
-                <div className="bg-white rounded-xl shadow-md p-6 border border-blue-100">
-                  <div className="flex items-center mb-4">
-                    <div className="bg-blue-100 rounded-full p-2 mr-3">
-                      <FaInfoCircle className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Did You Know?</h3>
-                  </div>
-                  <p className="text-gray-600 mb-4">
-                    Simply deleting files or formatting a drive doesn't actually remove your data. It only removes the reference to the file location, 
-                    leaving the actual data intact and recoverable with the right tools.
-                  </p>
-                  <p className="text-gray-600">
-                    A 2019 study found that over 40% of second-hand devices still contained personally identifiable information from their previous owners.
-                  </p>
+            <div className="md:w-1/2 flex justify-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="relative"
+              >
+                <div className="bg-blue-500 rounded-full p-8 shadow-xl">
+                  <FaShieldAlt className="h-32 w-32 text-white" />
                 </div>
-              </div>
+                <div className="absolute -top-4 -right-4 bg-green-500 rounded-full p-3">
+                  <FaCheck className="h-6 w-6 text-white" />
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
-        
-        {/* Our Process */}
-        <div className="mb-12">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Data Destruction Process</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We follow a rigorous, multi-step process to ensure your data is completely and permanently destroyed.
-            </p>
-          </div>
-          
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white rounded-xl shadow-sm p-6 border-t-4 border-blue-500"
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-all"
             >
-              <div className="bg-blue-100 rounded-full p-3 w-14 h-14 flex items-center justify-center mb-4">
-                <FaLock className="h-6 w-6 text-blue-600" />
+              <div className="bg-blue-100 rounded-full p-4 w-16 h-16 flex items-center justify-center mb-6">
+                <FaLock className="h-8 w-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">1. Secure Collection</h3>
+              <h3 className="text-xl font-semibold mb-4">Secure Wiping</h3>
               <p className="text-gray-600">
-                Your devices are collected and transported in secure, locked containers. Chain of custody is maintained throughout the process.
+                Military-grade data wiping that exceeds industry standards, making data recovery impossible.
               </p>
             </motion.div>
-            
+
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              className="bg-white rounded-xl shadow-sm p-6 border-t-4 border-blue-500"
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-all"
             >
-              <div className="bg-blue-100 rounded-full p-3 w-14 h-14 flex items-center justify-center mb-4">
-                <FaTools className="h-6 w-6 text-blue-600" />
+              <div className="bg-blue-100 rounded-full p-4 w-16 h-16 flex items-center justify-center mb-6">
+                <FaTrash className="h-8 w-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">2. Data Destruction</h3>
+              <h3 className="text-xl font-semibold mb-4">Physical Destruction</h3>
               <p className="text-gray-600">
-                Depending on the device type, we use secure wiping, degaussing, or physical destruction to permanently remove all data.
+                Complete physical destruction of storage devices for absolute data security.
               </p>
             </motion.div>
-            
+
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
-              className="bg-white rounded-xl shadow-sm p-6 border-t-4 border-blue-500"
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-all"
             >
-              <div className="bg-blue-100 rounded-full p-3 w-14 h-14 flex items-center justify-center mb-4">
-                <FaFileAlt className="h-6 w-6 text-blue-600" />
+              <div className="bg-blue-100 rounded-full p-4 w-16 h-16 flex items-center justify-center mb-6">
+                <FaFileAlt className="h-8 w-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">3. Certification</h3>
+              <h3 className="text-xl font-semibold mb-4">Certification</h3>
               <p className="text-gray-600">
-                You receive a Certificate of Data Destruction with details of the devices processed and methods used.
+                Detailed certificates of destruction for your records and compliance requirements.
               </p>
             </motion.div>
           </div>
-          
-          <div className="mt-8 text-center">
-            <div className="inline-flex items-center bg-blue-50 rounded-full px-4 py-2 text-blue-700">
-              <FaRecycle className="h-5 w-5 mr-2" />
-              <span className="font-medium">After data destruction, devices are responsibly recycled</span>
-            </div>
-          </div>
         </div>
-        
-        {/* FAQ Section */}
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-12">
-          <div className="p-6 md:p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
-            
-            <div className="space-y-4">
-              {faqs.map((faq, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
-                  <button
-                    onClick={() => toggleFaq(index)}
-                    className="w-full flex items-center justify-between p-4 text-left focus:outline-none"
-                  >
-                    <span className="font-medium text-gray-900">{faq.question}</span>
-                    <svg
-                      className={`h-5 w-5 text-gray-500 transform ${showFaq === index ? 'rotate-180' : ''} transition-transform duration-200`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  
-                  {showFaq === index && (
-                    <div className="p-4 pt-0 border-t border-gray-200 bg-gray-50">
-                      <p className="text-gray-600">{faq.answer}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        {/* CTA Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl shadow-lg overflow-hidden">
-          <div className="p-8 md:p-10 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to Protect Your Data?</h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-              Schedule a data destruction service today or drop off your devices at any of our locations.
+      </section>
+
+      {/* Process Section */}
+      <section className="py-16 bg-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900">Our Process</h2>
+            <p className="text-xl text-gray-600 mt-4">
+              We follow a rigorous process to ensure your data is completely and securely destroyed
             </p>
-            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <Link 
-                href="/contact" 
-                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                step: "1",
+                title: "Collection",
+                description: "Secure pickup of your devices from your location"
+              },
+              {
+                step: "2",
+                title: "Inventory",
+                description: "Detailed logging of all devices and storage media"
+              },
+              {
+                step: "3",
+                title: "Destruction",
+                description: "Complete data wiping or physical destruction"
+              },
+              {
+                step: "4",
+                title: "Certification",
+                description: "Documentation of the destruction process"
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={item.step}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="relative"
               >
-                Schedule Service
-              </Link>
-              <Link 
-                href="/locations" 
-                className="inline-flex items-center justify-center px-6 py-3 border border-white text-base font-medium rounded-md shadow-sm text-white bg-transparent hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Find Drop-off Locations
-              </Link>
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="absolute -top-4 -left-4 bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold">
+                    {item.step}
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-gray-600">{item.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-blue-600 rounded-2xl shadow-xl overflow-hidden">
+            <div className="px-6 py-12 md:p-12 text-center">
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to Secure Your Data?
+              </h2>
+              <p className="text-xl text-blue-100 mb-8">
+                Schedule a pickup or drop-off for your secure data destruction needs.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/schedule-service"
+                  className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-lg font-semibold text-lg inline-flex items-center justify-center transition-colors"
+                >
+                  Schedule Now
+                </Link>
+                <Link
+                  href="/contact"
+                  className="bg-blue-500 text-white hover:bg-blue-400 px-8 py-3 rounded-lg font-semibold text-lg inline-flex items-center justify-center transition-colors"
+                >
+                  Contact Us
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 } 

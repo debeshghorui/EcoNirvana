@@ -194,12 +194,20 @@ const Navbar = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 h-16 pb-[1px]">
+    <div className={`fixed top-0 left-0 right-0 z-50 h-16`}>
       {/* Background that extends full width/height with no gaps */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-gray-800 transition-all duration-300">
+      <div className={`absolute inset-0 ${
+        isDataDestructionPage 
+          ? 'bg-blue-600' 
+          : 'bg-gradient-to-br from-black via-gray-900 to-gray-800'
+      } transition-all duration-300`}>
         {/* Conditional overlay for scrolled state */}
         {scrolled && (
-          <div className="absolute inset-0 bg-gray-900 shadow-lg shadow-black/30"></div>
+          <div className={`absolute inset-0 ${
+            isDataDestructionPage 
+              ? 'bg-blue-700/50' 
+              : 'bg-gray-900'
+          } shadow-lg shadow-black/30`}></div>
         )}
       </div>
       
@@ -208,7 +216,9 @@ const Navbar = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center">
               <Link href="/" className="flex-shrink-0 flex items-center">
-                <div className="w-10 h-10 relative mr-2">
+                <div className={`w-10 h-10 relative mr-2 rounded-full ${
+                  isDataDestructionPage ? 'bg-white p-2' : ''
+                }`}>
                   <Image 
                     src="/logo.svg" 
                     alt="EcoRecycle Logo" 
@@ -229,18 +239,26 @@ const Navbar = () => {
               {/* Search Bar */}
               <div ref={searchRef} className="relative mr-4">
                 <form onSubmit={handleSearch} className="relative">
-                  <div className="flex items-center bg-gray-800 rounded-md overflow-hidden">
+                  <div className={`flex items-center rounded-md overflow-hidden ${
+                    isDataDestructionPage ? 'bg-blue-500' : 'bg-gray-800'
+                  }`}>
                     <input
                       type="text"
                       placeholder="Search..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onFocus={() => searchQuery.trim() && setShowSuggestions(true)}
-                      className="bg-gray-800 text-white text-sm px-3 py-1.5 w-40 focus:w-56 transition-all duration-300 focus:outline-none"
+                      className={`text-white text-sm px-3 py-1.5 w-40 focus:w-56 transition-all duration-300 focus:outline-none ${
+                        isDataDestructionPage ? 'bg-blue-500 placeholder-blue-200' : 'bg-gray-800'
+                      }`}
                     />
                     <button 
                       type="submit" 
-                      className="p-2 text-gray-400 hover:text-white"
+                      className={`p-2 ${
+                        isDataDestructionPage 
+                          ? 'text-blue-200 hover:text-white' 
+                          : 'text-gray-400 hover:text-white'
+                      }`}
                     >
                       <FaSearch className="h-4 w-4" />
                     </button>
