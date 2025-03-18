@@ -41,28 +41,19 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section - Made shorter */}
-      <section className="relative bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white overflow-hidden">
-        {/* Animated background pattern */}
+      <section className="relative bg-black text-white overflow-hidden">
+        {/* Background image */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-              <defs>
-                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="100" height="100" fill="url(#grid)" />
-            </svg>
-          </div>
-          <div className="absolute inset-0 opacity-20 mix-blend-overlay">
-            <Image
-              src="/hero-background.jpg"
-              alt="E-waste recycling background"
-              fill
-              style={{ objectFit: "cover" }}
-              priority
-            />
-          </div>
+          <Image
+            src="/green-globe.jpg"
+            alt="Digital globe with green plant sprouts"
+            fill
+            style={{ objectFit: "cover" }}
+            quality={100}
+            priority
+          />
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/20"></div>
         </div>
 
         {/* Gradient overlay */}
