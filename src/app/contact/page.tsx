@@ -58,10 +58,10 @@ export default function ContactPage() {
         <div className="absolute inset-0 overflow-hidden opacity-20">
           <Image 
             src="/contact-hero.jpg" 
-            alt="Contact EcoRecycle" 
+            alt="Contact EcoNirvana" 
             fill
             style={{ objectFit: "cover" }}
-            priority
+            className="brightness-50"
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
@@ -125,7 +125,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-1">Email</h3>
-                    <p className="text-gray-600">info@ecorecycle.com</p>
+                    <p className="text-gray-600">info@econirvana.com</p>
                     <p className="text-gray-500 text-sm">We'll respond as soon as possible</p>
                   </div>
                 </div>

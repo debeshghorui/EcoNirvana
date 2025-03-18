@@ -221,7 +221,7 @@ const Navbar = () => {
                 }`}>
                   <Image 
                     src="/logo.svg" 
-                    alt="EcoRecycle Logo" 
+                    alt="EcoNirvana Logo" 
                     width={40}
                     height={40}
                     priority
@@ -229,7 +229,7 @@ const Navbar = () => {
                   />
                 </div>
                 <span className="text-xl font-bold text-white">
-                  EcoRecycle
+                  EcoNirvana
                 </span>
               </Link>
             </div>
@@ -330,6 +330,38 @@ const Navbar = () => {
                   </Link>
                 </>
               )}
+              
+              {/* Common links - shown to all users */}
+              <Link 
+                href="/about" 
+                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  scrolled 
+                    ? `text-gray-300 hover:text-green-400 hover:bg-gray-800` 
+                    : `text-white hover:bg-gray-800`
+                }`}
+              >
+                Who we are
+              </Link>
+              <Link 
+                href="/why-econirvana" 
+                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  scrolled 
+                    ? `text-gray-300 hover:text-green-400 hover:bg-gray-800` 
+                    : `text-white hover:bg-gray-800`
+                }`}
+              >
+                Why EcoNirvana
+              </Link>
+              <Link 
+                href="/blog" 
+                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  scrolled 
+                    ? `text-gray-300 hover:text-green-400 hover:bg-gray-800` 
+                    : `text-white hover:bg-gray-800`
+                }`}
+              >
+                Blog
+              </Link>
               
               {user ? (
                 <div className="relative ml-3" ref={profileMenuRef}>
@@ -534,6 +566,27 @@ const Navbar = () => {
                       Rewards
                     </Link>
                     <Link
+                      href="/about"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Who we are
+                    </Link>
+                    <Link
+                      href="/why-econirvana"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Why EcoNirvana
+                    </Link>
+                    <Link
+                      href="/blog"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Blog
+                    </Link>
+                    <Link
                       href="/settings"
                       className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
@@ -554,6 +607,27 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
+                    <Link
+                      href="/about"
+                      className="text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Who we are
+                    </Link>
+                    <Link
+                      href="/why-econirvana"
+                      className="text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Why EcoNirvana
+                    </Link>
+                    <Link
+                      href="/blog"
+                      className="text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Blog
+                    </Link>
                     <Link
                       href="/login"
                       className="text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"

@@ -1,4 +1,4 @@
-# EcoRecycle - E-Waste Recycling Website
+# EcoNirvana - E-Waste Recycling Website
 
 A modern, responsive website for an e-waste recycling company built with Next.js 15 and TailwindCSS.
 

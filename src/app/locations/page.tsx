@@ -11,7 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 const allLocations = [
   {
     id: 1,
-    name: 'EcoRecycle Main Facility',
+    name: 'EcoNirvana Main Facility',
     address: '123 Recycling Way, Green City, EC 12345',
     phone: '(555) 123-4567',
     hours: 'Mon-Fri: 8AM-6PM, Sat: 9AM-4PM, Sun: Closed',

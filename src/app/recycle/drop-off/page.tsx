@@ -110,7 +110,7 @@ export default function DropOffPage() {
                 <FaInfoCircle className="text-green-600 mt-1 mr-3 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-gray-700 mb-2">
-                    <span className="font-medium">What to bring:</span> Your electronic devices, any accessories, and your ID or the EcoRecycle app to scan your QR code for points.
+                    <span className="font-medium">What to bring:</span> Your electronic devices, any accessories, and your ID or the EcoNirvana app to scan your QR code for points.
                   </p>
                   <p className="text-sm text-gray-700">
                     <span className="font-medium">Note:</span> Please remove personal data from devices before dropping them off. We also offer secure data destruction services if needed.

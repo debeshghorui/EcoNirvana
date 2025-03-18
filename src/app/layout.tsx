@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EcoRecycle - E-Waste Recycling Solutions",
+  title: "EcoNirvana - E-Waste Recycling Solutions",
   description: "Responsible e-waste recycling services for individuals and businesses. Protect the environment with proper electronic waste disposal.",
 };
 

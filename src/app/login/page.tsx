@@ -121,9 +121,9 @@ export default function LoginPage() {
           <div className="md:w-1/2 p-8">
             <div className="text-center mb-8">
               <Link href="/" className="inline-block">
-                <Image 
-                  src="/logo.svg" 
-                  alt="EcoRecycle Logo" 
+                <Image
+                  src="/logo.svg"
+                  alt="EcoNirvana Logo" 
                   width={70} 
                   height={70} 
                   className="mx-auto"

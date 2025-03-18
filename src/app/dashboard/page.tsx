@@ -361,7 +361,7 @@ export default function DashboardPage() {
                   <Link href="/locations" className="text-sm text-green-600 hover:text-green-700 font-medium">View All</Link>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4 hover:border-green-300 transition-colors">
-                  <h4 className="font-medium text-gray-900">EcoRecycle Main Facility</h4>
+                  <h4 className="font-medium text-gray-900">EcoNirvana Main Facility</h4>
                   <p className="text-sm text-gray-600 mt-1">123 Recycling Way, Green City, EC 12345</p>
                   <p className="text-sm text-gray-600 mt-1">2.3 miles away</p>
                   <div className="mt-3 flex justify-between items-center">

@@ -34,7 +34,7 @@ const allEvents = [
     title: 'E-Waste Recycling Workshop', 
     date: 'August 10, 2023', 
     time: '6:00 PM - 8:00 PM',
-    location: 'EcoRecycle Education Center',
+    location: 'EcoNirvana Education Center',
     description: 'Learn about the importance of e-waste recycling and how to properly dispose of electronic devices.',
     category: 'Workshop',
     image: '/images/events/workshop.jpg'
@@ -64,7 +64,7 @@ const allEvents = [
     title: 'Holiday Device Trade-In Event', 
     date: 'November 25, 2023', 
     time: '9:00 AM - 5:00 PM',
-    location: 'EcoRecycle Main Facility',
+    location: 'EcoNirvana Main Facility',
     description: 'Trade in your old devices for recycling and receive special holiday discounts on eco-friendly products.',
     category: 'Special Event',
     image: '/images/events/holiday.jpg'

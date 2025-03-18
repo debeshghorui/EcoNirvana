@@ -91,9 +91,9 @@ export default function SignupPage() {
               <Link href="/" className="inline-block">
                 <Image 
                   src="/logo.svg" 
-                  alt="EcoRecycle Logo" 
-                  width={60} 
-                  height={60} 
+                  alt="EcoNirvana Logo" 
+                  width={70} 
+                  height={70} 
                   className="mx-auto"
                 />
               </Link>

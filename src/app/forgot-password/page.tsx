@@ -44,10 +44,10 @@ export default function ForgotPasswordPage() {
           <Link href="/" className="inline-block">
             <Image 
               src="/logo.svg" 
-              alt="EcoRecycle Logo" 
-              width={60} 
-              height={60} 
-              className="mx-auto"
+              alt="EcoNirvana Logo" 
+              width={70} 
+              height={70} 
+              className="mx-auto mb-6"
             />
           </Link>
           <h2 className="mt-4 text-2xl font-bold text-gray-900">Reset your password</h2>
