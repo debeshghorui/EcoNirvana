@@ -26,7 +26,7 @@ const educationalResources = [
     id: 'guide-1',
     title: 'E-Waste 101: Understanding Electronic Waste',
     type: 'guide',
-    description: 'Learn about what constitutes e-waste, why it's harmful, and the basics of responsible disposal.',
+    description: "Learn about what constitutes e-waste, why it's harmful, and the basics of responsible disposal.",
     icon: FaBook,
     downloadable: true,
     length: '12 pages'
@@ -83,7 +83,7 @@ const faqs = [
   },
   {
     question: 'Why is e-waste harmful to the environment?',
-    answer: 'E-waste contains toxic materials like lead, mercury, cadmium, and flame retardants that can leach into soil and water when improperly disposed of in landfills. Additionally, valuable resources like gold, silver, copper, and rare earth elements are lost when e-waste isn't recycled properly.'
+    answer: "E-waste contains toxic materials like lead, mercury, cadmium, and flame retardants that can leach into soil and water when improperly disposed of in landfills. Additionally, valuable resources like gold, silver, copper, and rare earth elements are lost when e-waste isn't recycled properly."
   },
   {
     question: 'How should I prepare my devices for recycling?',

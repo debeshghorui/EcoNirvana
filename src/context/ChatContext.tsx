@@ -115,61 +115,57 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsLoading(true);
 
     try {
+      let responseText;
+
       if (!chatSession) {
-        // If chat session is not initialized, use the global one or create a new one
-        if (!globalChatSession) {
-          globalChatSession = createChatSession();
+        try {
+          // If chat session is not initialized, use the global one or create a new one
+          if (!globalChatSession) {
+            globalChatSession = createChatSession();
+          }
+          
+          setChatSession(globalChatSession);
+          
+          // Send message to the session
+          const result = await globalChatSession.sendMessage(content);
+          responseText = await result.response.text();
+        } catch (error) {
+          console.error("Error in chat session:", error);
+          responseText = "I'm sorry, I'm having trouble connecting to my knowledge base right now. Please try again later.";
         }
-        
-        setChatSession(globalChatSession);
-        
-        // Send message to the session
-        const result = await globalChatSession.sendMessage(content);
-        const responseText = await result.response.text();
-
-        // Create a new bot message
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'bot',
-          content: responseText,
-          timestamp: new Date(),
-        };
-
-        // Add bot message to state
-        setMessages((prev) => [...prev, botMessage]);
       } else {
-        // Send message to existing chat session
-        const result = await chatSession.sendMessage(content);
-        const responseText = await result.response.text();
-
-        // Create a new bot message
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'bot',
-          content: responseText,
-          timestamp: new Date(),
-        };
-
-        // Add bot message to state
-        setMessages((prev) => [...prev, botMessage]);
+        try {
+          // Send message to existing chat session
+          const result = await chatSession.sendMessage(content);
+          responseText = await result.response.text();
+        } catch (error) {
+          console.error("Error sending message to chat session:", error);
+          responseText = "I'm sorry, I'm having trouble processing your request right now. Please try again later.";
+        }
       }
-    } catch (error) {
-      console.error('Error sending message to Gemini:', error);
-      
-      // Create an error message
-      const errorMessage: Message = {
+
+      // Create a new bot message
+      const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'bot',
-        content: 'Sorry, I encountered an error. Please try again later.',
+        content: responseText,
         timestamp: new Date(),
       };
 
-      // Add error message to state
-      setMessages((prev) => [...prev, errorMessage]);
+      // Add bot message to state
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Error in chat flow:", error);
       
-      // Try to recreate the chat session
-      globalChatSession = createChatSession();
-      setChatSession(globalChatSession);
+      // Add error message as bot response
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'bot',
+        content: "I apologize, but I encountered an error while processing your request. Please try again later.",
+        timestamp: new Date(),
+      };
+      
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }

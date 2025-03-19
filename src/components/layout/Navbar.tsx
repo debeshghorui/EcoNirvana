@@ -4,43 +4,23 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine, FaSearch, FaMapMarkerAlt, FaCalendarAlt, FaQuestionCircle } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
-
-// Define search suggestions with keywords and their corresponding pages
-const searchSuggestions = [
-  { keywords: ['dashboard', 'home', 'main', 'profile'], path: '/dashboard' },
-  { keywords: ['recycle', 'recycling', 'waste', 'ewaste', 'e-waste', 'electronics'], path: '/recycle' },
-  { keywords: ['rewards', 'points', 'earn', 'redeem', 'benefit'], path: '/rewards' },
-  { keywords: ['settings', 'account', 'profile', 'preferences'], path: '/settings' },
-  { keywords: ['locations', 'centers', 'drop', 'dropoff', 'drop-off', 'collection', 'nearby'], path: '/locations' },
-  { keywords: ['events', 'upcoming', 'community', 'drives', 'collection'], path: '/events' },
-  { keywords: ['doorstep', 'pickup', 'home collection', 'collect', 'door'], path: '/doorstep' },
-  { keywords: ['quiz', 'test', 'knowledge', 'learn', 'education'], path: '/quiz' },
-  { keywords: ['blog', 'articles', 'news', 'posts', 'read'], path: '/blog' },
-  { keywords: ['services', 'offerings', 'solutions', 'business'], path: '/services' },
-  { keywords: ['login', 'signin', 'sign in', 'access'], path: '/login' },
-  { keywords: ['signup', 'register', 'join', 'create account', 'sign up'], path: '/signup' },
-  { keywords: ['impact', 'environment', 'stats', 'statistics', 'contribution'], path: '/impact' },
-  { keywords: ['activity', 'history', 'recent', 'actions'], path: '/activity' }
-];
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [suggestions, setSuggestions] = useState<{path: string, text: string}[]>([]);
   const profileMenuRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
   // Check if we're on the data destruction page to use blue theme
   const isDataDestructionPage = pathname.includes('/services/data-destruction');
+  // Check if we're on the home page
+  const isHomePage = pathname === '/';
   const themeColor = isDataDestructionPage ? 'blue' : 'green';
 
   // Handle scroll effect
@@ -58,53 +38,6 @@ const Navbar = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-  // Close suggestions when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Update suggestions when search query changes
-  useEffect(() => {
-    if (searchQuery.trim().length > 0) {
-      const query = searchQuery.toLowerCase().trim();
-      const matchedSuggestions: {path: string, text: string}[] = [];
-      
-      // Find matches in our predefined suggestions
-      searchSuggestions.forEach(suggestion => {
-        const matchedKeyword = suggestion.keywords.find(keyword => 
-          keyword.toLowerCase().includes(query) || query.includes(keyword.toLowerCase())
-        );
-        
-        if (matchedKeyword) {
-          // Format the suggestion text nicely
-          const formattedText = matchedKeyword.charAt(0).toUpperCase() + matchedKeyword.slice(1);
-          // Only add if not already in the list
-          if (!matchedSuggestions.some(s => s.path === suggestion.path)) {
-            matchedSuggestions.push({
-              path: suggestion.path,
-              text: formattedText
-            });
-          }
-        }
-      });
-      
-      setSuggestions(matchedSuggestions.slice(0, 5)); // Limit to 5 suggestions
-      setShowSuggestions(matchedSuggestions.length > 0);
-    } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
-    }
-  }, [searchQuery]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -133,64 +66,6 @@ const Navbar = () => {
     logout();
     setIsProfileMenuOpen(false);
     router.push('/');
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (searchQuery.trim()) {
-      // Try to find a direct match first
-      const directMatch = findBestMatch(searchQuery.trim().toLowerCase());
-      
-      if (directMatch) {
-        router.push(directMatch);
-      } else {
-        // If no direct match, go to search results page
-        router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      }
-      
-      setSearchQuery('');
-      setShowSuggestions(false);
-    }
-  };
-
-  const handleSuggestionClick = (path: string) => {
-    router.push(path);
-    setSearchQuery('');
-    setShowSuggestions(false);
-  };
-
-  // Find the best matching page for a search query
-  const findBestMatch = (query: string): string | null => {
-    let bestMatch = null;
-    let highestScore = 0;
-    
-    for (const suggestion of searchSuggestions) {
-      for (const keyword of suggestion.keywords) {
-        // Calculate how well the keyword matches the query
-        let score = 0;
-        
-        // Exact match gets highest score
-        if (keyword.toLowerCase() === query) {
-          score = 100;
-        } 
-        // Keyword contains query
-        else if (keyword.toLowerCase().includes(query)) {
-          score = 75;
-        }
-        // Query contains keyword
-        else if (query.includes(keyword.toLowerCase())) {
-          score = 50;
-        }
-        
-        if (score > highestScore) {
-          highestScore = score;
-          bestMatch = suggestion.path;
-        }
-      }
-    }
-    
-    return bestMatch;
   };
 
   return (
@@ -235,64 +110,7 @@ const Navbar = () => {
             </div>
             
             {/* Desktop menu */}
-            <div className="hidden md:flex md:items-center md:space-x-1">
-              {/* Search Bar */}
-              <div ref={searchRef} className="relative mr-4">
-                <form onSubmit={handleSearch} className="relative">
-                  <div className={`flex items-center rounded-md overflow-hidden ${
-                    isDataDestructionPage ? 'bg-blue-500' : 'bg-gray-800'
-                  }`}>
-                    <input
-                      type="text"
-                      placeholder="Search..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onFocus={() => searchQuery.trim() && setShowSuggestions(true)}
-                      className={`text-white text-sm px-3 py-1.5 w-40 focus:w-56 transition-all duration-300 focus:outline-none ${
-                        isDataDestructionPage ? 'bg-blue-500 placeholder-blue-200' : 'bg-gray-800'
-                      }`}
-                    />
-                    <button 
-                      type="submit" 
-                      className={`p-2 ${
-                        isDataDestructionPage 
-                          ? 'text-blue-200 hover:text-white' 
-                          : 'text-gray-400 hover:text-white'
-                      }`}
-                    >
-                      <FaSearch className="h-4 w-4" />
-                    </button>
-                  </div>
-                </form>
-                
-                {/* Search Suggestions Dropdown */}
-                <AnimatePresence>
-                  {showSuggestions && suggestions.length > 0 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute left-0 right-0 mt-1 bg-gray-800 rounded-md shadow-lg z-50 overflow-hidden"
-                    >
-                      <ul className="py-1">
-                        {suggestions.map((suggestion, index) => (
-                          <li key={index}>
-                            <button
-                              onClick={() => handleSuggestionClick(suggestion.path)}
-                              className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
-                            >
-                              <FaSearch className="mr-2 h-3 w-3 text-gray-500" />
-                              {suggestion.text}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-              
+            <div className="hidden md:flex md:items-center md:space-x-1">              
               {user && (
                 <>
                   <Link 
@@ -489,55 +307,6 @@ const Navbar = () => {
               transition={{ duration: 0.2 }}
               className="md:hidden bg-black border-t border-gray-800"
             >
-              {/* Mobile Search Bar */}
-              <div className="px-3 pt-3" ref={searchRef}>
-                <form onSubmit={handleSearch} className="relative">
-                  <div className="flex items-center bg-gray-800 rounded-md overflow-hidden">
-                    <input
-                      type="text"
-                      placeholder="Search..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onFocus={() => searchQuery.trim() && setShowSuggestions(true)}
-                      className="bg-gray-800 text-white text-sm px-3 py-2 w-full focus:outline-none"
-                    />
-                    <button 
-                      type="submit" 
-                      className="p-2 text-gray-400 hover:text-white"
-                    >
-                      <FaSearch className="h-4 w-4" />
-                    </button>
-                  </div>
-                </form>
-                
-                {/* Mobile Search Suggestions */}
-                <AnimatePresence>
-                  {showSuggestions && suggestions.length > 0 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="mt-1 bg-gray-800 rounded-md shadow-lg overflow-hidden"
-                    >
-                      <ul className="py-1">
-                        {suggestions.map((suggestion, index) => (
-                          <li key={index}>
-                            <button
-                              onClick={() => handleSuggestionClick(suggestion.path)}
-                              className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
-                            >
-                              <FaSearch className="mr-2 h-3 w-3 text-gray-500" />
-                              {suggestion.text}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-              
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 {user ? (
                   <>
