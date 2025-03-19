@@ -4,15 +4,17 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine, FaCaretDown, FaQuestionCircle, FaInfoCircle, FaBlog, FaChevronRight } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const aboutMenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
   const { user, logout } = useAuth();
@@ -45,13 +47,22 @@ const Navbar = () => {
 
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
+    if (isAboutMenuOpen) setIsAboutMenuOpen(false);
   };
 
-  // Close profile menu when clicking outside
+  const toggleAboutMenu = () => {
+    setIsAboutMenuOpen(!isAboutMenuOpen);
+    if (isProfileMenuOpen) setIsProfileMenuOpen(false);
+  };
+
+  // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
         setIsProfileMenuOpen(false);
+      }
+      if (aboutMenuRef.current && !aboutMenuRef.current.contains(event.target as Node)) {
+        setIsAboutMenuOpen(false);
       }
     };
 
@@ -149,36 +160,81 @@ const Navbar = () => {
                 </>
               )}
               
-              {/* Common links - shown to all users */}
+              {/* About Dropdown Menu */}
+              <div className="relative" ref={aboutMenuRef}>
+                <button
+                  onClick={toggleAboutMenu}
+                  className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    scrolled 
+                      ? `text-gray-300 hover:text-green-400 hover:bg-gray-800` 
+                      : `text-white hover:bg-gray-800`
+                  }`}
+                >
+                  <FaInfoCircle className="mr-1.5 h-4 w-4" />
+                  About
+                  <FaCaretDown className="ml-1 h-3 w-3" />
+                </button>
+                
+                <AnimatePresence>
+                  {isAboutMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-1 w-48 bg-gray-800 rounded-md shadow-lg z-50 overflow-hidden"
+                    >
+                      <div className="py-1">
+                        <Link
+                          href="/about"
+                          className="flex items-center justify-between px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
+                          onClick={() => setIsAboutMenuOpen(false)}
+                        >
+                          <div className="flex items-center">
+                            <FaInfoCircle className="mr-2 h-4 w-4" />
+                            Who we are
+                          </div>
+                          <FaChevronRight className="h-3 w-3 opacity-50" />
+                        </Link>
+                        <Link
+                          href="/why-econirvana"
+                          className="flex items-center justify-between px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
+                          onClick={() => setIsAboutMenuOpen(false)}
+                        >
+                          <div className="flex items-center">
+                            <FaLeaf className="mr-2 h-4 w-4" />
+                            Why EcoNirvana
+                          </div>
+                          <FaChevronRight className="h-3 w-3 opacity-50" />
+                        </Link>
+                        <Link
+                          href="/blog"
+                          className="flex items-center justify-between px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
+                          onClick={() => setIsAboutMenuOpen(false)}
+                        >
+                          <div className="flex items-center">
+                            <FaBlog className="mr-2 h-4 w-4" />
+                            Blog
+                          </div>
+                          <FaChevronRight className="h-3 w-3 opacity-50" />
+                        </Link>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              
+              {/* Quiz Button */}
               <Link 
-                href="/about" 
+                href="/quiz" 
                 className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   scrolled 
                     ? `text-gray-300 hover:text-green-400 hover:bg-gray-800` 
                     : `text-white hover:bg-gray-800`
                 }`}
               >
-                Who we are
-              </Link>
-              <Link 
-                href="/why-econirvana" 
-                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  scrolled 
-                    ? `text-gray-300 hover:text-green-400 hover:bg-gray-800` 
-                    : `text-white hover:bg-gray-800`
-                }`}
-              >
-                Why EcoNirvana
-              </Link>
-              <Link 
-                href="/blog" 
-                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  scrolled 
-                    ? `text-gray-300 hover:text-green-400 hover:bg-gray-800` 
-                    : `text-white hover:bg-gray-800`
-                }`}
-              >
-                Blog
+                <FaQuestionCircle className="mr-1.5 h-4 w-4" />
+                Quiz
               </Link>
               
               {user ? (
@@ -334,27 +390,48 @@ const Navbar = () => {
                       <FaChartLine className="mr-2 h-5 w-5" />
                       Rewards
                     </Link>
+                    
+                    {/* Mobile About submenu */}
+                    <div className="border-t border-gray-700 pt-2 mt-2">
+                      <div className="px-3 py-1 text-xs text-gray-500 uppercase tracking-wider">
+                        About
+                      </div>
+                      <Link
+                        href="/about"
+                        className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium pl-6"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <FaInfoCircle className="mr-2 h-5 w-5" />
+                        Who we are
+                      </Link>
+                      <Link
+                        href="/why-econirvana"
+                        className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium pl-6"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <FaLeaf className="mr-2 h-5 w-5" />
+                        Why EcoNirvana
+                      </Link>
+                      <Link
+                        href="/blog"
+                        className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium pl-6"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <FaBlog className="mr-2 h-5 w-5" />
+                        Blog
+                      </Link>
+                    </div>
+                    
+                    {/* Mobile Quiz Link */}
                     <Link
-                      href="/about"
+                      href="/quiz"
                       className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Who we are
+                      <FaQuestionCircle className="mr-2 h-5 w-5" />
+                      Quiz
                     </Link>
-                    <Link
-                      href="/why-econirvana"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Why EcoNirvana
-                    </Link>
-                    <Link
-                      href="/blog"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Blog
-                    </Link>
+                    
                     <Link
                       href="/settings"
                       className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
@@ -363,6 +440,7 @@ const Navbar = () => {
                       <FaCog className="mr-2 h-5 w-5" />
                       Settings
                     </Link>
+                    
                     <button
                       onClick={() => {
                         handleLogout();
