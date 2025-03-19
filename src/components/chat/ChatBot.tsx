@@ -2,9 +2,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaRobot, FaUser, FaPaperPlane, FaTimes, FaComments, FaTrash } from 'react-icons/fa';
+import { FaUser, FaPaperPlane, FaTimes, FaTrash } from 'react-icons/fa';
 import { useChat, Message } from '@/context/ChatContext';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 const ChatBot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -100,13 +101,28 @@ const ChatBot: React.FC = () => {
     <>
       {/* Chat toggle button */}
       <motion.button
-        className={`fixed bottom-6 right-6 bg-${themeColor}-600 text-white rounded-full p-4 shadow-lg z-50 hover:bg-${themeColor}-700 transition-colors border-2 border-white`}
+        className={`fixed bottom-6 right-6 text-white rounded-full p-0 shadow-lg z-50 hover:brightness-105 transition-all`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? "Close chat" : "Open chat"}
+        style={{ width: '64px', height: '64px' }}
       >
-        {isOpen ? <FaTimes size={24} /> : <FaComments size={24} />}
+        {isOpen ? (
+          <div className="bg-green-600 rounded-full p-4 w-full h-full flex items-center justify-center">
+            <FaTimes size={24} />
+          </div>
+        ) : (
+          <div className="relative w-full h-full drop-shadow-md">
+            <Image
+              src="/chatboticon.jpg"
+              alt="Chat with EcoBot"
+              width={64}
+              height={64}
+              className="rounded-full"
+            />
+          </div>
+        )}
       </motion.button>
 
       {/* Chat window */}
@@ -123,7 +139,15 @@ const ChatBot: React.FC = () => {
             {/* Chat header */}
             <div className={`bg-${themeColor}-600 text-white p-4 flex justify-between items-center`}>
               <div className="flex items-center">
-                <FaRobot className="mr-2" size={20} />
+                <div className="w-6 h-6 mr-2 relative">
+                  <Image
+                    src="/chatboticon.jpg"
+                    alt="EcoBot"
+                    width={24}
+                    height={24}
+                    className="rounded-full"
+                  />
+                </div>
                 <h3 className="font-medium">EcoBot</h3>
               </div>
               <button 
@@ -139,7 +163,15 @@ const ChatBot: React.FC = () => {
             <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-gray-500">
-                  <FaRobot size={48} className={`mb-4 text-${themeColor}-500`} />
+                  <div className="w-20 h-20 mb-4 relative">
+                    <Image
+                      src="/chatboticon.jpg"
+                      alt="EcoBot"
+                      width={80}
+                      height={80}
+                      className="rounded-full"
+                    />
+                  </div>
                   <p className="text-center mb-2">Hi! I'm EcoBot, your e-waste recycling assistant.</p>
                   <p className="text-center text-sm">Ask me anything about e-waste recycling, our services, or environmental impact.</p>
                 </div>
@@ -158,7 +190,15 @@ const ChatBot: React.FC = () => {
                           {message.role === 'user' ? (
                             <FaUser size={12} className="mr-2" />
                           ) : (
-                            <FaRobot size={12} className="mr-2" />
+                            <div className="w-4 h-4 mr-2 relative">
+                              <Image
+                                src="/chatboticon.jpg"
+                                alt="EcoBot"
+                                width={12}
+                                height={12}
+                                className="rounded-full"
+                              />
+                            </div>
                           )}
                           <span className="text-xs opacity-75">
                             {message.role === 'user' ? 'You' : 'EcoBot'} • {formatTime(message.timestamp)}
@@ -181,7 +221,15 @@ const ChatBot: React.FC = () => {
                 >
                   <div className="bg-white border border-gray-200 rounded-lg px-4 py-2 shadow-sm">
                     <div className="flex items-center">
-                      <FaRobot size={12} className="mr-2" />
+                      <div className="w-4 h-4 mr-2 relative">
+                        <Image
+                          src="/chatboticon.jpg"
+                          alt="EcoBot"
+                          width={12}
+                          height={12}
+                          className="rounded-full"
+                        />
+                      </div>
                       <span className="text-xs text-gray-500">EcoBot is typing</span>
                     </div>
                     <div className="flex space-x-1 mt-2">

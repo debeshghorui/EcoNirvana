@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background circle with navy border -->
+  <circle cx="100" cy="100" r="95" fill="#a6e3f7" stroke="#033b4a" stroke-width="5"/>
+  
+  <!-- Light green base -->
+  <circle cx="100" cy="100" r="85" fill="#c9f0a9"/>
+  
+  <!-- Darker green landmasses -->
+  <path d="M40,30 C20,50 25,70 45,80 C65,90 75,70 70,50 C65,30 60,20 40,30 Z" fill="#3aae56"/>
+  <path d="M130,30 C110,20 100,40 105,55 C110,70 130,75 145,65 C160,55 150,40 130,30 Z" fill="#3aae56"/>
+  <path d="M170,100 C160,80 140,90 135,110 C130,130 150,140 170,130 C190,120 180,105 170,100 Z" fill="#3aae56"/>
+  <path d="M135,155 C125,135 100,140 80,155 C60,170 80,185 105,180 C130,175 145,175 135,155 Z" fill="#3aae56"/>
+  <path d="M40,160 C20,150 25,130 40,120 C55,110 70,120 65,140 C60,160 50,165 40,160 Z" fill="#3aae56"/>
+  <path d="M30,100 C10,90 15,70 30,65 C45,60 55,75 50,90 C45,105 40,105 30,100 Z" fill="#3aae56"/>
+  
+  <!-- Small green details -->
+  <circle cx="75" cy="70" r="8" fill="#3aae56"/>
+  <circle cx="130" cy="95" r="12" fill="#3aae56"/>
+  <ellipse cx="160" cy="75" rx="10" ry="7" fill="#3aae56"/>
+  <ellipse cx="50" cy="130" rx="7" ry="5" fill="#3aae56"/>
+  <ellipse cx="90" cy="140" rx="5" ry="4" fill="#3aae56"/>
+  
+  <!-- Eyes with highlights -->
+  <circle cx="70" cy="85" r="10" fill="#ffffff"/>
+  <circle cx="70" cy="85" r="6" fill="#000000"/>
+  <circle cx="72" cy="83" r="2" fill="#ffffff"/>
+  
+  <circle cx="130" cy="85" r="10" fill="#ffffff"/>
+  <circle cx="130" cy="85" r="6" fill="#000000"/>
+  <circle cx="132" cy="83" r="2" fill="#ffffff"/>
+  
+  <!-- Rosy cheeks -->
+  <circle cx="65" cy="110" r="8" fill="#ff9a9e" opacity="0.6"/>
+  <circle cx="135" cy="110" r="8" fill="#ff9a9e" opacity="0.6"/>
+  
+  <!-- Smile -->
+  <path d="M85,115 C95,125 105,125 115,115" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+</svg> 
