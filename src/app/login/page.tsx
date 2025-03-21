@@ -95,18 +95,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white py-12">
+    <div className="min-h-screen bg-[#D5FFE5] py-12">
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-xl overflow-hidden md:max-w-4xl">
         <div className="md:flex">
           <div className="md:w-1/2 relative hidden md:block">
             <Image 
-              src="/login-image.jpg" 
+              src="/images/freepik__adjust__81957.png" 
               alt="E-waste recycling" 
               fill
               style={{ objectFit: "cover" }}
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-br from-green-700 to-green-900 opacity-80"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-green-700 to-green-900 opacity-70"></div>
             <div className="absolute inset-0 flex items-center justify-center p-8">
               <div className="text-white text-center">
                 <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>

@@ -7,7 +7,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#0C0A4F] text-white">
+    <footer className="bg-[#061D53] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -121,7 +121,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-[#171462] mt-12 pt-8">
+        <div className="border-t border-[#0b2872] mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-200 text-sm">
               &copy; {currentYear} EcoNirvana. All rights reserved.

@@ -38,10 +38,18 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatSession, setChatSession] = useState<any>(null);
-  const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
+  const pathname = usePathname() || '';
+
+  // Set isMounted on client-side
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Reset chat session when navigating to data destruction page
   useEffect(() => {
+    if (!isMounted) return;
+    
     if (pathname.includes('/services/data-destruction')) {
       // Add a welcome message specific to the data destruction page
       const dataDestructionWelcome: Message = {
@@ -58,10 +66,12 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         localStorage.setItem('chatMessages', JSON.stringify([dataDestructionWelcome]));
       }
     }
-  }, [pathname, messages.length]);
+  }, [pathname, messages.length, isMounted]);
 
   // Initialize chat session
   useEffect(() => {
+    if (!isMounted) return;
+    
     // Use the global session if it exists, otherwise create a new one
     if (!globalChatSession) {
       globalChatSession = createChatSession();
@@ -89,18 +99,20 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => {
       // Don't destroy the global session on unmount
     };
-  }, []);
+  }, [isMounted]);
 
   // Save messages to localStorage when they change
   useEffect(() => {
+    if (!isMounted) return;
+    
     if (messages.length > 0) {
       localStorage.setItem('chatMessages', JSON.stringify(messages));
     }
-  }, [messages]);
+  }, [messages, isMounted]);
 
   // Send message to Gemini API and get response
   const sendMessage = async (content: string) => {
-    if (!content.trim()) return;
+    if (!isMounted || !content.trim()) return;
 
     // Create a new user message
     const userMessage: Message = {
@@ -173,6 +185,8 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Clear chat history
   const clearChat = () => {
+    if (!isMounted) return;
+    
     setMessages([]);
     localStorage.removeItem('chatMessages');
     globalChatSession = createChatSession();

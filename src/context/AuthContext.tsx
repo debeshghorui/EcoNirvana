@@ -39,18 +39,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [justLoggedOut, setJustLoggedOut] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   // Check if user is logged in on initial load
   useEffect(() => {
+    setIsMounted(true);
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        // Handle potential JSON parse error
+        localStorage.removeItem('user');
+      }
     }
     setLoading(false);
   }, []);
 
   // Login function
   const login = async (email: string, password: string): Promise<boolean> => {
+    if (!isMounted) return false;
+    
     setError(null);
     setLoading(true);
     
@@ -88,6 +97,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Signup function
   const signup = async (name: string, email: string, password: string): Promise<boolean> => {
+    if (!isMounted) return false;
+    
     setError(null);
     setLoading(true);
     
@@ -125,6 +136,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Logout function
   const logout = () => {
+    if (!isMounted) return;
+    
     setUser(null);
     localStorage.removeItem('user');
     setJustLoggedOut(true);
