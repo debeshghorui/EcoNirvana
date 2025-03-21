@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
@@ -16,6 +16,9 @@ import {
 import Link from 'next/link';
 import { generateResponse } from '@/lib/gemini';
 import { useAuth } from '@/context/AuthContext';
+import PageHeader from '@/components/layout/PageHeader';
+import Card, { CardBody } from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 
 // Define the Quiz Question type
 interface QuizQuestion {
@@ -187,13 +190,13 @@ export default function QuizPage() {
     
     setIsCorrect(correct);
     if (correct) {
-      setScore(prevScore => prevScore + 1);
+      setScore((prevScore: number) => prevScore + 1);
     }
   };
   
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex((prev: number) => prev + 1);
       
       // Set the selected option to what was previously selected for the next question (if any)
       const nextIndex = currentQuestionIndex + 1;
@@ -249,273 +252,200 @@ export default function QuizPage() {
         try {
           // Simulate saving points to user account
           console.log(`Saving ${earnedPoints} points to user account`);
-          // In a real app, you would make an API call to save points
-          // Example: await saveUserPoints(user.id, earnedPoints);
           setPointsSaved(true);
+          // In a real app, you would call an API to save points
+          // await saveUserPoints(user.id, earnedPoints);
         } catch (error) {
           console.error("Error saving points:", error);
         }
       }
     };
     
-    savePoints();
-  }, [user, pointsSaved, earnedPoints, score, quizCompleted]);
+    if (quizCompleted) {
+      savePoints();
+    }
+  }, [quizCompleted, user, score, earnedPoints, pointsSaved]);
   
-  // Loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-        <div className="container mx-auto px-4 py-8">
-          <Link href="/" className="inline-flex items-center text-green-600 hover:text-green-700 mb-8">
-            <FaArrowLeft className="mr-2" /> Back to Home
-          </Link>
-          
-          <div className="flex items-center justify-center h-[60vh]">
-            <div className="text-center">
-              <FaSpinner className="h-12 w-12 text-green-500 animate-spin mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Preparing Your Quiz</h2>
-              <p className="text-gray-600">We're generating thought-provoking questions about e-waste recycling...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  
-  // Quiz completion screen
-  if (quizCompleted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-        <div className="container mx-auto px-4 py-8">
-          <Link href="/" className="inline-flex items-center text-green-600 hover:text-green-700 mb-8">
-            <FaArrowLeft className="mr-2" /> Back to Home
-          </Link>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm overflow-hidden"
-          >
-            <div className="p-8 text-center">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <FaTrophy className="h-10 w-10 text-green-600" />
-              </div>
+  return (
+    <>
+      <PageHeader
+        title="E-Waste Recycling Quiz"
+        description="Test your knowledge about electronic waste recycling and sustainability practices"
+        backgroundImage="/green-globe.jpg"
+      />
+      
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        {loading ? (
+          <Card className="p-12 text-center">
+            <CardBody>
+              <FaSpinner className="animate-spin text-4xl text-green-600 mx-auto mb-4" />
+              <p className="text-gray-600">Generating quiz questions...</p>
+            </CardBody>
+          </Card>
+        ) : quizCompleted ? (
+          <Card>
+            <CardBody className="text-center py-8">
+              <FaTrophy className="text-5xl text-yellow-500 mx-auto mb-4" />
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Quiz Completed!</h2>
+              <p className="text-xl text-gray-600 mb-4">You scored {score} out of {questions.length} questions correctly.</p>
               
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Quiz Completed!</h2>
-              
-              <div className="mb-6">
-                <p className="text-xl text-gray-700 mb-2">Your Score</p>
-                <div className="text-4xl font-bold text-green-600">{score} / {questions.length}</div>
-                
-                <div className="mt-4">
-                  {score === questions.length ? (
-                    <p className="text-green-600 font-medium">Perfect score! You're an e-waste recycling expert!</p>
-                  ) : score >= Math.floor(questions.length * 0.7) ? (
-                    <p className="text-green-600 font-medium">Great job! You know your e-waste facts.</p>
-                  ) : (
-                    <p className="text-amber-600 font-medium">Good effort! There's still more to learn about e-waste.</p>
-                  )}
+              <div className="bg-gray-50 rounded-lg p-6 mb-6 max-w-md mx-auto">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <FaLeaf className="text-green-500" />
+                  <p className="font-medium text-gray-800">Points Earned: {earnedPoints}</p>
                 </div>
-                
-                {/* Points earned section */}
-                {score > 0 && (
-                  <div className="mt-6 bg-green-50 p-4 rounded-lg">
-                    {user ? (
-                      <div>
-                        <p className="text-gray-800 font-medium">You earned</p>
-                        <p className="text-2xl font-bold text-green-600">{earnedPoints} points</p>
-                        <p className="text-sm text-gray-600 mt-1">
-                          {pointsSaved ? "Points added to your account!" : "Saving points to your account..."}
-                        </p>
-                      </div>
-                    ) : (
-                      <div>
-                        <p className="text-gray-800 font-medium">You earned {earnedPoints} points</p>
-                        <p className="text-sm text-gray-600 mt-1 mb-3">Sign up or log in to save your points!</p>
-                        <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-3">
-                          <Link href="/signup">
-                            <button className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                              Sign Up
-                            </button>
-                          </Link>
-                          <Link href="/login">
-                            <button className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                              Log In
-                            </button>
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <button
-                  onClick={handleRestartQuiz}
-                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                >
-                  <FaUndo className="mr-2 h-4 w-4" />
-                  Take Quiz Again
-                </button>
                 
                 {user ? (
-                  <Link href="/activity">
-                    <button className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                      <FaLeaf className="mr-2 h-4 w-4" />
-                      View My Points
-                    </button>
-                  </Link>
+                  pointsSaved ? (
+                    <p className="text-sm text-green-600">Points successfully added to your account!</p>
+                  ) : (
+                    <p className="text-sm text-gray-500">Points will be added to your account</p>
+                  )
                 ) : (
-                  <Link href="/blog">
-                    <button className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                      <FaLeaf className="mr-2 h-4 w-4" />
-                      Explore our blogs
-                    </button>
-                  </Link>
+                  <p className="text-sm text-gray-500">
+                    <Link href="/login" className="text-green-600 hover:underline">Sign in</Link> to save your points
+                  </p>
                 )}
               </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
-  
-  // Quiz question screen
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      <div className="container mx-auto px-4 py-8">
-        <Link href="/" className="inline-flex items-center text-green-600 hover:text-green-700 mb-8">
-          <FaArrowLeft className="mr-2" /> Back to Home
-        </Link>
-        
-        {currentQuestion && (
-          <>
-            <div className="max-w-3xl mx-auto mb-6">
-              <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900">E-Waste Recycling Quiz</h1>
-                <div className="text-sm text-gray-500">
-                  Question {currentQuestionIndex + 1} of {questions.length}
-                </div>
-              </div>
               
-              <div className="w-full bg-gray-200 rounded-full h-2.5 mt-4">
-                <div 
-                  className="bg-green-600 h-2.5 rounded-full" 
-                  style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
-                ></div>
+              <div className="flex flex-wrap gap-4 justify-center mt-6">
+                <Button
+                  onClick={handleRestartQuiz}
+                  className="flex items-center gap-2"
+                  variant="secondary"
+                >
+                  <FaUndo />
+                  Restart Quiz
+                </Button>
+                
+                <Button
+                  href="/activity"
+                  className="flex items-center gap-2" 
+                  variant="primary"
+                >
+                  View Activity
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+        ) : (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <Button
+                  onClick={() => router.back()}
+                  variant="secondary"
+                  className="mr-4"
+                >
+                  <FaArrowLeft className="mr-2" /> Back
+                </Button>
+                <h2 className="text-xl font-medium text-gray-900">Question {currentQuestionIndex + 1} of {questions.length}</h2>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-medium text-gray-500">Score: {score}/{questions.length}</p>
               </div>
             </div>
             
-            <motion.div 
-              key={currentQuestionIndex}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.3 }}
-              className="max-w-3xl mx-auto bg-white rounded-xl shadow-sm overflow-hidden"
-            >
-              <div className="p-6 md:p-8">
-                <div className="flex items-start mb-6">
-                  <div className="bg-green-100 p-2 rounded-lg mr-4">
-                    <FaQuestionCircle className="text-green-600 w-6 h-6" />
-                  </div>
-                  <h2 className="text-xl font-semibold text-gray-900">{currentQuestion.question}</h2>
-                </div>
-                
-                <div className="space-y-3 mb-6">
-                  {currentQuestion.options.map((option, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleOptionSelect(option)}
-                      disabled={selectedOptions[currentQuestionIndex] !== null}
-                      className={`w-full text-left p-4 rounded-lg border transition-all ${
-                        selectedOptions[currentQuestionIndex] === option
-                          ? option === currentQuestion.correctAnswer
-                            ? 'bg-green-100 border-green-500'
-                            : 'bg-red-100 border-red-500'
-                          : 'border-gray-200 hover:border-green-500 hover:bg-green-50'
-                      } ${selectedOptions[currentQuestionIndex] && option !== selectedOptions[currentQuestionIndex] && option !== currentQuestion.correctAnswer ? 'opacity-60' : ''}`}
-                    >
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-800">{option}</span>
-                        {selectedOptions[currentQuestionIndex] === option && (
-                          option === currentQuestion.correctAnswer ? (
-                            <FaCheck className="text-green-600 h-5 w-5" />
-                          ) : (
-                            <FaTimes className="text-red-600 h-5 w-5" />
-                          )
-                        )}
-                        {selectedOptions[currentQuestionIndex] && option === currentQuestion.correctAnswer && selectedOptions[currentQuestionIndex] !== option && (
-                          <FaCheck className="text-green-600 h-5 w-5" />
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-                
-                {selectedOptions[currentQuestionIndex] && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    transition={{ duration: 0.3 }}
-                    className={`p-4 rounded-lg mb-6 ${isCorrect ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}
-                  >
-                    <div className="flex items-start">
-                      <div className={`mr-3 mt-1 ${isCorrect ? 'text-green-500' : 'text-red-500'}`}>
-                        {isCorrect ? <FaCheck className="h-5 w-5" /> : <FaTimes className="h-5 w-5" />}
-                      </div>
-                      <div>
-                        <p className={`font-medium ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
-                          {isCorrect ? 'Correct!' : 'Incorrect!'}
-                        </p>
-                        <button
-                          onClick={() => setShowExplanation(!showExplanation)}
-                          className="text-sm mt-1 underline text-gray-600 hover:text-gray-800"
-                        >
-                          {showExplanation ? 'Hide explanation' : 'Show explanation'}
-                        </button>
-                        
-                        {showExplanation && (
-                          <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="mt-2 text-sm text-gray-600"
-                          >
-                            {currentQuestion.explanation}
-                          </motion.p>
-                        )}
-                      </div>
+            {currentQuestion && (
+              <Card>
+                <CardBody>
+                  <div className="flex items-start gap-3 mb-6">
+                    <div className="mt-1 text-green-600 flex-shrink-0">
+                      <FaQuestionCircle size={24} />
                     </div>
-                  </motion.div>
-                )}
-                
-                <div className="flex justify-between">
-                  {currentQuestionIndex > 0 && (
-                    <button
-                      onClick={handlePreviousQuestion}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                    >
-                      Previous Question
-                    </button>
-                  )}
-                  <div className={currentQuestionIndex > 0 ? '' : 'ml-auto'}>
-                    <button
-                      onClick={handleNextQuestion}
-                      disabled={!selectedOptions[currentQuestionIndex]}
-                      className={`inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${!selectedOptions[currentQuestionIndex] ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
-                      {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
-                    </button>
+                    <h3 className="text-xl font-medium text-gray-900">{currentQuestion.question}</h3>
                   </div>
-                </div>
-              </div>
-            </motion.div>
+                  
+                  <div className="space-y-3 mb-6">
+                    {currentQuestion.options.map((option: string, index: number) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2, delay: index * 0.1 }}
+                      >
+                        <button
+                          onClick={() => handleOptionSelect(option)}
+                          disabled={selectedOptions[currentQuestionIndex] !== null}
+                          className={`w-full text-left p-4 rounded-lg border transition-all ${
+                            selectedOptions[currentQuestionIndex] === option
+                              ? option === currentQuestion.correctAnswer
+                                ? 'bg-green-50 border-green-500 text-green-700'
+                                : 'bg-red-50 border-red-500 text-red-700'
+                              : selectedOptions[currentQuestionIndex] !== null && option === currentQuestion.correctAnswer
+                                ? 'bg-green-50 border-green-500 text-green-700'
+                                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span>{option}</span>
+                            {selectedOptions[currentQuestionIndex] === option && (
+                              option === currentQuestion.correctAnswer ? (
+                                <FaCheck className="text-green-600" />
+                              ) : (
+                                <FaTimes className="text-red-600" />
+                              )
+                            )}
+                            {selectedOptions[currentQuestionIndex] !== null && 
+                             selectedOptions[currentQuestionIndex] !== option && 
+                             option === currentQuestion.correctAnswer && (
+                              <FaCheck className="text-green-600" />
+                            )}
+                          </div>
+                        </button>
+                      </motion.div>
+                    ))}
+                  </div>
+                  
+                  {selectedOptions[currentQuestionIndex] && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      transition={{ duration: 0.3 }}
+                      className={`p-4 rounded-lg mb-6 ${
+                        isCorrect ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
+                      }`}
+                    >
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="font-medium">
+                          {isCorrect ? 'Correct!' : 'Incorrect'}
+                        </h4>
+                        <button 
+                          onClick={() => setShowExplanation(!showExplanation)}
+                          className="text-sm underline"
+                        >
+                          {showExplanation ? 'Hide' : 'Show'} explanation
+                        </button>
+                      </div>
+                      
+                      {showExplanation && (
+                        <p className="text-sm">{currentQuestion.explanation}</p>
+                      )}
+                    </motion.div>
+                  )}
+                  
+                  <div className="flex justify-between">
+                    <Button
+                      onClick={handlePreviousQuestion}
+                      disabled={currentQuestionIndex === 0}
+                      variant="secondary"
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      onClick={handleNextQuestion}
+                      disabled={selectedOptions[currentQuestionIndex] === null}
+                      variant="primary"
+                    >
+                      {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                    </Button>
+                  </div>
+                </CardBody>
+              </Card>
+            )}
           </>
         )}
       </div>
-    </div>
+    </>
   );
 } 
