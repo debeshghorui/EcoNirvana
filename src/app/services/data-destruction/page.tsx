@@ -49,6 +49,15 @@ export default function DataDestructionPage() {
       {/* Hero Section */}
       <section className="bg-blue-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Back button in header */}
+          <div className="mb-6">
+            <button 
+              onClick={() => router.back()} 
+              className="inline-flex items-center text-white hover:text-blue-100 transition-colors"
+            >
+              <FaArrowLeft className="mr-2" /> Back
+            </button>
+          </div>
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="md:w-1/2 mb-8 md:mb-0">
               <motion.h1 

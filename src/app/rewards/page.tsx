@@ -148,6 +148,16 @@ export default function RewardsPage() {
   // Mock user points
   const [userPoints, setUserPoints] = useState(450);
   
+  // Load points from localStorage if available
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedPoints = localStorage.getItem('userPoints');
+      if (savedPoints) {
+        setUserPoints(parseInt(savedPoints));
+      }
+    }
+  }, []);
+  
   // Filter rewards based on category and search term
   const filteredRewards = availableRewards.filter(reward => {
     const matchesCategory = selectedCategory === 'all' || reward.category === selectedCategory;

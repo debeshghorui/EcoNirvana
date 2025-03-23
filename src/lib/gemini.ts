@@ -14,13 +14,13 @@ let genAI: GoogleGenerativeAI;
 let geminiModel: any;
 
 try {
-  // Only initialize if we have an API key or are in development mode
-  if (apiKey || isDevelopment) {
+  // Only initialize if we have an API key and we're not forcing offline mode
+  if (apiKey && !(isDevelopment && OFFLINE_MODE)) {
     genAI = new GoogleGenerativeAI(apiKey);
     // Get the model
     geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
   } else {
-    console.error("Missing Gemini API key");
+    console.log("Using offline mode for Gemini API");
   }
 } catch (error) {
   console.error("Error initializing Gemini API:", error);
@@ -63,6 +63,68 @@ export async function generateResponse(prompt: string): Promise<string> {
 // Generate a mock response based on the prompt for offline development
 function generateMockResponse(prompt: string): string {
   const promptLower = prompt.toLowerCase();
+  
+  // Check if this is a quiz question request
+  if (promptLower.includes("quiz questions") && promptLower.includes("e-waste recycling")) {
+    // Return properly formatted JSON for quiz questions
+    return `[
+      {
+        "question": "What makes e-waste particularly harmful to the environment?",
+        "options": [
+          "It takes up more space in landfills than other waste",
+          "It contains toxic materials like lead, mercury, and cadmium",
+          "It produces more methane when decomposing",
+          "It's harder to collect than regular waste"
+        ],
+        "correctAnswer": "It contains toxic materials like lead, mercury, and cadmium",
+        "explanation": "Electronic waste contains various toxic materials including lead, mercury, cadmium, and flame retardants that can leach into soil and groundwater when improperly disposed of in landfills."
+      },
+      {
+        "question": "What percentage of e-waste materials can typically be recycled or recovered?",
+        "options": [
+          "Around 20-30%",
+          "Around 40-50%",
+          "Around 70-80%",
+          "Over 90%"
+        ],
+        "correctAnswer": "Over 90%",
+        "explanation": "More than 90% of the materials in electronic devices can be recovered and reused, including valuable metals like gold, silver, copper, and rare earth elements."
+      },
+      {
+        "question": "Which of the following is NOT a component commonly found in e-waste?",
+        "options": [
+          "Lead",
+          "Mercury",
+          "Uranium",
+          "Cadmium"
+        ],
+        "correctAnswer": "Uranium",
+        "explanation": "While lead, mercury, and cadmium are commonly found in electronic waste, uranium is not a standard component in consumer electronics."
+      },
+      {
+        "question": "What is the primary reason for proper data destruction when recycling electronic devices?",
+        "options": [
+          "To make the recycling process faster",
+          "To prevent personal information theft",
+          "To recover more valuable materials",
+          "To reduce the weight for transportation"
+        ],
+        "correctAnswer": "To prevent personal information theft",
+        "explanation": "Proper data destruction ensures that personal and sensitive information stored on devices cannot be accessed by unauthorized individuals, preventing identity theft and data breaches."
+      },
+      {
+        "question": "Which approach to e-waste management is considered most environmentally friendly?",
+        "options": [
+          "Landfilling with proper containment",
+          "Incineration with energy recovery",
+          "Recycling and resource recovery",
+          "Exporting to developing countries"
+        ],
+        "correctAnswer": "Recycling and resource recovery",
+        "explanation": "Recycling and resource recovery allows valuable materials to be reused, reduces the need for raw material extraction, and prevents toxic substances from entering the environment."
+      }
+    ]`;
+  }
   
   // Simple keyword-based mock responses
   if (promptLower.includes("hello") || promptLower.includes("hi")) {

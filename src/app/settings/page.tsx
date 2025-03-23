@@ -1,18 +1,22 @@
 "use client";
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, FormEvent, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { FaUser, FaEnvelope, FaLock, FaBell, FaShieldAlt, FaTrash, FaArrowLeft } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaBell, FaShieldAlt, FaTrash, FaArrowLeft, FaCalendarAlt, FaCamera, FaTimes } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { user, loading, logout, justLoggedOut } = useAuth();
+  const { user, loading, logout, justLoggedOut, updateProfile } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [activeTab, setActiveTab] = useState('profile');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -30,9 +34,31 @@ export default function SettingsPage() {
       // Populate form with user data
       setName(user.name);
       setEmail(user.email);
+      if (user.dateOfBirth) setDateOfBirth(user.dateOfBirth);
+      if (user.profilePicture) setProfilePicture(user.profilePicture);
     }
   }, [user, loading, router, justLoggedOut]);
   
+  // Handle profile picture upload
+  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicture(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Handle removing profile picture
+  const handleRemoveProfilePicture = () => {
+    setProfilePicture(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   // Handle profile update
   const handleProfileUpdate = async (e: FormEvent) => {
     e.preventDefault();
@@ -43,6 +69,14 @@ export default function SettingsPage() {
     try {
       // In a real app, this would be an API call to update the user's profile
       await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Update the user profile in the auth context
+      updateProfile({
+        name,
+        email,
+        dateOfBirth,
+        profilePicture
+      });
       
       // Simulate successful update
       setSuccessMessage('Profile updated successfully');
@@ -234,6 +268,55 @@ export default function SettingsPage() {
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900 mb-6">Profile Information</h2>
                   <form onSubmit={handleProfileUpdate} className="space-y-6">
+                    {/* Profile Picture */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Profile Picture
+                      </label>
+                      <div className="flex items-center space-x-4">
+                        <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 border border-gray-300">
+                          {profilePicture ? (
+                            <Image 
+                              src={profilePicture} 
+                              alt="Profile" 
+                              fill 
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                              <FaUser className="h-12 w-12 text-gray-400" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex flex-col space-y-2">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            ref={fileInputRef}
+                            onChange={handleProfilePictureChange}
+                            className="hidden"
+                            id="profile-picture-input"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 inline-flex items-center"
+                          >
+                            <FaCamera className="mr-2" /> Upload Photo
+                          </button>
+                          {profilePicture && (
+                            <button
+                              type="button"
+                              onClick={handleRemoveProfilePicture}
+                              className="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-red-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 inline-flex items-center"
+                            >
+                              <FaTimes className="mr-2" /> Remove
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                         Full name
@@ -269,6 +352,26 @@ export default function SettingsPage() {
                           onChange={(e) => setEmail(e.target.value)}
                           className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
                           suppressHydrationWarning
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Date of Birth */}
+                    <div>
+                      <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700">
+                        Date of Birth
+                      </label>
+                      <div className="mt-1 relative rounded-md shadow-sm">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <FaCalendarAlt className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <input
+                          id="dateOfBirth"
+                          name="dateOfBirth"
+                          type="date"
+                          value={dateOfBirth}
+                          onChange={(e) => setDateOfBirth(e.target.value)}
+                          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
                         />
                       </div>
                     </div>

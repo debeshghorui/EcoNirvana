@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine, FaCaretDown, FaQuestionCircle, FaInfoCircle, FaBlog, FaChevronRight, FaSearch, FaCalendarAlt, FaTools } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine, FaCaretDown, FaQuestionCircle, FaInfoCircle, FaBlog, FaChevronRight, FaSearch, FaCalendarAlt, FaTools, FaArrowLeft } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 
@@ -58,7 +58,7 @@ const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchSuggestions, setSearchSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -77,16 +77,21 @@ const Navbar = () => {
   const isHomePage = pathname === '/';
   // Check if we're on login or signup pages
   const isAuthPage = pathname === '/login' || pathname === '/signup';
-  const themeColor = isDataDestructionPage ? 'blue' : 'green';
+  // Check if we're on pages where search should be hidden for non-logged in users
+  const isHideSearchPage = pathname === '/about' || pathname === '/why-econirvana' || pathname === '/blog' || pathname === '/quiz';
+  // Only show search if not on excluded pages or if user is logged in
+  const showSearch = !isHomePage && !isAuthPage && !(isHideSearchPage && !user);
+  
+  const themeColor = isDataDestructionPage ? '#0A1533' : 'green';
 
   // Set mounted state on client-side only
   useEffect(() => {
-    setHasMounted(true);
+    setIsMounted(true);
   }, []);
 
   // Handle scroll effect
   useEffect(() => {
-    if (!hasMounted) return;
+    if (!isMounted) return;
     
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -100,11 +105,11 @@ const Navbar = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [hasMounted]);
+  }, [isMounted]);
 
   // Close suggestions when clicking outside
   useEffect(() => {
-    if (!hasMounted) return;
+    if (!isMounted) return;
     
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -125,7 +130,7 @@ const Navbar = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [hasMounted]);
+  }, [isMounted]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -157,7 +162,6 @@ const Navbar = () => {
     }
   };
 
-<<<<<<< HEAD
   // Find matching pages based on search term
   const findMatches = (query: string) => {
     if (!query.trim()) return [];
@@ -218,14 +222,19 @@ const Navbar = () => {
     }
   }, [searchTerm]);
 
+  // Handle navigation back
+  const handleBackNavigation = () => {
+    router.back();
+  };
+
   // Handle initial SSR render
   if (!isMounted) {
     return (
       <div className="fixed top-0 left-0 right-0 z-50 h-16">
         <div className={`absolute inset-0 ${
           isDataDestructionPage 
-            ? 'bg-blue-600' 
-            : 'bg-gradient-to-br from-black via-gray-900 to-gray-800'
+            ? 'bg-[#0A1533]' 
+            : 'bg-[#0A1533]'
         } transition-all duration-300`}></div>
         <nav className="relative h-full transition-all duration-300 py-3">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -254,14 +263,6 @@ const Navbar = () => {
           </div>
         </nav>
       </div>
-=======
-  // Return minimal navbar until client-side rendering is complete
-  if (!hasMounted) {
-    return (
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm" suppressHydrationWarning={true}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16"></div>
-      </header>
->>>>>>> bbd398848c4f2d2605d1c4f4be6c570edeea6e86
     );
   }
 
@@ -270,15 +271,15 @@ const Navbar = () => {
       {/* Background that extends full width/height with no gaps */}
       <div className={`absolute inset-0 ${
         isDataDestructionPage 
-          ? 'bg-blue-600' 
-          : 'bg-gradient-to-br from-black via-gray-900 to-gray-800'
+          ? 'bg-[#0A1533]' 
+          : 'bg-[#0A1533]'
       } transition-all duration-300`}>
         {/* Conditional overlay for scrolled state */}
         {scrolled && (
           <div className={`absolute inset-0 ${
             isDataDestructionPage 
-              ? 'bg-blue-700/50' 
-              : 'bg-gray-900'
+              ? 'bg-[#0A1533]/90' 
+              : 'bg-[#0A1533]/90'
           } shadow-lg shadow-black/30`}></div>
         )}
       </div>
@@ -287,6 +288,20 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
+              {/* Back button - show on all pages except home, dashboard, and data destruction */}
+              {!isHomePage && pathname !== '/dashboard' && !isDataDestructionPage && (
+                <button
+                  onClick={handleBackNavigation}
+                  className={`mr-3 p-2 rounded-full transition-colors ${
+                    isDataDestructionPage 
+                      ? 'text-white hover:bg-[#0A1533]/80' 
+                      : 'text-white hover:bg-gray-800'
+                  }`}
+                  aria-label="Go back"
+                >
+                  <FaArrowLeft className="h-4 w-4" />
+                </button>
+              )}
               <Link href="/" className="flex-shrink-0 flex items-center">
                 <div className="w-10 h-10 relative mr-2 rounded-md overflow-hidden bg-white">
                   <Image 
@@ -307,10 +322,14 @@ const Navbar = () => {
             
             {/* Desktop menu */}
             <div className="hidden md:flex md:items-center md:space-x-1">              
-              {!isHomePage && !isAuthPage && (
+              {showSearch && (
                 <div className="relative mr-2" ref={desktopSearchRef}>
                   <form onSubmit={handleSearch} className="relative">
-                    <div className="flex items-center bg-gray-800 rounded-lg overflow-hidden">
+                    <div className={`flex items-center ${
+                      isDataDestructionPage 
+                        ? 'bg-[#0A1533]/90 rounded-lg overflow-hidden' 
+                        : 'bg-gray-800 rounded-lg overflow-hidden'
+                    }`}>
                       <input
                         type="text"
                         placeholder="Search..."
@@ -320,7 +339,11 @@ const Navbar = () => {
                       />
                       <button
                         type="submit"
-                        className="p-1.5 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+                        className={`p-1.5 ${
+                          isDataDestructionPage 
+                            ? 'bg-[#0A1533] hover:bg-[#0A1533]/80 text-white hover:text-white' 
+                            : 'bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white'
+                        }`}
                         aria-label="Search"
                       >
                         <FaSearch className="h-4 w-4" />
@@ -519,9 +542,33 @@ const Navbar = () => {
                     }`}
                   >
                     <span className="sr-only">Open user menu</span>
-                    <div className={`flex items-center bg-gray-800 rounded-full p-0.5`}>
-                      <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-700">
-                        {user.name ? (
+                    <div className={`flex items-center ${
+                      isDataDestructionPage 
+                        ? 'bg-[#0A1533]/90 rounded-full p-0.5' 
+                        : 'bg-gray-800 rounded-full p-0.5'
+                    }`}>
+                      <div className={`w-8 h-8 rounded-full overflow-hidden ${
+                        isDataDestructionPage 
+                          ? 'border-2 border-[#0A1533]/70' 
+                          : 'border-2 border-gray-700'
+                      }`}>
+                        {user.profilePicture ? (
+                          <Image 
+                            src={user.profilePicture}
+                            alt={user.name || 'User'}
+                            width={32}
+                            height={32}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : user.photoURL ? (
+                          <Image 
+                            src={user.photoURL}
+                            alt={user.name || 'User'}
+                            width={32}
+                            height={32}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : user.name ? (
                           <div className="w-full h-full flex items-center justify-center text-lg font-medium bg-gray-700 text-white">
                             {user.name.charAt(0).toUpperCase()}
                           </div>
@@ -605,6 +652,20 @@ const Navbar = () => {
             
             {/* Mobile menu button */}
             <div className="md:hidden flex items-center">
+              {/* Back button for mobile - show on all pages except home and dashboard */}
+              {!isHomePage && pathname !== '/dashboard' && (
+                <button
+                  onClick={handleBackNavigation}
+                  className={`mr-3 p-2 rounded-full transition-colors ${
+                    isDataDestructionPage 
+                      ? 'text-white hover:bg-[#0A1533]/80' 
+                      : 'text-white hover:bg-gray-800'
+                  }`}
+                  aria-label="Go back"
+                >
+                  <FaArrowLeft className="h-4 w-4" />
+                </button>
+              )}
               <button
                 onClick={toggleMenu}
                 className={`inline-flex items-center justify-center p-2 rounded-md ${
@@ -637,13 +698,17 @@ const Navbar = () => {
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 {user ? (
                   <>
-                    {!isHomePage && !isAuthPage && (
+                    {showSearch && (
                       <div className="relative mb-2" ref={mobileSearchRef}>
                         <form 
                           onSubmit={handleSearch} 
                           className="mb-2"
                         >
-                          <div className="relative flex items-center bg-gray-800 rounded-lg overflow-hidden">
+                          <div className={`relative flex items-center ${
+                            isDataDestructionPage 
+                              ? 'bg-[#0A1533]/90 rounded-lg overflow-hidden' 
+                              : 'bg-gray-800 rounded-lg overflow-hidden'
+                          }`}>
                             <input
                               type="text"
                               placeholder="Search..."
@@ -653,7 +718,11 @@ const Navbar = () => {
                             />
                             <button
                               type="submit"
-                              className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+                              className={`p-2 ${
+                                isDataDestructionPage 
+                                  ? 'bg-[#0A1533] hover:bg-[#0A1533]/80 text-white hover:text-white' 
+                                  : 'bg-green-600 hover:bg-green-500 text-white hover:text-white'
+                              }`}
                               aria-label="Search"
                             >
                               <FaSearch className="h-4 w-4" />
@@ -805,13 +874,17 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
-                    {!isHomePage && !isAuthPage && (
+                    {showSearch && (
                       <div className="relative mb-2" ref={mobileSearchRef}>
                         <form 
                           onSubmit={handleSearch} 
                           className="mb-2"
                         >
-                          <div className="relative flex items-center bg-gray-800 rounded-lg overflow-hidden">
+                          <div className={`relative flex items-center ${
+                            isDataDestructionPage 
+                              ? 'bg-[#0A1533]/90 rounded-lg overflow-hidden' 
+                              : 'bg-gray-800 rounded-lg overflow-hidden'
+                          }`}>
                             <input
                               type="text"
                               placeholder="Search..."
@@ -821,7 +894,11 @@ const Navbar = () => {
                             />
                             <button
                               type="submit"
-                              className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+                              className={`p-2 ${
+                                isDataDestructionPage 
+                                  ? 'bg-[#0A1533] hover:bg-[#0A1533]/80 text-white hover:text-white' 
+                                  : 'bg-green-600 hover:bg-green-500 text-white hover:text-white'
+                              }`}
                               aria-label="Search"
                             >
                               <FaSearch className="h-4 w-4" />

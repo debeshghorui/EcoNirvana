@@ -253,6 +253,19 @@ export default function QuizPage() {
           // Simulate saving points to user account
           console.log(`Saving ${earnedPoints} points to user account`);
           setPointsSaved(true);
+          
+          // Update the user's points in the rewards system
+          // In a production app, this would be an API call to update the database
+          if (typeof window !== 'undefined') {
+            // Get current points from localStorage or initialize to 0
+            const currentPoints = parseInt(localStorage.getItem('userPoints') || '0');
+            // Add new points from quiz
+            const newTotalPoints = currentPoints + earnedPoints;
+            // Save updated points to localStorage
+            localStorage.setItem('userPoints', newTotalPoints.toString());
+            console.log(`Updated total rewards points: ${newTotalPoints}`);
+          }
+          
           // In a real app, you would call an API to save points
           // await saveUserPoints(user.id, earnedPoints);
         } catch (error) {

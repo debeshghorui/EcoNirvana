@@ -227,7 +227,7 @@ export default function RecyclePage() {
         <div className="mb-12">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Choose How to Recycle</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
             {recyclingOptions.map((option) => (
               <motion.div
                 key={option.id}
@@ -239,21 +239,21 @@ export default function RecyclePage() {
                 }`}
                 onClick={() => setSelectedOption(option.id === selectedOption ? null : option.id)}
               >
-                <div className="p-6">
-                  <div className="bg-green-100 rounded-full p-3 w-14 h-14 flex items-center justify-center mb-4">
-                    <option.icon className="h-7 w-7 text-green-600" />
+                <div className="p-4">
+                  <div className="bg-green-100 rounded-full p-3 w-12 h-12 flex items-center justify-center mb-3 mx-auto">
+                    <option.icon className="h-6 w-6 text-green-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{option.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{option.description}</p>
+                  <h3 className="text-base font-semibold text-gray-900 mb-1 text-center">{option.title}</h3>
+                  <p className="text-gray-600 text-xs mb-3 text-center">{option.description}</p>
                   
                   <button
-                    className="text-green-600 hover:text-green-700 font-medium inline-flex items-center text-sm"
+                    className="text-green-600 hover:text-green-700 font-medium inline-flex items-center text-xs w-full justify-center"
                   >
                     {selectedOption === option.id ? 'Hide details' : 'View details'}
                     {selectedOption === option.id ? (
-                      <FaChevronUp className="ml-1 h-4 w-4" />
+                      <FaChevronUp className="ml-1 h-3 w-3" />
                     ) : (
-                      <FaChevronDown className="ml-1 h-4 w-4" />
+                      <FaChevronDown className="ml-1 h-3 w-3" />
                     )}
                   </button>
                 </div>
