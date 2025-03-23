@@ -40,7 +40,7 @@ export default function Home() {
   // Only show landing page if user is not logged in
   return (
     <div className="min-h-screen">
-      {/* Hero Section - Made shorter */}
+      {/* Hero Section with Recycling Impact integration */}
       <section className="relative bg-black text-white overflow-hidden">
         {/* Background image */}
         <div className="absolute inset-0 overflow-hidden">

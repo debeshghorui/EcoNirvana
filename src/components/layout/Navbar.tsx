@@ -4,9 +4,54 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine, FaCaretDown, FaQuestionCircle, FaInfoCircle, FaBlog, FaChevronRight, FaSearch } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine, FaCaretDown, FaQuestionCircle, FaInfoCircle, FaBlog, FaChevronRight, FaSearch, FaCalendarAlt, FaTools } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
+
+// Define search categories with their pages and keywords
+const searchCategories = [
+  {
+    title: 'Recycling',
+    icon: <FaRecycle className="h-5 w-5 text-green-500" />,
+    pages: [
+      { title: 'Recycle Your E-Waste', path: '/recycle', keywords: ['recycle', 'recycling', 'waste', 'ewaste', 'e-waste', 'electronics'] },
+      { title: 'Find Drop-off Locations', path: '/locations', keywords: ['locations', 'centers', 'drop', 'dropoff', 'drop-off', 'collection', 'nearby'] },
+      { title: 'Doorstep Collection', path: '/doorstep', keywords: ['doorstep', 'pickup', 'home collection', 'collect', 'door'] },
+      { title: 'Schedule a Pickup', path: '/recycle/schedule-pickup', keywords: ['schedule', 'pickup', 'collection'] }
+    ]
+  },
+  {
+    title: 'Community',
+    icon: <FaCalendarAlt className="h-5 w-5 text-green-500" />,
+    pages: [
+      { title: 'Upcoming Events', path: '/events', keywords: ['events', 'upcoming', 'community', 'drives', 'collection'] },
+      { title: 'E-Waste Quiz', path: '/quiz', keywords: ['quiz', 'test', 'knowledge', 'learn', 'education'] },
+      { title: 'Blog & Resources', path: '/blog', keywords: ['blog', 'articles', 'news', 'posts', 'read'] }
+    ]
+  },
+  {
+    title: 'Account',
+    icon: <FaChartLine className="h-5 w-5 text-green-500" />,
+    pages: [
+      { title: 'Dashboard', path: '/dashboard', keywords: ['dashboard', 'home', 'main', 'profile'] },
+      { title: 'Your Rewards', path: '/rewards', keywords: ['rewards', 'points', 'earn', 'redeem', 'benefit'] },
+      { title: 'Account Settings', path: '/settings', keywords: ['settings', 'account', 'profile', 'preferences'] },
+      { title: 'Activity History', path: '/activity', keywords: ['activity', 'history', 'recent', 'actions'] }
+    ]
+  },
+  {
+    title: 'Services',
+    icon: <FaTools className="h-5 w-5 text-green-500" />,
+    pages: [
+      { title: 'Our Services', path: '/services', keywords: ['services', 'offerings', 'solutions', 'business'] },
+      { title: 'Environmental Impact', path: '/impact', keywords: ['impact', 'environment', 'stats', 'statistics', 'contribution'] },
+      { title: 'Data Destruction', path: '/services/data-destruction', keywords: ['data', 'destruction', 'security', 'privacy', 'wipe'] }
+    ]
+  }
+];
+
+// Flatten all pages for searching
+const allPages = searchCategories.flatMap(category => category.pages);
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,14 +60,19 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchSuggestions, setSearchSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const aboutMenuRef = useRef<HTMLDivElement>(null);
+  const desktopSearchRef = useRef<HTMLDivElement>(null);
+  const mobileSearchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
   // Check if we're on the data destruction page to use blue theme
-  const isDataDestructionPage = pathname?.includes('/services/data-destruction') || false;
+  const isDataDestructionPage = pathname?.includes('/services/data-destruction') || 
+                               pathname?.includes('/services/data-security') || false;
   // Check if we're on the home page
   const isHomePage = pathname === '/';
   // Check if we're on login or signup pages
@@ -52,11 +102,17 @@ const Navbar = () => {
     };
   }, [isMounted]);
 
-  // Close menus when clicking outside
+  // Close suggestions when clicking outside
   useEffect(() => {
     if (!isMounted) return;
     
     const handleClickOutside = (event: MouseEvent) => {
+      if (
+        (desktopSearchRef.current && !desktopSearchRef.current.contains(event.target as Node)) &&
+        (mobileSearchRef.current && !mobileSearchRef.current.contains(event.target as Node))
+      ) {
+        setShowSuggestions(false);
+      }
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
         setIsProfileMenuOpen(false);
       }
@@ -92,12 +148,74 @@ const Navbar = () => {
     router.push('/');
   };
 
+  // Search functionality
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+      setShowSuggestions(false);
     }
   };
+
+  // Find matching pages based on search term
+  const findMatches = (query: string) => {
+    if (!query.trim()) return [];
+    
+    const searchQuery = query.toLowerCase().trim();
+    
+    // Score each page based on how well it matches the query
+    const scoredPages = allPages.map(page => {
+      let score = 0;
+      
+      // Check title match
+      if (page.title.toLowerCase().includes(searchQuery)) {
+        score += 10;
+        // Check for exact title match
+        if (page.title.toLowerCase() === searchQuery) {
+          score += 50;
+        }
+      }
+      
+      // Check keyword matches
+      page.keywords.forEach(keyword => {
+        if (keyword === searchQuery) {
+          score += 15; // Exact match
+        } else if (keyword.includes(searchQuery)) {
+          score += 8; // Keyword contains query
+        } else if (searchQuery.includes(keyword)) {
+          score += 5; // Query contains keyword
+        }
+      });
+      
+      return { ...page, score };
+    });
+    
+    // Filter out pages with no match and sort by score
+    return scoredPages
+      .filter(page => page.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5); // Limit to top 5 results
+  };
+
+  // Update suggestions as the user types
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      const matches = findMatches(searchTerm);
+      setSearchSuggestions(matches);
+      setShowSuggestions(matches.length > 0);
+      
+      // If there's an exact match with very high score, redirect immediately
+      const exactMatch = matches.find(match => match.score >= 50);
+      if (exactMatch) {
+        router.push(exactMatch.path);
+        setSearchTerm('');
+        setShowSuggestions(false);
+      }
+    } else {
+      setSearchSuggestions([]);
+      setShowSuggestions(false);
+    }
+  }, [searchTerm]);
 
   // Handle initial SSR render
   if (!isMounted) {
@@ -113,14 +231,15 @@ const Navbar = () => {
             <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <Link href="/" className="flex-shrink-0 flex items-center">
-                  <div className="w-10 h-10 relative mr-2 rounded-full">
+                  <div className="w-10 h-10 relative mr-2 rounded-md overflow-hidden bg-white">
                     <Image 
-                      src="/logo.svg" 
+                      src="/logo.jpeg" 
                       alt="EcoNirvana Logo" 
                       width={40}
                       height={40}
                       priority
-                      className="w-full h-full"
+                      className="w-full h-full scale-110"
+                      style={{ objectFit: "cover", objectPosition: "center" }}
                     />
                   </div>
                   <span className="text-xl font-bold text-white">
@@ -160,16 +279,15 @@ const Navbar = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center">
               <Link href="/" className="flex-shrink-0 flex items-center">
-                <div className={`w-10 h-10 relative mr-2 rounded-full ${
-                  isDataDestructionPage ? 'bg-white p-2' : ''
-                }`}>
+                <div className="w-10 h-10 relative mr-2 rounded-md overflow-hidden bg-white">
                   <Image 
-                    src="/logo.svg" 
+                    src="/logo.jpeg" 
                     alt="EcoNirvana Logo" 
                     width={40}
                     height={40}
                     priority
-                    className="w-full h-full"
+                    className="w-full h-full scale-110"
+                    style={{ objectFit: "cover", objectPosition: "center" }}
                   />
                 </div>
                 <span className="text-xl font-bold text-white">
@@ -181,24 +299,48 @@ const Navbar = () => {
             {/* Desktop menu */}
             <div className="hidden md:flex md:items-center md:space-x-1">              
               {!isHomePage && !isAuthPage && (
-                <form onSubmit={handleSearch} className="relative mr-2">
-                  <div className="flex items-center bg-gray-800 rounded-lg overflow-hidden">
-                    <input
-                      type="text"
-                      placeholder="Search..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="bg-transparent text-white px-3 py-1.5 text-sm focus:outline-none w-32 lg:w-40"
-                    />
-                    <button
-                      type="submit"
-                      className="p-1.5 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
-                      aria-label="Search"
-                    >
-                      <FaSearch className="h-4 w-4" />
-                    </button>
-                  </div>
-                </form>
+                <div className="relative mr-2" ref={desktopSearchRef}>
+                  <form onSubmit={handleSearch} className="relative">
+                    <div className="flex items-center bg-gray-800 rounded-lg overflow-hidden">
+                      <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="bg-transparent text-white px-3 py-1.5 text-sm focus:outline-none w-32 lg:w-40"
+                      />
+                      <button
+                        type="submit"
+                        className="p-1.5 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+                        aria-label="Search"
+                      >
+                        <FaSearch className="h-4 w-4" />
+                      </button>
+                    </div>
+                    
+                    {/* Search Suggestions */}
+                    {showSuggestions && (
+                      <div className="absolute mt-1 w-64 bg-white rounded-md shadow-lg overflow-hidden z-50">
+                        <ul className="divide-y divide-gray-100">
+                          {searchSuggestions.map((result, index) => (
+                            <li key={index}>
+                              <Link 
+                                href={result.path}
+                                className="block px-4 py-2 hover:bg-gray-50 text-gray-800"
+                                onClick={() => {
+                                  setSearchTerm('');
+                                  setShowSuggestions(false);
+                                }}
+                              >
+                                {result.title}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </form>
+                </div>
               )}
               
               {user && (
@@ -487,27 +629,52 @@ const Navbar = () => {
                 {user ? (
                   <>
                     {!isHomePage && !isAuthPage && (
-                      <form 
-                        onSubmit={handleSearch} 
-                        className="mb-2"
-                      >
-                        <div className="relative flex items-center bg-gray-800 rounded-lg overflow-hidden">
-                          <input
-                            type="text"
-                            placeholder="Search..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="flex-grow bg-transparent text-white px-3 py-2 text-sm focus:outline-none"
-                          />
-                          <button
-                            type="submit"
-                            className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
-                            aria-label="Search"
-                          >
-                            <FaSearch className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </form>
+                      <div className="relative mb-2" ref={mobileSearchRef}>
+                        <form 
+                          onSubmit={handleSearch} 
+                          className="mb-2"
+                        >
+                          <div className="relative flex items-center bg-gray-800 rounded-lg overflow-hidden">
+                            <input
+                              type="text"
+                              placeholder="Search..."
+                              value={searchTerm}
+                              onChange={(e) => setSearchTerm(e.target.value)}
+                              className="flex-grow bg-transparent text-white px-3 py-2 text-sm focus:outline-none"
+                            />
+                            <button
+                              type="submit"
+                              className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+                              aria-label="Search"
+                            >
+                              <FaSearch className="h-4 w-4" />
+                            </button>
+                          </div>
+                          
+                          {/* Search Suggestions for Mobile */}
+                          {showSuggestions && (
+                            <div className="absolute mt-1 w-full bg-white rounded-md shadow-lg overflow-hidden z-50">
+                              <ul className="divide-y divide-gray-100">
+                                {searchSuggestions.map((result, index) => (
+                                  <li key={index}>
+                                    <Link 
+                                      href={result.path}
+                                      className="block px-4 py-2 hover:bg-gray-50 text-gray-800"
+                                      onClick={() => {
+                                        setSearchTerm('');
+                                        setShowSuggestions(false);
+                                        setIsMenuOpen(false);
+                                      }}
+                                    >
+                                      {result.title}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </form>
+                      </div>
                     )}
                     <Link
                       href="/dashboard"
@@ -630,27 +797,52 @@ const Navbar = () => {
                 ) : (
                   <>
                     {!isHomePage && !isAuthPage && (
-                      <form 
-                        onSubmit={handleSearch} 
-                        className="mb-2"
-                      >
-                        <div className="relative flex items-center bg-gray-800 rounded-lg overflow-hidden">
-                          <input
-                            type="text"
-                            placeholder="Search..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="flex-grow bg-transparent text-white px-3 py-2 text-sm focus:outline-none"
-                          />
-                          <button
-                            type="submit"
-                            className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
-                            aria-label="Search"
-                          >
-                            <FaSearch className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </form>
+                      <div className="relative mb-2" ref={mobileSearchRef}>
+                        <form 
+                          onSubmit={handleSearch} 
+                          className="mb-2"
+                        >
+                          <div className="relative flex items-center bg-gray-800 rounded-lg overflow-hidden">
+                            <input
+                              type="text"
+                              placeholder="Search..."
+                              value={searchTerm}
+                              onChange={(e) => setSearchTerm(e.target.value)}
+                              className="flex-grow bg-transparent text-white px-3 py-2 text-sm focus:outline-none"
+                            />
+                            <button
+                              type="submit"
+                              className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+                              aria-label="Search"
+                            >
+                              <FaSearch className="h-4 w-4" />
+                            </button>
+                          </div>
+                          
+                          {/* Search Suggestions for Mobile */}
+                          {showSuggestions && (
+                            <div className="absolute mt-1 w-full bg-white rounded-md shadow-lg overflow-hidden z-50">
+                              <ul className="divide-y divide-gray-100">
+                                {searchSuggestions.map((result, index) => (
+                                  <li key={index}>
+                                    <Link 
+                                      href={result.path}
+                                      className="block px-4 py-2 hover:bg-gray-50 text-gray-800"
+                                      onClick={() => {
+                                        setSearchTerm('');
+                                        setShowSuggestions(false);
+                                        setIsMenuOpen(false);
+                                      }}
+                                    >
+                                      {result.title}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </form>
+                      </div>
                     )}
                     <Link
                       href="/about"

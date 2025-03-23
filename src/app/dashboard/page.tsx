@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTruck, FaTimes, FaTree } from 'react-icons/fa';
+import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTruck, FaTimes, FaTree, FaBars, FaBullhorn, FaHandsHelping, FaComments } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
 // Mock data for the dashboard
@@ -167,46 +167,61 @@ export default function DashboardPage() {
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Recycling Impact</h2>
           
-          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-xl overflow-hidden">
-            <div className="p-8 grid grid-cols-1 md:grid-cols-5 gap-6 text-white">
-              <div className="flex flex-col items-center justify-center">
-                <div className="mb-3 bg-white/10 rounded-full p-4 backdrop-blur-sm">
-                  <FaRecycle className="h-8 w-8" />
+          <div className="rounded-2xl shadow-xl overflow-hidden relative bg-green-600" style={{ height: "165px" }}>
+            {/* Background image */}
+            <div className="absolute inset-0 z-0">
+              <Image
+                src="/recyclic impact bg.jpg"
+                alt="Recycling Impact Background"
+                fill
+                priority
+                sizes="100vw"
+                className="w-full h-full"
+                style={{ objectFit: "cover", objectPosition: "center 45%" }}
+              />
+            </div>
+            
+            <div className="relative z-10 h-full flex items-center">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-white w-full px-4 md:px-8">
+                <div className="flex flex-col items-center justify-center">
+                  <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
+                    <FaRecycle className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.itemsRecycled}</h3>
+                  <p className="text-xs text-white font-medium shadow-sm">Items Recycled</p>
                 </div>
-                <h3 className="text-4xl font-bold mb-1">{recyclingStats.itemsRecycled}</h3>
-                <p className="text-sm text-green-100">Items Recycled</p>
-              </div>
-              
-              <div className="flex flex-col items-center justify-center">
-                <div className="mb-3 bg-white/10 rounded-full p-4 backdrop-blur-sm">
-                  <FaLeaf className="h-8 w-8" />
+                
+                <div className="flex flex-col items-center justify-center">
+                  <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
+                    <FaLeaf className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.co2Saved} kg</h3>
+                  <p className="text-xs text-white font-medium shadow-sm">CO<sub>2</sub> Saved</p>
                 </div>
-                <h3 className="text-4xl font-bold mb-1">{recyclingStats.co2Saved} kg</h3>
-                <p className="text-sm text-green-100">CO<sub>2</sub> Saved</p>
-              </div>
-              
-              <div className="flex flex-col items-center justify-center">
-                <div className="mb-3 bg-white/10 rounded-full p-4 backdrop-blur-sm">
-                  <FaTrophy className="h-8 w-8" />
+                
+                <div className="flex flex-col items-center justify-center">
+                  <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
+                    <FaTrophy className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.pointsEarned}</h3>
+                  <p className="text-xs text-white font-medium shadow-sm">Points Earned</p>
                 </div>
-                <h3 className="text-4xl font-bold mb-1">{recyclingStats.pointsEarned}</h3>
-                <p className="text-sm text-green-100">Points Earned</p>
-              </div>
-              
-              <div className="flex flex-col items-center justify-center">
-                <div className="mb-3 bg-white/10 rounded-full p-4 backdrop-blur-sm">
-                  <FaTree className="h-8 w-8" />
+                
+                <div className="flex flex-col items-center justify-center">
+                  <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
+                    <FaTree className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{environmentalImpact.treesPlanted}</h3>
+                  <p className="text-xs text-white font-medium shadow-sm">Trees Equivalent</p>
                 </div>
-                <h3 className="text-4xl font-bold mb-1">{environmentalImpact.treesPlanted}</h3>
-                <p className="text-sm text-green-100">Trees Equivalent</p>
-              </div>
-              
-              <div className="flex flex-col items-center justify-center">
-                <div className="mb-3 bg-white/10 rounded-full p-4 backdrop-blur-sm">
-                  <FaLightbulb className="h-8 w-8" />
+                
+                <div className="flex flex-col items-center justify-center">
+                  <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
+                    <FaLightbulb className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{environmentalImpact.energySaved}%</h3>
+                  <p className="text-xs text-white font-medium shadow-sm">Energy Saved</p>
                 </div>
-                <h3 className="text-4xl font-bold mb-1">{environmentalImpact.energySaved}%</h3>
-                <p className="text-sm text-green-100">Energy Saved</p>
               </div>
             </div>
           </div>
