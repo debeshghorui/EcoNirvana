@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaLock, FaGoogle, FaFacebook, FaUserAlt } from 'react-icons/fa';
+import { FaEnvelope, FaLock, FaGoogle, FaFacebook, FaUserAlt, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
 export default function LoginPage() {
@@ -13,11 +13,22 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDemoLoggingIn, setIsDemoLoggingIn] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   
   const router = useRouter();
-  const { login, error } = useAuth();
+  const { login, loginWithGoogle, loginWithFacebook, error } = useAuth();
+
+  // Add useEffect for client-side mounting to prevent hydration mismatch
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  // Skip rendering form content until client-side hydration is complete
+  if (!hasMounted) {
+    return <div className="min-h-screen bg-[#D5FFE5] py-12" suppressHydrationWarning={true}></div>;
+  }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -32,65 +43,80 @@ export default function LoginPage() {
         return;
       }
       
-      // Attempt login
+      console.log("Attempting login with:", { email, password: "***" });
+      
+      // Attempt login with Firebase
       const success = await login(email, password);
       
       if (success) {
         // Redirect to dashboard
         router.push('/dashboard');
       } else {
-        // Display error from auth context
+        // Display error from auth context or a generic message
         setFormError(error || 'Login failed');
+        
+        // Special handling for common errors
+        if (error) {
+          if (error.includes('not properly configured')) {
+            setFormError('Authentication service is currently unavailable. Please try again later or contact support.');
+            console.error("Authentication configuration error detected");
+          } else if (error.includes('unavailable')) {
+            setFormError('Authentication service is currently unavailable. Please check your internet connection or try again later.');
+            console.error("Authentication service unavailable");
+          }
+        }
       }
-    } catch (err) {
-      setFormError('An unexpected error occurred');
+    } catch (err: any) {
+      console.error("Login error:", err);
+      setFormError(err?.message || 'An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleDemoLogin = async () => {
+  const handleGoogleLogin = async () => {
     setFormError(null);
-    setIsDemoLoggingIn(true);
+    setIsSubmitting(true);
     
     try {
-      // Use demo credentials
-      const demoEmail = 'demo@example.com';
-      const demoPassword = 'password123';
-      
-      // Simulate typing effect
-      setEmail('');
-      setPassword('');
-      
-      // Type email character by character
-      for (let i = 0; i < demoEmail.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 50));
-        setEmail(demoEmail.substring(0, i + 1));
-      }
-      
-      // Type password character by character
-      for (let i = 0; i < demoPassword.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 50));
-        setPassword(demoPassword.substring(0, i + 1));
-      }
-      
-      // Wait a moment before submitting
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Attempt login with demo credentials
-      const success = await login(demoEmail, demoPassword);
+      console.log("Attempting Google login");
+      const success = await loginWithGoogle();
       
       if (success) {
         // Redirect to dashboard
         router.push('/dashboard');
       } else {
         // Display error from auth context
-        setFormError(error || 'Demo login failed');
+        setFormError(error || 'Google login failed');
       }
-    } catch (err) {
-      setFormError('An unexpected error occurred during demo login');
+    } catch (err: any) {
+      console.error("Google login error:", err);
+      setFormError(err?.message || 'An unexpected error occurred');
     } finally {
-      setIsDemoLoggingIn(false);
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    setFormError(null);
+    setIsSubmitting(true);
+    
+    try {
+      console.log("Attempting Facebook login");
+      const success = await loginWithFacebook();
+      
+      if (success) {
+        // Redirect to dashboard
+        router.push('/dashboard');
+      } else {
+        // Display error from auth context
+        setFormError(error || 'Facebook login failed');
+      }
+    } catch (err: any) {
+      console.error("Facebook login error:", err);
+      setFormError(err?.message || 'An unexpected error occurred');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -183,13 +209,24 @@ export default function LoginPage() {
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 bg-white placeholder-gray-500"
+                    className="block w-full pl-10 pr-10 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 bg-white placeholder-gray-500"
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <FaEyeSlash className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    ) : (
+                      <FaEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    )}
+                  </button>
                 </div>
               </div>
               
@@ -218,9 +255,9 @@ export default function LoginPage() {
               <div>
                 <button
                   type="submit"
-                  disabled={isSubmitting || isDemoLoggingIn}
+                  disabled={isSubmitting}
                   className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
-                    (isSubmitting || isDemoLoggingIn) ? 'opacity-70 cursor-not-allowed' : ''
+                    isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
                   }`}
                 >
                   {isSubmitting ? 'Signing in...' : 'Sign in'}
@@ -240,47 +277,29 @@ export default function LoginPage() {
               
               <div className="mt-6 grid grid-cols-2 gap-3">
                 <div>
-                  <a
-                    href="#"
+                  <button
+                    type="button"
+                    onClick={handleGoogleLogin}
+                    disabled={isSubmitting}
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     <FaGoogle className="h-5 w-5 text-red-500" />
                     <span className="ml-2">Google</span>
-                  </a>
+                  </button>
                 </div>
                 
                 <div>
-                  <a
-                    href="#"
+                  <button
+                    type="button"
+                    onClick={handleFacebookLogin}
+                    disabled={isSubmitting}
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     <FaFacebook className="h-5 w-5 text-blue-600" />
                     <span className="ml-2">Facebook</span>
-                  </a>
+                  </button>
                 </div>
               </div>
-              
-              {/* Demo Login Button */}
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-4"
-              >
-                <button
-                  type="button"
-                  onClick={handleDemoLogin}
-                  disabled={isSubmitting || isDemoLoggingIn}
-                  className={`w-full flex justify-center items-center py-2 px-4 border-2 border-green-600 rounded-md shadow-sm text-sm font-medium text-green-700 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
-                    (isSubmitting || isDemoLoggingIn) ? 'opacity-70 cursor-not-allowed' : ''
-                  }`}
-                >
-                  <FaUserAlt className="mr-2" />
-                  {isDemoLoggingIn ? 'Logging in...' : 'Try Demo Account'}
-                </button>
-                <p className="text-xs text-center text-gray-500 mt-2">
-                  Want to try without creating an account?
-                </p>
-              </motion.div>
             </div>
           </div>
         </div>

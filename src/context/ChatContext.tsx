@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { createChatSession } from '@/lib/gemini';
 import { usePathname } from 'next/navigation';
 
 // Define message type
@@ -41,6 +40,19 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname() || '';
 
+  // Import chat session creation function only on client side
+  const initChatSession = async () => {
+    if (typeof window === 'undefined') return null;
+    
+    try {
+      const { createChatSession } = await import('@/lib/gemini');
+      return createChatSession();
+    } catch (error) {
+      console.error("Failed to import createChatSession:", error);
+      return null;
+    }
+  };
+
   // Set isMounted on client-side
   useEffect(() => {
     setIsMounted(true);
@@ -63,7 +75,9 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (messages.length === 0) {
         setMessages([dataDestructionWelcome]);
         // Save this welcome message to localStorage to persist it
-        localStorage.setItem('chatMessages', JSON.stringify([dataDestructionWelcome]));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('chatMessages', JSON.stringify([dataDestructionWelcome]));
+        }
       }
     }
   }, [pathname, messages.length, isMounted]);
@@ -72,29 +86,35 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     if (!isMounted) return;
     
-    // Use the global session if it exists, otherwise create a new one
-    if (!globalChatSession) {
-      globalChatSession = createChatSession();
-    }
-    
-    setChatSession(globalChatSession);
-    
-    // Load messages from localStorage if available
-    const savedMessages = localStorage.getItem('chatMessages');
-    if (savedMessages) {
-      try {
-        const parsedMessages = JSON.parse(savedMessages);
-        // Convert string timestamps back to Date objects
-        const messagesWithDateObjects = parsedMessages.map((msg: any) => ({
-          ...msg,
-          timestamp: new Date(msg.timestamp)
-        }));
-        setMessages(messagesWithDateObjects);
-      } catch (error) {
-        console.error('Error parsing saved messages:', error);
+    const initializeSession = async () => {
+      // Use the global session if it exists, otherwise create a new one
+      if (!globalChatSession) {
+        globalChatSession = await initChatSession();
       }
-    }
-
+      
+      setChatSession(globalChatSession);
+      
+      // Load messages from localStorage if available
+      if (typeof window !== 'undefined') {
+        const savedMessages = localStorage.getItem('chatMessages');
+        if (savedMessages) {
+          try {
+            const parsedMessages = JSON.parse(savedMessages);
+            // Convert string timestamps back to Date objects
+            const messagesWithDateObjects = parsedMessages.map((msg: any) => ({
+              ...msg,
+              timestamp: new Date(msg.timestamp)
+            }));
+            setMessages(messagesWithDateObjects);
+          } catch (error) {
+            console.error('Error parsing saved messages:', error);
+          }
+        }
+      }
+    };
+    
+    initializeSession();
+    
     // Cleanup function
     return () => {
       // Don't destroy the global session on unmount
@@ -105,7 +125,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     if (!isMounted) return;
     
-    if (messages.length > 0) {
+    if (typeof window !== 'undefined' && messages.length > 0) {
       localStorage.setItem('chatMessages', JSON.stringify(messages));
     }
   }, [messages, isMounted]);
@@ -131,8 +151,9 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (!chatSession) {
         try {
-          // If chat session is not initialized, use the global one or create a new one
+          // If chat session is not initialized, initialize it
           if (!globalChatSession) {
+            const { createChatSession } = await import('@/lib/gemini');
             globalChatSession = createChatSession();
           }
           
@@ -184,11 +205,16 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   // Clear chat history
-  const clearChat = () => {
+  const clearChat = async () => {
     if (!isMounted) return;
     
     setMessages([]);
-    localStorage.removeItem('chatMessages');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('chatMessages');
+    }
+    
+    // Re-initialize chat session
+    const { createChatSession } = await import('@/lib/gemini');
     globalChatSession = createChatSession();
     setChatSession(globalChatSession);
   };

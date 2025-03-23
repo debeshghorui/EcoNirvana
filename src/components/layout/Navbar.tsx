@@ -13,7 +13,7 @@ const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const aboutMenuRef = useRef<HTMLDivElement>(null);
@@ -29,14 +29,14 @@ const Navbar = () => {
   const isAuthPage = pathname === '/login' || pathname === '/signup';
   const themeColor = isDataDestructionPage ? 'blue' : 'green';
 
-  // Mount check
+  // Set mounted state on client-side only
   useEffect(() => {
-    setIsMounted(true);
+    setHasMounted(true);
   }, []);
 
   // Handle scroll effect
   useEffect(() => {
-    if (!isMounted) return;
+    if (!hasMounted) return;
     
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -50,11 +50,11 @@ const Navbar = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isMounted]);
+  }, [hasMounted]);
 
   // Close menus when clicking outside
   useEffect(() => {
-    if (!isMounted) return;
+    if (!hasMounted) return;
     
     const handleClickOutside = (event: MouseEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
@@ -69,7 +69,7 @@ const Navbar = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMounted]);
+  }, [hasMounted]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -99,41 +99,12 @@ const Navbar = () => {
     }
   };
 
-  // Handle initial SSR render
-  if (!isMounted) {
+  // Return minimal navbar until client-side rendering is complete
+  if (!hasMounted) {
     return (
-      <div className="fixed top-0 left-0 right-0 z-50 h-16">
-        <div className={`absolute inset-0 ${
-          isDataDestructionPage 
-            ? 'bg-blue-600' 
-            : 'bg-gradient-to-br from-black via-gray-900 to-gray-800'
-        } transition-all duration-300`}></div>
-        <nav className="relative h-full transition-all duration-300 py-3">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <Link href="/" className="flex-shrink-0 flex items-center">
-                  <div className="w-10 h-10 relative mr-2 rounded-full">
-                    <Image 
-                      src="/logo.svg" 
-                      alt="EcoNirvana Logo" 
-                      width={40}
-                      height={40}
-                      priority
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <span className="text-xl font-bold text-white">
-                    EcoNirvana
-                  </span>
-                </Link>
-              </div>
-              <div className="hidden md:flex md:items-center md:space-x-1"></div>
-              <div className="md:hidden flex items-center"></div>
-            </div>
-          </div>
-        </nav>
-      </div>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm" suppressHydrationWarning={true}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16"></div>
+      </header>
     );
   }
 

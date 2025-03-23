@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Get API key from environment variable
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || "AIzaSyAgpew0EviXju6CUFPIPzzhBcNKaZKkulQ";
+const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || '';
 
 // Offline mode for development - set to true to use mock responses when API is unavailable
 const OFFLINE_MODE = true;
@@ -14,9 +14,14 @@ let genAI: GoogleGenerativeAI;
 let geminiModel: any;
 
 try {
-  genAI = new GoogleGenerativeAI(apiKey);
-  // Get the model
-  geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+  // Only initialize if we have an API key or are in development mode
+  if (apiKey || isDevelopment) {
+    genAI = new GoogleGenerativeAI(apiKey);
+    // Get the model
+    geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+  } else {
+    console.error("Missing Gemini API key");
+  }
 } catch (error) {
   console.error("Error initializing Gemini API:", error);
   // In development, we'll continue with mock responses

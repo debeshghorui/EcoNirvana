@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaUser, FaEnvelope, FaLock, FaGoogle, FaFacebook } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaGoogle, FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
 export default function SignupPage() {
@@ -16,9 +16,30 @@ export default function SignupPage() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   
   const router = useRouter();
-  const { signup, error } = useAuth();
+  const { signup, loginWithGoogle, loginWithFacebook, error } = useAuth();
+
+  // Add useEffect for client-side mounting to prevent hydration mismatch
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  // Skip rendering form content until client-side hydration is complete
+  if (!hasMounted) {
+    return <div className="min-h-screen bg-[#D5FFE5] py-12" suppressHydrationWarning={true}></div>;
+  }
+
+  // Password validation function
+  const validatePassword = (password: string): string | null => {
+    if (password.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    return null;
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -29,6 +50,14 @@ export default function SignupPage() {
       // Validate form
       if (!name || !email || !password || !confirmPassword) {
         setFormError('Please fill in all fields');
+        setIsSubmitting(false);
+        return;
+      }
+      
+      // Validate password strength
+      const passwordError = validatePassword(password);
+      if (passwordError) {
+        setFormError(passwordError);
         setIsSubmitting(false);
         return;
       }
@@ -45,18 +74,79 @@ export default function SignupPage() {
         return;
       }
       
-      // Attempt signup
+      console.log("Attempting signup with:", { name, email, password: "***" });
+      
+      // Attempt signup with Firebase
       const success = await signup(name, email, password);
       
       if (success) {
         // Redirect to dashboard
         router.push('/dashboard');
       } else {
-        // Display error from auth context
+        // Display error from auth context or a generic message
         setFormError(error || 'Signup failed');
+        
+        // Special handling for common errors
+        if (error) {
+          if (error.includes('not properly configured')) {
+            setFormError('Authentication service is currently unavailable. Please try again later or contact support.');
+            console.error("Authentication configuration error detected");
+          } else if (error.includes('unavailable')) {
+            setFormError('Authentication service is currently unavailable. Please check your internet connection or try again later.');
+            console.error("Authentication service unavailable");
+          }
+        }
       }
-    } catch (err) {
-      setFormError('An unexpected error occurred');
+    } catch (err: any) {
+      console.error("Signup error:", err);
+      setFormError(err?.message || 'An unexpected error occurred');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Add handler functions for social logins
+  const handleGoogleSignup = async () => {
+    setFormError(null);
+    setIsSubmitting(true);
+    
+    try {
+      console.log("Attempting Google signup");
+      const success = await loginWithGoogle();
+      
+      if (success) {
+        // Redirect to dashboard
+        router.push('/dashboard');
+      } else {
+        // Display error from auth context
+        setFormError(error || 'Google signup failed');
+      }
+    } catch (err: any) {
+      console.error("Google signup error:", err);
+      setFormError(err?.message || 'An unexpected error occurred');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFacebookSignup = async () => {
+    setFormError(null);
+    setIsSubmitting(true);
+    
+    try {
+      console.log("Attempting Facebook signup");
+      const success = await loginWithFacebook();
+      
+      if (success) {
+        // Redirect to dashboard
+        router.push('/dashboard');
+      } else {
+        // Display error from auth context
+        setFormError(error || 'Facebook signup failed');
+      }
+    } catch (err: any) {
+      console.error("Facebook signup error:", err);
+      setFormError(err?.message || 'An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }
@@ -173,16 +263,27 @@ export default function SignupPage() {
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 bg-white placeholder-gray-500"
+                    className="block w-full pl-10 pr-10 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 bg-white placeholder-gray-500"
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <FaEyeSlash className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    ) : (
+                      <FaEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    )}
+                  </button>
                 </div>
                 <p className="mt-1 text-xs text-gray-500">
-                  Password must be at least 8 characters long
+                  Password must be at least 6 characters long
                 </p>
               </div>
               
@@ -197,13 +298,24 @@ export default function SignupPage() {
                   <input
                     id="confirm-password"
                     name="confirm-password"
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 bg-white placeholder-gray-500"
+                    className="block w-full pl-10 pr-10 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-800 bg-white placeholder-gray-500"
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <FaEyeSlash className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    ) : (
+                      <FaEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    )}
+                  </button>
                 </div>
               </div>
               
@@ -247,29 +359,33 @@ export default function SignupPage() {
                   <div className="w-full border-t border-gray-300"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                  <span className="px-2 bg-white text-gray-500">Or sign up with</span>
                 </div>
               </div>
               
               <div className="mt-6 grid grid-cols-2 gap-3">
                 <div>
-                  <a
-                    href="#"
-                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  <button
+                    type="button"
+                    onClick={handleGoogleSignup}
+                    disabled={isSubmitting}
+                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     <FaGoogle className="h-5 w-5 text-red-500" />
                     <span className="ml-2">Google</span>
-                  </a>
+                  </button>
                 </div>
                 
                 <div>
-                  <a
-                    href="#"
-                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  <button
+                    type="button"
+                    onClick={handleFacebookSignup}
+                    disabled={isSubmitting}
+                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     <FaFacebook className="h-5 w-5 text-blue-600" />
                     <span className="ml-2">Facebook</span>
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
