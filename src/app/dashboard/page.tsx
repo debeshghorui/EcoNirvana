@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTruck, FaTimes, FaTree, FaBars, FaBullhorn, FaHandsHelping, FaComments } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
+// Move mock data outside of the component to prevent hydration issues
 // Mock data for the dashboard
 const recyclingStats = {
   itemsRecycled: 12,
@@ -52,13 +53,19 @@ export default function DashboardPage() {
   const { user, loading, logout, justLoggedOut } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showContactModal, setShowContactModal] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
+  
+  // Client-side initialization
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
   
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (!loading && !user && !justLoggedOut) {
+    if (hasMounted && !loading && !user && !justLoggedOut) {
       router.push('/login');
     }
-  }, [user, loading, router, justLoggedOut]);
+  }, [user, loading, router, justLoggedOut, hasMounted]);
   
   // Handle logout
   const handleLogout = () => {
@@ -71,26 +78,28 @@ export default function DashboardPage() {
     setShowContactModal(!showContactModal);
   };
   
-  // Show loading state
-  if (loading || !user) {
+  // Show minimal loading state during SSR to prevent hydration mismatch
+  if (!hasMounted || loading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white">
-        <div className="text-center">
-          <div className="relative w-20 h-20 mx-auto mb-4">
-            <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
-            <div className="absolute inset-0 rounded-full border-4 border-t-green-500 animate-spin"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <FaRecycle className="h-8 w-8 text-green-500" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white" suppressHydrationWarning={true}>
+        {hasMounted && (
+          <div className="text-center">
+            <div className="relative w-20 h-20 mx-auto mb-4">
+              <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
+              <div className="absolute inset-0 rounded-full border-4 border-t-green-500 animate-spin"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <FaRecycle className="h-8 w-8 text-green-500" />
+              </div>
             </div>
+            <p className="text-gray-600 font-medium">Loading your dashboard...</p>
           </div>
-          <p className="text-gray-600 font-medium">Loading your dashboard...</p>
-        </div>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white" suppressHydrationWarning={true}>
       {/* Welcome Banner */}
       <section className="relative bg-gradient-to-r from-green-600 to-green-500 text-white overflow-hidden">
         {/* Background pattern */}

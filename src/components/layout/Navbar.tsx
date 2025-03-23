@@ -58,7 +58,7 @@ const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchSuggestions, setSearchSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -79,14 +79,14 @@ const Navbar = () => {
   const isAuthPage = pathname === '/login' || pathname === '/signup';
   const themeColor = isDataDestructionPage ? 'blue' : 'green';
 
-  // Mount check
+  // Set mounted state on client-side only
   useEffect(() => {
-    setIsMounted(true);
+    setHasMounted(true);
   }, []);
 
   // Handle scroll effect
   useEffect(() => {
-    if (!isMounted) return;
+    if (!hasMounted) return;
     
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -100,11 +100,11 @@ const Navbar = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isMounted]);
+  }, [hasMounted]);
 
   // Close suggestions when clicking outside
   useEffect(() => {
-    if (!isMounted) return;
+    if (!hasMounted) return;
     
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -125,7 +125,7 @@ const Navbar = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMounted]);
+  }, [hasMounted]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -157,6 +157,7 @@ const Navbar = () => {
     }
   };
 
+<<<<<<< HEAD
   // Find matching pages based on search term
   const findMatches = (query: string) => {
     if (!query.trim()) return [];
@@ -253,6 +254,14 @@ const Navbar = () => {
           </div>
         </nav>
       </div>
+=======
+  // Return minimal navbar until client-side rendering is complete
+  if (!hasMounted) {
+    return (
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm" suppressHydrationWarning={true}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16"></div>
+      </header>
+>>>>>>> bbd398848c4f2d2605d1c4f4be6c570edeea6e86
     );
   }
 
