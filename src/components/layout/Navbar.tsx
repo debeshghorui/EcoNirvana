@@ -157,7 +157,6 @@ const Navbar = () => {
     }
   };
 
-<<<<<<< HEAD
   // Find matching pages based on search term
   const findMatches = (query: string) => {
     if (!query.trim()) return [];
@@ -218,50 +217,12 @@ const Navbar = () => {
     }
   }, [searchTerm]);
 
-  // Handle initial SSR render
-  if (!isMounted) {
-    return (
-      <div className="fixed top-0 left-0 right-0 z-50 h-16">
-        <div className={`absolute inset-0 ${
-          isDataDestructionPage 
-            ? 'bg-blue-600' 
-            : 'bg-gradient-to-br from-black via-gray-900 to-gray-800'
-        } transition-all duration-300`}></div>
-        <nav className="relative h-full transition-all duration-300 py-3">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <Link href="/" className="flex-shrink-0 flex items-center">
-                  <div className="w-10 h-10 relative mr-2 rounded-md overflow-hidden bg-white">
-                    <Image 
-                      src="/logo.jpeg" 
-                      alt="EcoNirvana Logo" 
-                      width={40}
-                      height={40}
-                      priority
-                      className="w-full h-full scale-110"
-                      style={{ objectFit: "cover", objectPosition: "center" }}
-                    />
-                  </div>
-                  <span className="text-xl font-bold text-white">
-                    EcoNirvana
-                  </span>
-                </Link>
-              </div>
-              <div className="hidden md:flex md:items-center md:space-x-1"></div>
-              <div className="md:hidden flex items-center"></div>
-            </div>
-          </div>
-        </nav>
-      </div>
-=======
   // Return minimal navbar until client-side rendering is complete
   if (!hasMounted) {
     return (
       <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm" suppressHydrationWarning={true}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16"></div>
       </header>
->>>>>>> bbd398848c4f2d2605d1c4f4be6c570edeea6e86
     );
   }
 

@@ -36,13 +36,13 @@ if (!isConfigValid) {
 // Development fallback config - ONLY FOR DEVELOPMENT
 // In production you should use environment variables
 const devFallbackConfig = {
-  apiKey: "AIzaSyACYO628-wFisQ8t98I-RZR8MgskuH-tYI",
-  authDomain: "econirvana-a290f.firebaseapp.com",
-  projectId: "econirvana-a290f",
-  storageBucket: "econirvana-a290f.appspot.com",
-  messagingSenderId: "296278406913",
-  appId: "1:296278406913:web:2d7d15d817c406e53f4d00",
-  measurementId: "G-339W4RX5G4"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
 // Use environment variables if valid, otherwise use dev fallback in development

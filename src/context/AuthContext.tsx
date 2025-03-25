@@ -70,13 +70,13 @@ async function initializeFirebase(): Promise<FirebaseServices> {
 
     // Firebase configuration
     const firebaseConfig = {
-      apiKey: "AIzaSyACYO628-wFisQ8t98I-RZR8MgskuH-tYI",
-      authDomain: "econirvana-a290f.firebaseapp.com",
-      projectId: "econirvana-a290f",
-      storageBucket: "econirvana-a290f.appspot.com",
-      messagingSenderId: "296278406913",
-      appId: "1:296278406913:web:2d7d15d817c406e53f4d00",
-      measurementId: "G-339W4RX5G4"
+      apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+      authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+      appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+      measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
     };
 
     // Initialize Firebase only once
@@ -187,10 +187,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setError(null);
       
       // Import required functions
-      const { signInWithPopup } = await import('firebase/auth');
+      const { signInWithPopup, signInWithRedirect, getRedirectResult } = await import('firebase/auth');
       
-      // Check if we're in a redirect
+      // Check if we're returning from a redirect
       if (typeof window !== 'undefined') {
+        try {
+          const result = await getRedirectResult(firebase.auth);
+          if (result) {
+            console.log("Redirect login successful for user:", result.user.email);
+            setLoading(false);
+            return true;
+          }
+        } catch (redirectError: any) {
+          console.error("Redirect result error:", redirectError.code, redirectError.message);
+        }
+        
         const urlParams = new URLSearchParams(window.location.search);
         const mode = urlParams.get('mode');
         const oobCode = urlParams.get('oobCode');
@@ -204,30 +215,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       console.log("Starting social login process with provider:", provider.providerId);
-      const result = await signInWithPopup(firebase.auth, provider);
-      const firebaseUser = result.user;
-      console.log("Social login successful for user:", firebaseUser.email);
       
-      setLoading(false);
-      return true;
+      try {
+        // First try popup method
+        const result = await signInWithPopup(firebase.auth, provider);
+        const firebaseUser = result.user;
+        console.log("Social login successful for user:", firebaseUser.email);
+        
+        setLoading(false);
+        return true;
+      } catch (popupError: any) {
+        // If popup fails with specific errors, try redirect method
+        console.error("Popup error:", popupError.code, popupError.message);
+        
+        if (popupError.code === 'auth/popup-blocked' || 
+            popupError.code === 'auth/popup-closed-by-user' ||
+            popupError.code === 'auth/cancelled-popup-request') {
+          
+          console.log("Popup was blocked or closed, trying redirect method instead");
+          
+          // Inform user that we're switching to redirect method
+          setError('Popup was blocked. Redirecting to login page...');
+          
+          // Short delay to show the message
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          
+          // Try redirect method instead
+          await signInWithRedirect(firebase.auth, provider);
+          return false; // The page will reload, so we return false here
+        }
+        
+        // Handle other errors
+        if (popupError.code === 'auth/account-exists-with-different-credential') {
+          setError('An account already exists with the same email address but different sign-in credentials.');
+        } else if (popupError.code === 'auth/network-request-failed') {
+          setError('Network error. Please check your internet connection.');
+        } else {
+          setError(`Social login failed: ${popupError.message || 'Unknown error'}`);
+        }
+        
+        throw popupError; // Re-throw to be caught by outer try/catch
+      }
     } catch (err: any) {
       console.error('Social login error:', err.code, err.message);
-      
-      // Handle specific Firebase auth errors for social login
-      if (err.code === 'auth/popup-closed-by-user') {
-        setError('Login was cancelled.');
-      } else if (err.code === 'auth/account-exists-with-different-credential') {
-        setError('An account already exists with the same email address but different sign-in credentials.');
-      } else if (err.code === 'auth/cancelled-popup-request') {
-        setError('The popup has been closed by the user before finalizing the operation.');
-      } else if (err.code === 'auth/popup-blocked') {
-        setError('The popup was blocked by the browser. Please check your popup blocker settings.');
-      } else if (err.code === 'auth/network-request-failed') {
-        setError('Network error. Please check your internet connection.');
-      } else {
-        setError(`Social login failed: ${err.message || 'Unknown error'}`);
-      }
-      
       setLoading(false);
       return false;
     }
