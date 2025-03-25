@@ -22,6 +22,8 @@ type User = {
   name: string;
   email: string;
   photoURL?: string;
+  profilePicture?: string;
+  dateOfBirth?: string;
 };
 
 // Define auth context type
@@ -33,6 +35,7 @@ type AuthContextType = {
   loginWithGoogle: () => Promise<boolean>;
   loginWithFacebook: () => Promise<boolean>;
   logout: () => void;
+  updateProfile: (data: Partial<User>) => void;
   error: string | null;
   justLoggedOut: boolean;
 };
@@ -46,6 +49,7 @@ const AuthContext = createContext<AuthContextType>({
   loginWithGoogle: async () => false,
   loginWithFacebook: async () => false,
   logout: () => {},
+  updateProfile: () => {},
   error: null,
   justLoggedOut: false,
 });
@@ -146,6 +150,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               name: firebaseUser.displayName || 'User',
               email: firebaseUser.email || '',
               photoURL: firebaseUser.photoURL || undefined,
+              profilePicture: firebaseUser.photoURL || undefined,
+              dateOfBirth: firebaseUser.metadata?.creationTime,
             };
             setUser(userData);
           } else {
@@ -403,6 +409,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Add the updateProfile function
+  const updateProfile = (data: Partial<User>) => {
+    setUser(prevUser => {
+      if (!prevUser) return null;
+      return {
+        ...prevUser,
+        ...data
+      };
+    });
+  };
+
   const value = {
     user,
     loading,
@@ -411,6 +428,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loginWithGoogle,
     loginWithFacebook,
     logout,
+    updateProfile,
     error,
     justLoggedOut,
   };

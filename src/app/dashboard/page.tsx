@@ -100,7 +100,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white" suppressHydrationWarning={true}>
-      {/* Welcome Banner */}
+      {/* Combined Welcome Banner and Recycling Impact */}
       <section className="relative bg-gradient-to-r from-green-600 to-green-500 text-white overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 overflow-hidden opacity-10">
@@ -114,7 +114,8 @@ export default function DashboardPage() {
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 relative z-10">
-          <div className="md:flex md:items-center md:justify-between">
+          {/* Welcome Header */}
+          <div className="md:flex md:items-center md:justify-between mb-10">
             <div>
               <motion.h1 
                 initial={{ opacity: 0, y: 20 }}
@@ -155,6 +156,56 @@ export default function DashboardPage() {
               </button>
             </motion.div>
           </div>
+
+          {/* Recycling Impact Metrics */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 mb-2"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-white">
+              <div className="flex flex-col items-center justify-center">
+                <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
+                  <FaRecycle className="h-6 w-6" />
+                </div>
+                <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.itemsRecycled}</h3>
+                <p className="text-xs text-white font-medium shadow-sm">Items Recycled</p>
+              </div>
+              
+              <div className="flex flex-col items-center justify-center">
+                <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
+                  <FaLeaf className="h-6 w-6" />
+                </div>
+                <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.co2Saved} kg</h3>
+                <p className="text-xs text-white font-medium shadow-sm">CO<sub>2</sub> Saved</p>
+              </div>
+              
+              <div className="flex flex-col items-center justify-center">
+                <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
+                  <FaTrophy className="h-6 w-6" />
+                </div>
+                <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.pointsEarned}</h3>
+                <p className="text-xs text-white font-medium shadow-sm">Points Earned</p>
+              </div>
+              
+              <div className="flex flex-col items-center justify-center">
+                <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
+                  <FaTree className="h-6 w-6" />
+                </div>
+                <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{environmentalImpact.treesPlanted}</h3>
+                <p className="text-xs text-white font-medium shadow-sm">Trees Equivalent</p>
+              </div>
+              
+              <div className="flex flex-col items-center justify-center">
+                <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
+                  <FaLightbulb className="h-6 w-6" />
+                </div>
+                <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{environmentalImpact.energySaved}%</h3>
+                <p className="text-xs text-white font-medium shadow-sm">Energy Saved</p>
+              </div>
+            </div>
+          </motion.div>
         </div>
         
         {/* Wave divider */}
@@ -167,75 +218,6 @@ export default function DashboardPage() {
       
       {/* Dashboard Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        {/* Environmental Impact Statistics */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="mb-12"
-        >
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Recycling Impact</h2>
-          
-          <div className="rounded-2xl shadow-xl overflow-hidden relative bg-green-600" style={{ height: "165px" }}>
-            {/* Background image */}
-            <div className="absolute inset-0 z-0">
-              <Image
-                src="/recyclic impact bg.jpg"
-                alt="Recycling Impact Background"
-                fill
-                priority
-                sizes="100vw"
-                className="w-full h-full"
-                style={{ objectFit: "cover", objectPosition: "center 45%" }}
-              />
-            </div>
-            
-            <div className="relative z-10 h-full flex items-center">
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-white w-full px-4 md:px-8">
-                <div className="flex flex-col items-center justify-center">
-                  <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
-                    <FaRecycle className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.itemsRecycled}</h3>
-                  <p className="text-xs text-white font-medium shadow-sm">Items Recycled</p>
-                </div>
-                
-                <div className="flex flex-col items-center justify-center">
-                  <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
-                    <FaLeaf className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.co2Saved} kg</h3>
-                  <p className="text-xs text-white font-medium shadow-sm">CO<sub>2</sub> Saved</p>
-                </div>
-                
-                <div className="flex flex-col items-center justify-center">
-                  <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
-                    <FaTrophy className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.pointsEarned}</h3>
-                  <p className="text-xs text-white font-medium shadow-sm">Points Earned</p>
-                </div>
-                
-                <div className="flex flex-col items-center justify-center">
-                  <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
-                    <FaTree className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{environmentalImpact.treesPlanted}</h3>
-                  <p className="text-xs text-white font-medium shadow-sm">Trees Equivalent</p>
-                </div>
-                
-                <div className="flex flex-col items-center justify-center">
-                  <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
-                    <FaLightbulb className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{environmentalImpact.energySaved}%</h3>
-                  <p className="text-xs text-white font-medium shadow-sm">Energy Saved</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-        
         {/* Quick Actions */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -249,7 +231,7 @@ export default function DashboardPage() {
             {/* Recycle Now */}
             <motion.div 
               whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
+              className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
             >
               <Link href="/recycle" className="block">
                 <div className="p-6 flex flex-col items-center">
@@ -265,7 +247,7 @@ export default function DashboardPage() {
             {/* Find Locations */}
             <motion.div 
               whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
+              className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
             >
               <Link href="/locations" className="block">
                 <div className="p-6 flex flex-col items-center">
@@ -281,7 +263,7 @@ export default function DashboardPage() {
             {/* Doorstep Collection */}
             <motion.div 
               whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
+              className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
             >
               <Link href="/doorstep" className="block">
                 <div className="p-6 flex flex-col items-center">
@@ -297,7 +279,7 @@ export default function DashboardPage() {
             {/* My Activity */}
             <motion.div 
               whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
+              className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
             >
               <Link href="/activity" className="block">
                 <div className="p-6 flex flex-col items-center">
@@ -313,7 +295,7 @@ export default function DashboardPage() {
             {/* Rewards */}
             <motion.div 
               whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
+              className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
             >
               <Link href="/rewards" className="block">
                 <div className="p-6 flex flex-col items-center">
