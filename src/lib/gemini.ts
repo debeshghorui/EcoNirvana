@@ -247,11 +247,7 @@ When users are on our Secure Data Destruction Services page, emphasize the follo
 If asked about data destruction services, provide information about our secure data destruction services without mentioning "page" or referring to the current location. Focus on the services themselves.
 
 If you don't know the answer to a question, don't make up information. Instead, suggest that the user contact our customer service team for more specific information.` }],
-        },
-        {
-          role: "model",
-          parts: [{ text: "I'm EcoBot, your friendly e-waste recycling assistant at EcoNirvana! I'm here to help with any questions about our recycling services, environmental impact of e-waste, or how to properly dispose of your electronic devices. How can I assist you today?" }],
-        },
+        }
       ],
       generationConfig: {
         maxOutputTokens: 500,

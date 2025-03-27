@@ -58,30 +58,6 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsMounted(true);
   }, []);
 
-  // Reset chat session when navigating to data destruction page
-  useEffect(() => {
-    if (!isMounted) return;
-    
-    if (pathname.includes('/services/data-destruction')) {
-      // Add a welcome message specific to the data destruction page
-      const dataDestructionWelcome: Message = {
-        id: Date.now().toString(),
-        role: 'bot',
-        content: "Welcome to our Secure Data Destruction Services! I can help answer questions about our data destruction methods, security standards, and how we protect your sensitive information. How can I assist you today?",
-        timestamp: new Date(),
-      };
-      
-      // Only add the welcome message if there are no messages yet
-      if (messages.length === 0) {
-        setMessages([dataDestructionWelcome]);
-        // Save this welcome message to localStorage to persist it
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('chatMessages', JSON.stringify([dataDestructionWelcome]));
-        }
-      }
-    }
-  }, [pathname, messages.length, isMounted]);
-
   // Initialize chat session
   useEffect(() => {
     if (!isMounted) return;

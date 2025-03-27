@@ -118,25 +118,6 @@ const ChatBot: React.FC = () => {
   // Check if we're on the data destruction page to use blue theme
   const isDataDestructionPage = pathname.includes('/services/data-destruction');
 
-  // Set default welcome message based on current page
-  useEffect(() => {
-    if (messages.length === 0 && isOpen && isDataDestructionPage && !initialMessageSentRef.current['welcome']) {
-      initialMessageSentRef.current['welcome'] = true;
-      sendMessage("Show me information about data destruction services");
-    }
-  }, [isOpen, isDataDestructionPage, messages.length, sendMessage]);
-
-  // Set initial question based on page
-  useEffect(() => {
-    if (pathname && pathname !== '/' && !initialMessageSentRef.current[pathname]) {
-      // Only send once per pathname
-      initialMessageSentRef.current[pathname] = true;
-      // Send a default message based on the current page
-      const pageName = pathname.split('/').pop() || '';
-      sendMessage(`Tell me about ${pageName}`);
-    }
-  }, [pathname, sendMessage]);
-
   return (
     <>
       {/* Chat toggle button */}
