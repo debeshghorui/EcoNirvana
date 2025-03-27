@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 
 // Define message type
@@ -58,30 +58,6 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsMounted(true);
   }, []);
 
-  // Reset chat session when navigating to data destruction page
-  useEffect(() => {
-    if (!isMounted) return;
-    
-    if (pathname.includes('/services/data-destruction')) {
-      // Add a welcome message specific to the data destruction page
-      const dataDestructionWelcome: Message = {
-        id: Date.now().toString(),
-        role: 'bot',
-        content: "Welcome to our Secure Data Destruction Services! I can help answer questions about our data destruction methods, security standards, and how we protect your sensitive information. How can I assist you today?",
-        timestamp: new Date(),
-      };
-      
-      // Only add the welcome message if there are no messages yet
-      if (messages.length === 0) {
-        setMessages([dataDestructionWelcome]);
-        // Save this welcome message to localStorage to persist it
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('chatMessages', JSON.stringify([dataDestructionWelcome]));
-        }
-      }
-    }
-  }, [pathname, messages.length, isMounted]);
-
   // Initialize chat session
   useEffect(() => {
     if (!isMounted) return;
@@ -131,7 +107,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [messages, isMounted]);
 
   // Send message to Gemini API and get response
-  const sendMessage = async (content: string) => {
+  const sendMessage = useCallback(async (content: string) => {
     if (!isMounted || !content.trim()) return;
 
     // Create a new user message
@@ -202,10 +178,10 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isMounted, chatSession]);
 
   // Clear chat history
-  const clearChat = async () => {
+  const clearChat = useCallback(async () => {
     if (!isMounted) return;
     
     setMessages([]);
@@ -217,7 +193,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const { createChatSession } = await import('@/lib/gemini');
     globalChatSession = createChatSession();
     setChatSession(globalChatSession);
-  };
+  }, [isMounted]);
 
   return (
     <ChatContext.Provider value={{ messages, isLoading, sendMessage, clearChat }}>

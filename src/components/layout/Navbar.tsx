@@ -60,7 +60,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchSuggestions, setSearchSuggestions] = useState<any[]>([]);
+  const [searchSuggestions, setSearchSuggestions] = useState<Array<{title: string; path: string; score: number}>>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const aboutMenuRef = useRef<HTMLDivElement>(null);
@@ -82,8 +82,6 @@ const Navbar = () => {
   // Only show search if not on excluded pages or if user is logged in
   const showSearch = !isHomePage && !isAuthPage && !(isHideSearchPage && !user);
   
-  const themeColor = isDataDestructionPage ? '#0A1533' : 'green';
-
   // Set mounted state on client-side only
   useEffect(() => {
     setIsMounted(true);
@@ -220,22 +218,22 @@ const Navbar = () => {
       setSearchSuggestions([]);
       setShowSuggestions(false);
     }
-  }, [searchTerm]);
+  }, [searchTerm, router]);
 
   // Handle navigation back
   const handleBackNavigation = () => {
     router.back();
   };
 
-  // If on auth page, show simplified navbar
-  if (isAuthPage) {
+  // Handle initial SSR render
+  if (!isMounted) {
     return (
       <div className="fixed top-0 left-0 right-0 z-50 h-16">
-        <div className="absolute inset-0 bg-[#0A1533] transition-all duration-300">
-          {scrolled && (
-            <div className="absolute inset-0 bg-[#0A1533]/90 shadow-lg shadow-black/30"></div>
-          )}
-        </div>
+        <div className={`absolute inset-0 ${
+          isDataDestructionPage 
+            ? 'bg-[#0A1533]' 
+            : 'bg-[#0A1533]'
+        } transition-all duration-300`}></div>
         <nav className="relative h-full transition-all duration-300 py-3">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center">

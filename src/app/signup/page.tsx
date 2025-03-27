@@ -124,14 +124,28 @@ export default function SignupPage() {
     
     try {
       console.log("Attempting Google signup");
+      
+      // Display a loading message for better UX
+      setFormError("Connecting to Google...");
+      
       const success = await loginWithGoogle();
       
       if (success) {
         // Redirect to dashboard
         router.push('/dashboard');
       } else {
-        // Display error from auth context
-        setFormError(error || 'Google signup failed');
+        // Get the error from context
+        if (error) {
+          if (error.includes('popup')) {
+            setFormError('Login popup was blocked. Please check your browser settings or try again.');
+          } else if (error.includes('network')) {
+            setFormError('Network error. Please check your internet connection and try again.');
+          } else {
+            setFormError(error);
+          }
+        } else {
+          setFormError('Google signup failed. Please try again or use email registration.');
+        }
       }
     } catch (err: any) {
       console.error("Google signup error:", err);

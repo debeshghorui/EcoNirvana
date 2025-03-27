@@ -140,11 +140,11 @@ function generateMockResponse(prompt: string): string {
   }
   
   if (promptLower.includes("data") || promptLower.includes("security")) {
-    return "Data security is our priority. All devices undergo secure data wiping that meets DoD standards, or physical destruction for storage devices that cannot be wiped. We provide certificates of destruction for your peace of mind.";
+    return "Data security is our priority. All devices undergo secure data wiping that meets DoD 5220.22-M standards, or physical destruction for storage devices that cannot be wiped. We provide certificates of destruction for your peace of mind.";
   }
   
   if (promptLower.includes("location") || promptLower.includes("where")) {
-    return "We have multiple drop-off locations across the city. You can find the nearest location by using the map feature on our website or mobile app.";
+    return "We have multiple drop-off locations across the city including our Main Facility, Downtown Drop-off Center, Westside Collection Point, Northside Recycling Hub, Eastside Collection Center, and Southside Drop-off Point. You can find the nearest location using our website's map feature.";
   }
   
   // Default response
@@ -153,24 +153,28 @@ function generateMockResponse(prompt: string): string {
 
 // E-waste recycling knowledge base
 const ewasteKnowledge = `
-EcoRecycle E-Waste Recycling Services Information:
+EcoNirvana E-Waste Recycling Services Information:
 
 Services Offered:
-1. Residential E-Waste Collection: Free pickup service for households with electronic waste.
-2. Business IT Asset Disposition: Secure data destruction and recycling for businesses.
-3. E-Waste Drop-off Centers: Convenient locations for dropping off electronic waste.
-4. Community Collection Events: Regular events in different neighborhoods.
-5. Educational Programs: Workshops and resources about responsible e-waste management.
+1. Residential E-Waste Recycling: Convenient recycling solutions for households.
+2. Business Solutions: Tailored recycling programs for businesses of all sizes including IT asset disposition.
+3. Data Destruction: Secure data wiping and physical destruction services with certification.
+4. Pickup Services: Convenient collection from your location for both residential and commercial clients.
+5. Community Events: Regular e-waste collection events in different neighborhoods.
+6. Zero Landfill Policy: Commitment to ensuring no e-waste ends up in landfills.
 
-Accepted Items:
-- Computers, laptops, and servers
-- Monitors, TVs, and displays
-- Printers, scanners, and fax machines
-- Mobile phones and tablets
-- Keyboards, mice, and peripherals
-- Cables and wires
-- Batteries (must be removed from devices)
-- Small household electronics
+Recycling Options:
+1. Drop Off: Bring your e-waste to one of our collection centers.
+2. Schedule Pickup: We'll come to your location to collect your e-waste.
+3. Mail In: Request a shipping label and send your e-waste to us.
+4. Business Collection: Special service for businesses with large volumes.
+5. Educational Resources: Learn about e-waste recycling and its impact.
+
+Accepted Items & Reward Points:
+- Small Electronics (30 points): Smartphones, tablets, e-readers, small gadgets
+- Medium Electronics (50 points): Laptops, monitors, printers, small appliances
+- Large Electronics (100 points): Desktop computers, TVs, servers, large appliances
+- We also accept accessories like keyboards, mice, cables, and chargers
 
 Not Accepted:
 - Large appliances (refrigerators, washing machines)
@@ -179,31 +183,39 @@ Not Accepted:
 - Medical equipment
 - Items with leaking batteries
 
+Drop-off Locations:
+- EcoNirvana Main Facility: 123 Recycling Way, Green City, EC 12345
+- Downtown Drop-off Center: 456 Central Ave, Green City, EC 12346
+- Westside Collection Point: 789 West Blvd, Green City, EC 12347
+- Northside Recycling Hub: 101 North Park, Green City, EC 12348
+- Eastside Collection Center: 202 East Road, Green City, EC 12349
+- Southside Drop-off Point: 303 South Street, Green City, EC 12350
+
+Data Security:
+- Secure data wiping that meets DoD 5220.22-M standards
+- Degaussing for magnetic media
+- Physical destruction for devices that cannot be wiped
+- Certificates of destruction for your records and compliance requirements
+- Certified services compliant with NIST 800-88 guidelines, GDPR, HIPAA, and other data protection standards
+- Detailed documentation of the destruction process
+
 Environmental Impact:
 - E-waste contains toxic materials like lead, mercury, and cadmium
 - Proper recycling prevents these toxins from entering landfills and water supplies
 - Recycling one million laptops saves energy equivalent to electricity used by 3,500 homes in a year
 - 95-98% of materials in electronics can be recovered and reused
 
-Data Security:
-- All data storage devices undergo secure data wiping or physical destruction
-- Certificates of destruction available for businesses
-- Compliant with all relevant data protection regulations
-
-Locations:
-- Main Recycling Center: 123 Green Street, Eco City
-- Downtown Drop-off: 456 Recycle Avenue
-- Westside Collection Point: 789 Sustainability Boulevard
-
-Hours of Operation:
-- Monday to Friday: 9am - 6pm
-- Saturday: 10am - 4pm
-- Sunday: Closed
+Rewards Program:
+- Earn points based on the type and size of electronics you recycle
+- For drop-offs, points are credited instantly
+- For pickups, points are usually credited within 24 hours
+- For mail-in recycling, points are credited within 3-5 business days
+- View your complete recycling history in the Activity section of your account
 
 Contact Information:
 - Phone: (555) 123-4567
-- Email: info@ecorecycle.com
-- Website: www.ecorecycle.com
+- Email: info@econirvana.com
+- Website: www.econirvana.com
 `;
 
 // Function to create a chat session
@@ -218,7 +230,7 @@ export function createChatSession() {
       history: [
         {
           role: "user",
-          parts: [{ text: `You are EcoBot, an AI assistant for EcoRecycle, an e-waste recycling service. Your goal is to help users with information about e-waste recycling, our services, and environmental impact. Keep responses concise, friendly, and focused on e-waste recycling topics. 
+          parts: [{ text: `You are EcoBot, an AI assistant for EcoNirvana, an e-waste recycling service. Your goal is to help users with information about e-waste recycling, our services, and environmental impact. Keep responses concise, friendly, and focused on e-waste recycling topics. 
 
 Here is information about our services that you should use to answer questions:
 ${ewasteKnowledge}
@@ -229,17 +241,13 @@ When users are on our Secure Data Destruction Services page, emphasize the follo
 - We provide a Certificate of Data Destruction for each device processed
 - Simply deleting files or formatting a drive doesn't actually remove data - it only removes the reference to the file location
 - A 2019 study found that over 40% of second-hand devices still contained personally identifiable information from previous owners
-- Our process includes secure collection, data destruction, and certification
+- Our process includes secure collection, inventory, destruction, and certification
 - After data destruction, devices are responsibly recycled
 
 If asked about data destruction services, provide information about our secure data destruction services without mentioning "page" or referring to the current location. Focus on the services themselves.
 
 If you don't know the answer to a question, don't make up information. Instead, suggest that the user contact our customer service team for more specific information.` }],
-        },
-        {
-          role: "model",
-          parts: [{ text: "I'm EcoBot, your friendly e-waste recycling assistant at EcoRecycle! I'm here to help with any questions about our recycling services, environmental impact of e-waste, or how to properly dispose of your electronic devices. How can I assist you today?" }],
-        },
+        }
       ],
       generationConfig: {
         maxOutputTokens: 500,
