@@ -6,6 +6,7 @@ import { FaUser, FaPaperPlane, FaTimes, FaTrash } from 'react-icons/fa';
 import { useChat, Message } from '@/context/ChatContext';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { useAuth } from '@/context/AuthContext';
 
 const ChatBot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,9 @@ const ChatBot: React.FC = () => {
   const pathname = usePathname();
   const [prevMessagesLength, setPrevMessagesLength] = useState(0);
   const [prevIsLoading, setPrevIsLoading] = useState(false);
+  const { user } = useAuth();
+  // Ref to track if we've already sent initial messages
+  const initialMessageSentRef = useRef<{[key: string]: boolean}>({});
   
   // Load chatbot state from localStorage on initial render
   useEffect(() => {
@@ -113,16 +117,25 @@ const ChatBot: React.FC = () => {
 
   // Check if we're on the data destruction page to use blue theme
   const isDataDestructionPage = pathname.includes('/services/data-destruction');
-  const themeColor = isDataDestructionPage ? 'blue' : 'green';
 
   // Set default welcome message based on current page
   useEffect(() => {
-    if (messages.length === 0 && isOpen) {
-      if (isDataDestructionPage) {
-        sendMessage("Show me information about data destruction services");
-      }
+    if (messages.length === 0 && isOpen && isDataDestructionPage && !initialMessageSentRef.current['welcome']) {
+      initialMessageSentRef.current['welcome'] = true;
+      sendMessage("Show me information about data destruction services");
     }
-  }, [isOpen, isDataDestructionPage, messages.length]);
+  }, [isOpen, isDataDestructionPage, messages.length, sendMessage]);
+
+  // Set initial question based on page
+  useEffect(() => {
+    if (pathname && pathname !== '/' && !initialMessageSentRef.current[pathname]) {
+      // Only send once per pathname
+      initialMessageSentRef.current[pathname] = true;
+      // Send a default message based on the current page
+      const pageName = pathname.split('/').pop() || '';
+      sendMessage(`Tell me about ${pageName}`);
+    }
+  }, [pathname, sendMessage]);
 
   return (
     <>

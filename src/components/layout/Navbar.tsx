@@ -60,7 +60,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchSuggestions, setSearchSuggestions] = useState<any[]>([]);
+  const [searchSuggestions, setSearchSuggestions] = useState<Array<{title: string; path: string; score: number}>>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const aboutMenuRef = useRef<HTMLDivElement>(null);
@@ -82,8 +82,6 @@ const Navbar = () => {
   // Only show search if not on excluded pages or if user is logged in
   const showSearch = !isHomePage && !isAuthPage && !(isHideSearchPage && !user);
   
-  const themeColor = isDataDestructionPage ? '#0A1533' : 'green';
-
   // Set mounted state on client-side only
   useEffect(() => {
     setIsMounted(true);
@@ -220,7 +218,7 @@ const Navbar = () => {
       setSearchSuggestions([]);
       setShowSuggestions(false);
     }
-  }, [searchTerm]);
+  }, [searchTerm, router]);
 
   // Handle navigation back
   const handleBackNavigation = () => {

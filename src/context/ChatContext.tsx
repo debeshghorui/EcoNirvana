@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 
 // Define message type
@@ -131,7 +131,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [messages, isMounted]);
 
   // Send message to Gemini API and get response
-  const sendMessage = async (content: string) => {
+  const sendMessage = useCallback(async (content: string) => {
     if (!isMounted || !content.trim()) return;
 
     // Create a new user message
@@ -202,10 +202,10 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isMounted, chatSession]);
 
   // Clear chat history
-  const clearChat = async () => {
+  const clearChat = useCallback(async () => {
     if (!isMounted) return;
     
     setMessages([]);
@@ -217,7 +217,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const { createChatSession } = await import('@/lib/gemini');
     globalChatSession = createChatSession();
     setChatSession(globalChatSession);
-  };
+  }, [isMounted]);
 
   return (
     <ChatContext.Provider value={{ messages, isLoading, sendMessage, clearChat }}>

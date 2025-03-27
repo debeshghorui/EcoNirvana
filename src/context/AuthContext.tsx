@@ -1,19 +1,43 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import type { 
   Auth,
   User as FirebaseUser,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
+  GoogleAuthProvider as GoogleAuthProviderType,
+  FacebookAuthProvider as FacebookAuthProviderType,
   AuthProvider as FirebaseAuthProvider
+} from 'firebase/auth';
+import { 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword, 
+  signOut,
+  sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile
 } from 'firebase/auth';
 
 // Create an interface for the firebase services
 interface FirebaseServices {
   auth: Auth | null;
-  googleProvider: GoogleAuthProvider | null;
-  facebookProvider: FacebookAuthProvider | null;
+  googleProvider: GoogleAuthProviderType | null;
+  facebookProvider: FacebookAuthProviderType | null;
+}
+
+// Define proper types for user data and error handling
+interface UserData {
+  id: string;
+  email: string | null;
+  name: string;
+  photoURL?: string;
+  profilePicture?: string;
+  [key: string]: unknown;
+}
+
+interface ErrorWithCode extends Error {
+  code?: string;
 }
 
 // Define user type
