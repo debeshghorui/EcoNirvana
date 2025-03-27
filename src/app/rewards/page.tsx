@@ -40,7 +40,7 @@ const availableRewards = [
     description: 'Eco-friendly stainless steel water bottle', 
     points: 150, 
     category: 'eco',
-    image: '/images/rewards/water-bottle.jpg',
+    image: '/images/rewards/aluminum-bottle-packaging-liquids.jpg',
     stock: 15
   },
   { 
@@ -368,13 +368,22 @@ export default function RewardsPage() {
                 className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all"
               >
                 <div className="h-48 bg-gray-200 relative">
-                  {/* In a real app, this would be an actual image */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-600 to-green-400 flex items-center justify-center">
-                    {reward.category === 'eco' && <FaLeaf className="h-16 w-16 text-white opacity-30" />}
-                    {reward.category === 'shopping' && <FaShoppingBag className="h-16 w-16 text-white opacity-30" />}
-                    {reward.category === 'donation' && <FaHandHoldingHeart className="h-16 w-16 text-white opacity-30" />}
-                    {reward.category === 'planting' && <FaTree className="h-16 w-16 text-white opacity-30" />}
-                  </div>
+                  {reward.title === 'Reusable Water Bottle' ? (
+                    <Image
+                      src="/images/aluminum-bottle-packaging-liquids.jpg"
+                      alt="Reusable Water Bottle"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-600 to-green-400 flex items-center justify-center">
+                      {reward.category === 'eco' && <FaLeaf className="h-16 w-16 text-white opacity-30" />}
+                      {reward.category === 'shopping' && <FaShoppingBag className="h-16 w-16 text-white opacity-30" />}
+                      {reward.category === 'donation' && <FaHandHoldingHeart className="h-16 w-16 text-white opacity-30" />}
+                      {reward.category === 'planting' && <FaTree className="h-16 w-16 text-white opacity-30" />}
+                    </div>
+                  )}
                   <div className="absolute top-2 right-2 bg-white rounded-full px-3 py-1 text-sm font-medium text-green-700 shadow-sm">
                     {reward.points} pts
                   </div>

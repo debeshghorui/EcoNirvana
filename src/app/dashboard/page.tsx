@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTruck, FaTimes, FaTree, FaBars, FaBullhorn, FaHandsHelping, FaComments } from 'react-icons/fa';
+import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTruck, FaTimes, FaTree, FaBars, FaBullhorn, FaHandsHelping, FaComments, FaCertificate } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 
 // Move mock data outside of the component to prevent hydration issues
@@ -281,13 +281,13 @@ export default function DashboardPage() {
               whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
               className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
             >
-              <Link href="/activity" className="block">
+              <Link href="/certificates" className="block">
                 <div className="p-6 flex flex-col items-center">
                   <div className="bg-green-100 rounded-full p-4 mb-4 text-green-600">
-                    <FaHistory className="h-6 w-6" />
+                    <FaCertificate className="h-6 w-6" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1 text-center">My Activity</h3>
-                  <p className="text-sm text-gray-500 text-center">View your history</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1 text-center">My Certificates</h3>
+                  <p className="text-sm text-gray-500 text-center">View your achievements</p>
                 </div>
               </Link>
             </motion.div>
@@ -325,6 +325,23 @@ export default function DashboardPage() {
                 </h2>
               </div>
               <div className="p-6">
+                {/* Add the aluminum bottle image */}
+                <div className="mb-6">
+                  <div className="relative h-48 rounded-lg overflow-hidden">
+                    <Image
+                      src="/images/aluminum-bottle-packaging-liquids.jpg"
+                      alt="Recyclable aluminum bottles"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                      <p className="text-white p-4 text-sm">
+                        Aluminum bottles are 100% recyclable and can be recycled indefinitely without losing quality
+                      </p>
+                    </div>
+                  </div>
+                </div>
                 {recentActivities.length > 0 ? (
                   <div className="space-y-4">
                     {recentActivities.map((activity) => (

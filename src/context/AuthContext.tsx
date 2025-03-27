@@ -5,7 +5,6 @@ import type {
   Auth,
   User as FirebaseUser,
   GoogleAuthProvider,
-  FacebookAuthProvider,
   AuthProvider as FirebaseAuthProvider
 } from 'firebase/auth';
 
@@ -13,7 +12,6 @@ import type {
 interface FirebaseServices {
   auth: Auth | null;
   googleProvider: GoogleAuthProvider | null;
-  facebookProvider: FacebookAuthProvider | null;
 }
 
 // Define user type
@@ -33,7 +31,6 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<boolean>;
   signup: (name: string, email: string, password: string) => Promise<boolean>;
   loginWithGoogle: () => Promise<boolean>;
-  loginWithFacebook: () => Promise<boolean>;
   logout: () => void;
   updateProfile: (data: Partial<User>) => void;
   error: string | null;
@@ -47,7 +44,6 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => false,
   signup: async () => false,
   loginWithGoogle: async () => false,
-  loginWithFacebook: async () => false,
   logout: () => {},
   updateProfile: () => {},
   error: null,
@@ -60,7 +56,7 @@ export const useAuth = () => useContext(AuthContext);
 // Initialize Firebase SDK only on client side
 async function initializeFirebase(): Promise<FirebaseServices> {
   if (typeof window === 'undefined') {
-    return { auth: null, googleProvider: null, facebookProvider: null };
+    return { auth: null, googleProvider: null };
   }
 
   try {
@@ -68,8 +64,7 @@ async function initializeFirebase(): Promise<FirebaseServices> {
     const { initializeApp, getApps, getApp } = await import('firebase/app');
     const { 
       getAuth, 
-      GoogleAuthProvider, 
-      FacebookAuthProvider 
+      GoogleAuthProvider 
     } = await import('firebase/auth');
 
     // Firebase configuration
@@ -92,14 +87,10 @@ async function initializeFirebase(): Promise<FirebaseServices> {
     googleProvider.addScope('profile');
     googleProvider.addScope('email');
 
-    const facebookProvider = new FacebookAuthProvider();
-    facebookProvider.addScope('email');
-    facebookProvider.addScope('public_profile');
-
-    return { auth, googleProvider, facebookProvider };
+    return { auth, googleProvider };
   } catch (error) {
     console.error("Failed to initialize Firebase:", error);
-    return { auth: null, googleProvider: null, facebookProvider: null };
+    return { auth: null, googleProvider: null };
   }
 }
 
@@ -111,8 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isMounted, setIsMounted] = useState(false);
   const [firebase, setFirebase] = useState<FirebaseServices>({ 
     auth: null, 
-    googleProvider: null, 
-    facebookProvider: null 
+    googleProvider: null 
   });
 
   // Initialize Firebase on the client side only
@@ -242,11 +232,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Login with Google
   const loginWithGoogle = async (): Promise<boolean> => {
     return socialLogin(firebase.googleProvider);
-  };
-  
-  // Login with Facebook
-  const loginWithFacebook = async (): Promise<boolean> => {
-    return socialLogin(firebase.facebookProvider);
   };
 
   // Login function
@@ -396,7 +381,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login,
     signup,
     loginWithGoogle,
-    loginWithFacebook,
     logout,
     updateProfile,
     error,

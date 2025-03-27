@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { FaRecycle, FaLeaf, FaShieldAlt, FaTruck, FaBuilding, FaUsers, FaArrowRight, FaMapMarkerAlt, FaCalendarAlt, FaQuestionCircle, FaHome } from "react-icons/fa";
+import { FaRecycle, FaLeaf, FaShieldAlt, FaTruck, FaBuilding, FaUsers, FaArrowRight, FaMapMarkerAlt, FaCalendarAlt, FaQuestionCircle, FaHome, FaCertificate } from "react-icons/fa";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Home() {
@@ -114,7 +114,7 @@ export default function Home() {
       {/* Quick Actions Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-green-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
               <div className="flex items-center mb-4">
                 <div className="bg-green-100 p-3 rounded-lg mr-4">
@@ -164,6 +164,19 @@ export default function Home() {
               <p className="text-gray-600 mb-4">Test your knowledge about e-waste recycling and learn how to dispose of electronics properly.</p>
               <Link href="/quiz" className="text-green-600 font-medium inline-flex items-center hover:text-green-700">
                 Start quiz <FaArrowRight className="ml-2 h-3 w-3" />
+              </Link>
+            </div>
+
+            <div className="bg-green-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+              <div className="flex items-center mb-4">
+                <div className="bg-green-100 p-3 rounded-lg mr-4">
+                  <FaCertificate className="text-green-600 w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900">Recycling Certificates</h3>
+              </div>
+              <p className="text-gray-600 mb-4">Earn prestigious certificates by reaching recycling milestones. Get recognized for your environmental impact.</p>
+              <Link href="/certificates" className="text-green-600 font-medium inline-flex items-center hover:text-green-700">
+                View certificates <FaArrowRight className="ml-2 h-3 w-3" />
               </Link>
             </div>
           </div>
