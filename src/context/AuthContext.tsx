@@ -5,7 +5,6 @@ import type {
   Auth,
   User as FirebaseUser,
   GoogleAuthProvider,
-  FacebookAuthProvider,
   AuthProvider as FirebaseAuthProvider
 } from 'firebase/auth';
 import { 
@@ -14,7 +13,7 @@ import {
   createUserWithEmailAndPassword, 
   signOut,
   sendPasswordResetEmail,
-  GoogleAuthProvider,
+  GoogleAuthProvider as GoogleProvider,
   signInWithPopup,
   updateProfile
 } from 'firebase/auth';
@@ -23,7 +22,6 @@ import {
 interface FirebaseServices {
   auth: Auth | null;
   googleProvider: GoogleAuthProvider | null;
-  facebookProvider: FacebookAuthProvider | null;
 }
 
 // Define user type
