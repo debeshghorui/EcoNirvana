@@ -11,7 +11,8 @@ import {
   FaSpinner,
   FaUndo,
   FaTrophy,
-  FaLeaf
+  FaLeaf,
+  FaExclamationTriangle
 } from 'react-icons/fa';
 import Link from 'next/link';
 import { generateResponse } from '@/lib/gemini';
@@ -40,6 +41,7 @@ export default function QuizPage() {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
   const [pointsSaved, setPointsSaved] = useState(false);
@@ -48,7 +50,18 @@ export default function QuizPage() {
   useEffect(() => {
     const fetchQuizQuestions = async () => {
       setLoading(true);
+      setError(null);
       try {
+        // Use sample questions for immediate development feedback
+        // Comment this out for production to use actual API
+        const sampleQuestions = getSampleQuestions();
+        setQuestions(sampleQuestions);
+        setSelectedOptions(new Array(sampleQuestions.length).fill(null));
+        setLoading(false);
+        return;
+        
+        // Uncomment below for production use with Gemini API
+        /*
         const prompt = `Create 5 multiple-choice quiz questions about e-waste recycling and proper electronics disposal. For each question:
         - Include the question
         - Provide 4 possible answers
@@ -95,8 +108,10 @@ export default function QuizPage() {
         setQuestions(questionsWithIds);
         // Initialize selectedOptions array with nulls for each question
         setSelectedOptions(new Array(questionsWithIds.length).fill(null));
+        */
       } catch (error) {
         console.error("Error fetching quiz questions:", error);
+        setError("Failed to load quiz questions. Please try again.");
         // Fallback to sample questions if API fails
         const sampleQuestions = getSampleQuestions();
         setQuestions(sampleQuestions);
@@ -280,185 +295,290 @@ export default function QuizPage() {
   }, [quizCompleted, user, score, earnedPoints, pointsSaved]);
   
   return (
-    <>
-      <PageHeader
-        title="E-Waste Recycling Quiz"
-        description="Test your knowledge about electronic waste recycling and sustainability practices"
-        backgroundImage="/green-globe.jpg"
-      />
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-green-50">
+      <div className="sticky top-0 z-10 bg-gray-50 shadow-sm">
+        {/* Main Navigation Bar will be rendered here by layout */}
+      </div>
       
-      <div className="max-w-4xl mx-auto px-4 py-12">
+      <div className="max-w-3xl mx-auto px-4 pt-6 pb-16">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center">
+            <Button
+              onClick={() => router.back()}
+              variant="secondary"
+              className="mr-4 p-2.5 rounded-full hover:bg-gray-100"
+            >
+              <FaArrowLeft />
+            </Button>
+            <h1 className="text-2xl font-bold text-gray-800">E-Waste Quiz</h1>
+          </div>
+          
+          {!loading && !error && questions.length > 0 && !quizCompleted && (
+            <div className="bg-green-50 py-1.5 px-3 rounded-lg border border-green-100">
+              <p className="text-sm font-medium text-gray-700">Score: <span className="text-green-600 font-bold">{score}</span></p>
+            </div>
+          )}
+        </div>
+        
+        {!loading && !error && questions.length > 0 && !quizCompleted && (
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-600">Question {currentQuestionIndex + 1} of {questions.length}</span>
+              <span className="text-sm font-medium text-gray-500">{Math.round((currentQuestionIndex / questions.length) * 100)}% complete</span>
+            </div>
+            <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+              <div 
+                className="h-2 bg-green-500 rounded-full" 
+                style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
+        
         {loading ? (
-          <Card className="p-12 text-center">
+          <Card className="shadow-xl border-0 p-10 text-center bg-white rounded-2xl">
             <CardBody>
-              <FaSpinner className="animate-spin text-4xl text-green-600 mx-auto mb-4" />
-              <p className="text-gray-600">Generating quiz questions...</p>
+              <FaSpinner className="animate-spin text-5xl text-green-500 mx-auto mb-6" />
+              <p className="text-gray-600 text-lg">Generating quiz questions...</p>
+            </CardBody>
+          </Card>
+        ) : error ? (
+          <Card className="shadow-xl border-0 overflow-hidden rounded-2xl bg-white">
+            <div className="h-2 bg-red-500"></div>
+            <CardBody className="text-center py-10 px-6">
+              <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                <FaExclamationTriangle className="text-3xl text-red-500" />
+              </div>
+              <h2 className="text-xl font-bold text-gray-800 mb-4">{error}</h2>
+              <Button
+                onClick={() => window.location.reload()}
+                className="px-5 py-2.5"
+                variant="primary"
+              >
+                Try Again
+              </Button>
+            </CardBody>
+          </Card>
+        ) : questions.length === 0 ? (
+          <Card className="shadow-xl border-0 overflow-hidden rounded-2xl bg-white">
+            <div className="h-2 bg-yellow-500"></div>
+            <CardBody className="text-center py-10 px-6">
+              <div className="w-16 h-16 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-4">
+                <FaExclamationTriangle className="text-3xl text-yellow-500" />
+              </div>
+              <h2 className="text-xl font-bold text-gray-800 mb-4">No quiz questions available</h2>
+              <Button
+                onClick={() => window.location.reload()}
+                className="px-5 py-2.5"
+                variant="primary"
+              >
+                Reload Quiz
+              </Button>
             </CardBody>
           </Card>
         ) : quizCompleted ? (
-          <Card>
-            <CardBody className="text-center py-8">
-              <FaTrophy className="text-5xl text-yellow-500 mx-auto mb-4" />
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Quiz Completed!</h2>
-              <p className="text-xl text-gray-600 mb-4">You scored {score} out of {questions.length} questions correctly.</p>
-              
-              <div className="bg-gray-50 rounded-lg p-6 mb-6 max-w-md mx-auto">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <FaLeaf className="text-green-500" />
-                  <p className="font-medium text-gray-800">Points Earned: {earnedPoints}</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card className="shadow-xl border-0 overflow-hidden rounded-2xl bg-white">
+              <div className="h-8 bg-gradient-to-r from-green-400 to-green-600"></div>
+              <CardBody className="text-center py-10 px-6">
+                <div className="mb-6">
+                  <div className="w-20 h-20 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-4">
+                    <FaTrophy className="text-4xl text-yellow-500" />
+                  </div>
+                  <h2 className="text-3xl font-bold text-gray-800 mb-3">Quiz Completed!</h2>
+                  <p className="text-xl text-gray-600 mb-2">
+                    You scored <span className="font-semibold text-green-600">{score} out of {questions.length}</span> questions correctly.
+                  </p>
                 </div>
                 
-                {user ? (
-                  pointsSaved ? (
-                    <p className="text-sm text-green-600">Points successfully added to your account!</p>
+                <div className="bg-green-50 rounded-xl p-6 mb-8 max-w-sm mx-auto border border-green-100">
+                  <div className="flex items-center justify-center gap-3 mb-3">
+                    <FaLeaf className="text-green-500 text-xl" />
+                    <p className="font-medium text-gray-800 text-lg">Points Earned: {earnedPoints}</p>
+                  </div>
+                  
+                  {user ? (
+                    pointsSaved ? (
+                      <p className="text-sm text-green-600 bg-green-100 py-2 px-3 rounded-md">Points successfully added to your account!</p>
+                    ) : (
+                      <p className="text-sm text-gray-500">Points will be added to your account</p>
+                    )
                   ) : (
-                    <p className="text-sm text-gray-500">Points will be added to your account</p>
-                  )
-                ) : (
-                  <p className="text-sm text-gray-500">
-                    <Link href="/login" className="text-green-600 hover:underline">Sign in</Link> to save your points
-                  </p>
-                )}
-              </div>
-              
-              <div className="flex flex-wrap gap-4 justify-center mt-6">
-                <Button
-                  onClick={handleRestartQuiz}
-                  className="flex items-center gap-2"
-                  variant="secondary"
-                >
-                  <FaUndo />
-                  Restart Quiz
-                </Button>
+                    <div className="mt-3 py-2 px-3 bg-blue-50 rounded-md border border-blue-100">
+                      <p className="text-sm text-gray-700">
+                        <Link href="/login" className="text-blue-600 font-medium hover:underline">Sign in</Link> to save your points
+                      </p>
+                    </div>
+                  )}
+                </div>
                 
-                <Button
-                  href="/activity"
-                  className="flex items-center gap-2" 
-                  variant="primary"
-                >
-                  View Activity
-                </Button>
-              </div>
-            </CardBody>
-          </Card>
+                <div className="flex flex-wrap gap-4 justify-center mt-6">
+                  <Button
+                    onClick={handleRestartQuiz}
+                    className="flex items-center gap-2 px-5 py-2.5"
+                    variant="secondary"
+                  >
+                    <FaUndo />
+                    Restart Quiz
+                  </Button>
+                  
+                  <Button
+                    href="/activity"
+                    className="flex items-center gap-2 px-5 py-2.5" 
+                    variant="primary"
+                  >
+                    View Activity
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
+          </motion.div>
         ) : (
           <>
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
-                <Button
-                  onClick={() => router.back()}
-                  variant="secondary"
-                  className="mr-4"
-                >
-                  <FaArrowLeft className="mr-2" /> Back
-                </Button>
-                <h2 className="text-xl font-medium text-gray-900">Question {currentQuestionIndex + 1} of {questions.length}</h2>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-medium text-gray-500">Score: {score}/{questions.length}</p>
-              </div>
-            </div>
-            
             {currentQuestion && (
-              <Card>
-                <CardBody>
-                  <div className="flex items-start gap-3 mb-6">
-                    <div className="mt-1 text-green-600 flex-shrink-0">
-                      <FaQuestionCircle size={24} />
-                    </div>
-                    <h3 className="text-xl font-medium text-gray-900">{currentQuestion.question}</h3>
-                  </div>
-                  
-                  <div className="space-y-3 mb-6">
-                    {currentQuestion.options.map((option: string, index: number) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.2, delay: index * 0.1 }}
-                      >
-                        <button
-                          onClick={() => handleOptionSelect(option)}
-                          disabled={selectedOptions[currentQuestionIndex] !== null}
-                          className={`w-full text-left p-4 rounded-lg border transition-all ${
-                            selectedOptions[currentQuestionIndex] === option
-                              ? option === currentQuestion.correctAnswer
-                                ? 'bg-green-50 border-green-500 text-green-700'
-                                : 'bg-red-50 border-red-500 text-red-700'
-                              : selectedOptions[currentQuestionIndex] !== null && option === currentQuestion.correctAnswer
-                                ? 'bg-green-50 border-green-500 text-green-700'
-                                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span>{option}</span>
-                            {selectedOptions[currentQuestionIndex] === option && (
-                              option === currentQuestion.correctAnswer ? (
-                                <FaCheck className="text-green-600" />
-                              ) : (
-                                <FaTimes className="text-red-600" />
-                              )
-                            )}
-                            {selectedOptions[currentQuestionIndex] !== null && 
-                             selectedOptions[currentQuestionIndex] !== option && 
-                             option === currentQuestion.correctAnswer && (
-                              <FaCheck className="text-green-600" />
-                            )}
-                          </div>
-                        </button>
-                      </motion.div>
-                    ))}
-                  </div>
-                  
-                  {selectedOptions[currentQuestionIndex] && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      transition={{ duration: 0.3 }}
-                      className={`p-4 rounded-lg mb-6 ${
-                        isCorrect ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
-                      }`}
-                    >
-                      <div className="flex justify-between items-center mb-2">
-                        <h4 className="font-medium">
-                          {isCorrect ? 'Correct!' : 'Incorrect'}
-                        </h4>
-                        <button 
-                          onClick={() => setShowExplanation(!showExplanation)}
-                          className="text-sm underline"
-                        >
-                          {showExplanation ? 'Hide' : 'Show'} explanation
-                        </button>
+              <motion.div
+                key={currentQuestionIndex}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Card className="shadow-lg border-0 rounded-2xl overflow-hidden bg-white">
+                  <div className="h-2 bg-gradient-to-r from-green-400 to-green-600"></div>
+                  <CardBody className="p-6 md:p-8">
+                    <div className="flex items-start gap-4 mb-8 border-b border-gray-100 pb-6">
+                      <div className="mt-1 bg-green-100 p-3 rounded-full flex-shrink-0">
+                        <FaQuestionCircle className="text-green-600" size={22} />
                       </div>
-                      
-                      {showExplanation && (
-                        <p className="text-sm">{currentQuestion.explanation}</p>
+                      <h3 className="text-xl md:text-2xl font-medium text-gray-800">{currentQuestion.question}</h3>
+                    </div>
+                    
+                    <div className="space-y-4 mb-8">
+                      {currentQuestion.options.map((option: string, index: number) => {
+                        const isSelected = selectedOptions[currentQuestionIndex] === option;
+                        const isCorrect = option === currentQuestion.correctAnswer;
+                        const showCorrect = selectedOptions[currentQuestionIndex] !== null && isCorrect;
+                        
+                        return (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.2, delay: index * 0.1 }}
+                          >
+                            <button
+                              onClick={() => handleOptionSelect(option)}
+                              disabled={selectedOptions[currentQuestionIndex] !== null}
+                              className={`w-full text-left p-4 md:p-5 rounded-xl border-2 transition-all ${
+                                isSelected
+                                  ? isCorrect
+                                    ? 'bg-green-50 border-green-500 text-green-800'
+                                    : 'bg-red-50 border-red-500 text-red-800'
+                                  : showCorrect
+                                    ? 'bg-green-50 border-green-500 text-green-800'
+                                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                              } ${selectedOptions[currentQuestionIndex] === null ? 'hover:shadow-md' : ''}`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                  <div className={`w-6 h-6 mr-3 rounded-full flex items-center justify-center border ${
+                                    isSelected
+                                      ? isCorrect 
+                                        ? 'border-green-500 bg-green-500'
+                                        : 'border-red-500 bg-red-500'
+                                      : showCorrect
+                                        ? 'border-green-500 bg-green-500'
+                                        : 'border-gray-300'
+                                  }`}>
+                                    {isSelected && isCorrect && <FaCheck className="text-white text-xs" />}
+                                    {isSelected && !isCorrect && <FaTimes className="text-white text-xs" />}
+                                    {!isSelected && showCorrect && <FaCheck className="text-white text-xs" />}
+                                  </div>
+                                  <span className={`font-medium ${
+                                    isSelected || showCorrect 
+                                      ? isCorrect
+                                        ? 'text-green-800' 
+                                        : 'text-red-800'
+                                      : 'text-gray-800'
+                                  }`}>{option}</span>
+                                </div>
+                              </div>
+                            </button>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                    
+                    {selectedOptions[currentQuestionIndex] && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        transition={{ duration: 0.3 }}
+                        className={`p-5 rounded-xl mb-8 ${
+                          isCorrect ? 'bg-green-100 border border-green-200' : 'bg-red-100 border border-red-200'
+                        }`}
+                      >
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className={`font-semibold text-lg ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
+                            {isCorrect ? 'Correct!' : 'Incorrect'}
+                          </h4>
+                          <button 
+                            onClick={() => setShowExplanation(!showExplanation)}
+                            className={`text-sm py-1 px-3 rounded-full ${
+                              isCorrect 
+                                ? 'bg-green-200 text-green-800 hover:bg-green-300' 
+                                : 'bg-red-200 text-red-800 hover:bg-red-300'
+                            }`}
+                          >
+                            {showExplanation ? 'Hide' : 'Show'} explanation
+                          </button>
+                        </div>
+                        
+                        {showExplanation && (
+                          <motion.p 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className={`text-sm mt-2 leading-relaxed font-medium ${
+                              isCorrect ? 'text-green-900' : 'text-red-900'
+                            }`}
+                          >
+                            {currentQuestion.explanation}
+                          </motion.p>
+                        )}
+                      </motion.div>
+                    )}
+                    
+                    <div className="flex justify-between pt-2">
+                      {currentQuestionIndex > 0 ? (
+                        <Button
+                          onClick={handlePreviousQuestion}
+                          variant="secondary"
+                          className="px-5 py-2.5"
+                        >
+                          Previous
+                        </Button>
+                      ) : (
+                        <div>{/* Empty div to maintain flex spacing */}</div>
                       )}
-                    </motion.div>
-                  )}
-                  
-                  <div className="flex justify-between">
-                    <Button
-                      onClick={handlePreviousQuestion}
-                      disabled={currentQuestionIndex === 0}
-                      variant="secondary"
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      onClick={handleNextQuestion}
-                      disabled={selectedOptions[currentQuestionIndex] === null}
-                      variant="primary"
-                    >
-                      {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
-                    </Button>
-                  </div>
-                </CardBody>
-              </Card>
+                      <Button
+                        onClick={handleNextQuestion}
+                        disabled={selectedOptions[currentQuestionIndex] === null}
+                        variant="primary"
+                        className="px-5 py-2.5"
+                      >
+                        {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                      </Button>
+                    </div>
+                  </CardBody>
+                </Card>
+              </motion.div>
             )}
           </>
         )}
       </div>
-    </>
+    </div>
   );
 } 
