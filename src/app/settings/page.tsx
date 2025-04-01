@@ -171,68 +171,68 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-green-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back button */}
         <div className="mb-6">
           <button 
             onClick={() => router.back()}
-            className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+            className="flex items-center text-gray-700 hover:text-green-700 transition-colors font-medium"
             aria-label="Go back"
           >
             <FaArrowLeft className="h-5 w-5 mr-2" />
-            <span className="font-medium">Back</span>
+            <span>Back</span>
           </button>
         </div>
         
         <div className="md:flex md:gap-8">
           {/* Sidebar */}
           <div className="md:w-1/4">
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Settings</h2>
-              <nav className="space-y-1">
+            <div className="bg-white rounded-xl shadow-md p-6 mb-8 border border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-800 mb-6">Settings</h2>
+              <nav className="space-y-2">
                 <button
                   onClick={() => setActiveTab('profile')}
-                  className={`flex items-center px-4 py-2 text-sm font-medium rounded-md w-full text-left ${
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg w-full text-left transition-colors ${
                     activeTab === 'profile'
-                      ? 'bg-green-50 text-green-700'
+                      ? 'bg-green-100 text-green-800 shadow-sm'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
-                  <FaUser className={`mr-3 ${activeTab === 'profile' ? 'text-green-500' : 'text-gray-400'}`} />
+                  <FaUser className={`mr-3 h-5 w-5 ${activeTab === 'profile' ? 'text-green-600' : 'text-gray-500'}`} />
                   Profile Information
                 </button>
                 <button
                   onClick={() => setActiveTab('password')}
-                  className={`flex items-center px-4 py-2 text-sm font-medium rounded-md w-full text-left ${
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg w-full text-left transition-colors ${
                     activeTab === 'password'
-                      ? 'bg-green-50 text-green-700'
+                      ? 'bg-green-100 text-green-800 shadow-sm'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
-                  <FaLock className={`mr-3 ${activeTab === 'password' ? 'text-green-500' : 'text-gray-400'}`} />
+                  <FaLock className={`mr-3 h-5 w-5 ${activeTab === 'password' ? 'text-green-600' : 'text-gray-500'}`} />
                   Password
                 </button>
                 <button
                   onClick={() => setActiveTab('notifications')}
-                  className={`flex items-center px-4 py-2 text-sm font-medium rounded-md w-full text-left ${
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg w-full text-left transition-colors ${
                     activeTab === 'notifications'
-                      ? 'bg-green-50 text-green-700'
+                      ? 'bg-green-100 text-green-800 shadow-sm'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
-                  <FaBell className={`mr-3 ${activeTab === 'notifications' ? 'text-green-500' : 'text-gray-400'}`} />
+                  <FaBell className={`mr-3 h-5 w-5 ${activeTab === 'notifications' ? 'text-green-600' : 'text-gray-500'}`} />
                   Notifications
                 </button>
                 <button
                   onClick={() => setActiveTab('account')}
-                  className={`flex items-center px-4 py-2 text-sm font-medium rounded-md w-full text-left ${
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg w-full text-left transition-colors ${
                     activeTab === 'account'
-                      ? 'bg-green-50 text-green-700'
+                      ? 'bg-green-100 text-green-800 shadow-sm'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
-                  <FaShieldAlt className={`mr-3 ${activeTab === 'account' ? 'text-green-500' : 'text-gray-400'}`} />
+                  <FaShieldAlt className={`mr-3 h-5 w-5 ${activeTab === 'account' ? 'text-green-600' : 'text-gray-500'}`} />
                   Account
                 </button>
               </nav>
@@ -241,15 +241,15 @@ export default function SettingsPage() {
           
           {/* Main Content */}
           <div className="md:w-3/4">
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="bg-white rounded-xl shadow-md p-8 border border-gray-100">
               {/* Success/Error Messages */}
               {successMessage && (
                 <motion.div 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 bg-green-50 border-l-4 border-green-500 p-4 text-green-700"
+                  className="mb-6 bg-green-100 border-l-4 border-green-500 p-4 text-green-800 rounded-r-md"
                 >
-                  <p>{successMessage}</p>
+                  <p className="font-medium">{successMessage}</p>
                 </motion.div>
               )}
               
@@ -257,24 +257,24 @@ export default function SettingsPage() {
                 <motion.div 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 text-red-700"
+                  className="mb-6 bg-red-100 border-l-4 border-red-500 p-4 text-red-800 rounded-r-md"
                 >
-                  <p>{errorMessage}</p>
+                  <p className="font-medium">{errorMessage}</p>
                 </motion.div>
               )}
               
               {/* Profile Tab */}
               {activeTab === 'profile' && (
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-6">Profile Information</h2>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6">Profile Information</h2>
                   <form onSubmit={handleProfileUpdate} className="space-y-6">
                     {/* Profile Picture */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Profile Picture
                       </label>
                       <div className="flex items-center space-x-4">
-                        <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 border border-gray-300">
+                        <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200 shadow-sm">
                           {profilePicture ? (
                             <Image 
                               src={profilePicture} 
@@ -283,12 +283,12 @@ export default function SettingsPage() {
                               className="object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
                               <FaUser className="h-12 w-12 text-gray-400" />
                             </div>
                           )}
                         </div>
-                        <div className="flex flex-col space-y-2">
+                        <div className="flex flex-col space-y-3">
                           <input
                             type="file"
                             accept="image/*"
@@ -300,15 +300,15 @@ export default function SettingsPage() {
                           <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 inline-flex items-center"
+                            className="py-2.5 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 inline-flex items-center transition-colors"
                           >
-                            <FaCamera className="mr-2" /> Upload Photo
+                            <FaCamera className="mr-2 text-gray-600" /> Upload Photo
                           </button>
                           {profilePicture && (
                             <button
                               type="button"
                               onClick={handleRemoveProfilePicture}
-                              className="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-red-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 inline-flex items-center"
+                              className="py-2.5 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-red-600 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 inline-flex items-center transition-colors"
                             >
                               <FaTimes className="mr-2" /> Remove
                             </button>
@@ -318,12 +318,12 @@ export default function SettingsPage() {
                     </div>
 
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1">
                         Full name
                       </label>
                       <div className="mt-1 relative rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <FaUser className="h-5 w-5 text-gray-400" />
+                          <FaUser className="h-5 w-5 text-gray-500" />
                         </div>
                         <input
                           id="name"
@@ -331,18 +331,19 @@ export default function SettingsPage() {
                           type="text"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
-                          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 font-medium"
+                          placeholder="Your full name"
                         />
                       </div>
                     </div>
                     
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
                         Email address
                       </label>
                       <div className="mt-1 relative rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <FaEnvelope className="h-5 w-5 text-gray-400" />
+                          <FaEnvelope className="h-5 w-5 text-gray-500" />
                         </div>
                         <input
                           id="email"
@@ -350,7 +351,8 @@ export default function SettingsPage() {
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 font-medium"
+                          placeholder="your.email@example.com"
                           suppressHydrationWarning
                         />
                       </div>
@@ -358,12 +360,12 @@ export default function SettingsPage() {
                     
                     {/* Date of Birth */}
                     <div>
-                      <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="dateOfBirth" className="block text-sm font-semibold text-gray-700 mb-1">
                         Date of Birth
                       </label>
                       <div className="mt-1 relative rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <FaCalendarAlt className="h-5 w-5 text-gray-400" />
+                          <FaCalendarAlt className="h-5 w-5 text-gray-500" />
                         </div>
                         <input
                           id="dateOfBirth"
@@ -371,16 +373,16 @@ export default function SettingsPage() {
                           type="date"
                           value={dateOfBirth}
                           onChange={(e) => setDateOfBirth(e.target.value)}
-                          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 font-medium"
                         />
                       </div>
                     </div>
                     
-                    <div>
+                    <div className="pt-4">
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                        className={`inline-flex justify-center py-2.5 px-6 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors ${
                           isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
                         }`}
                       >
@@ -394,15 +396,15 @@ export default function SettingsPage() {
               {/* Password Tab */}
               {activeTab === 'password' && (
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-6">Change Password</h2>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6">Change Password</h2>
                   <form onSubmit={handlePasswordChange} className="space-y-6">
                     <div>
-                      <label htmlFor="current-password" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="current-password" className="block text-sm font-semibold text-gray-700 mb-1">
                         Current password
                       </label>
                       <div className="mt-1 relative rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <FaLock className="h-5 w-5 text-gray-400" />
+                          <FaLock className="h-5 w-5 text-gray-500" />
                         </div>
                         <input
                           id="current-password"
@@ -410,18 +412,19 @@ export default function SettingsPage() {
                           type="password"
                           value={currentPassword}
                           onChange={(e) => setCurrentPassword(e.target.value)}
-                          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 font-medium"
+                          placeholder="••••••••"
                         />
                       </div>
                     </div>
                     
                     <div>
-                      <label htmlFor="new-password" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="new-password" className="block text-sm font-semibold text-gray-700 mb-1">
                         New password
                       </label>
                       <div className="mt-1 relative rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <FaLock className="h-5 w-5 text-gray-400" />
+                          <FaLock className="h-5 w-5 text-gray-500" />
                         </div>
                         <input
                           id="new-password"
@@ -429,21 +432,22 @@ export default function SettingsPage() {
                           type="password"
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
-                          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 font-medium"
+                          placeholder="••••••••"
                         />
                       </div>
-                      <p className="mt-1 text-xs text-gray-500">
+                      <p className="mt-1.5 text-xs text-gray-600 font-medium">
                         Password must be at least 8 characters long
                       </p>
                     </div>
                     
                     <div>
-                      <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="confirm-password" className="block text-sm font-semibold text-gray-700 mb-1">
                         Confirm new password
                       </label>
                       <div className="mt-1 relative rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <FaLock className="h-5 w-5 text-gray-400" />
+                          <FaLock className="h-5 w-5 text-gray-500" />
                         </div>
                         <input
                           id="confirm-password"
@@ -451,16 +455,17 @@ export default function SettingsPage() {
                           type="password"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 font-medium"
+                          placeholder="••••••••"
                         />
                       </div>
                     </div>
                     
-                    <div>
+                    <div className="pt-4">
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                        className={`inline-flex justify-center py-2.5 px-6 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors ${
                           isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
                         }`}
                       >
@@ -474,10 +479,10 @@ export default function SettingsPage() {
               {/* Notifications Tab */}
               {activeTab === 'notifications' && (
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-6">Notification Settings</h2>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6">Notification Settings</h2>
                   <form onSubmit={handleNotificationUpdate} className="space-y-6">
-                    <div className="space-y-4">
-                      <div className="flex items-start">
+                    <div className="space-y-5">
+                      <div className="flex items-start bg-gray-50 p-4 rounded-lg border border-gray-100">
                         <div className="flex items-center h-5">
                           <input
                             id="email-notifications"
@@ -485,20 +490,20 @@ export default function SettingsPage() {
                             type="checkbox"
                             checked={emailNotifications}
                             onChange={(e) => setEmailNotifications(e.target.checked)}
-                            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                            className="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                           />
                         </div>
                         <div className="ml-3 text-sm">
-                          <label htmlFor="email-notifications" className="font-medium text-gray-700">
+                          <label htmlFor="email-notifications" className="font-semibold text-gray-800">
                             Email notifications
                           </label>
-                          <p className="text-gray-500">
+                          <p className="text-gray-600 mt-1">
                             Receive email notifications about your recycling activities and upcoming events.
                           </p>
                         </div>
                       </div>
                       
-                      <div className="flex items-start">
+                      <div className="flex items-start bg-gray-50 p-4 rounded-lg border border-gray-100">
                         <div className="flex items-center h-5">
                           <input
                             id="marketing-emails"
@@ -506,25 +511,25 @@ export default function SettingsPage() {
                             type="checkbox"
                             checked={marketingEmails}
                             onChange={(e) => setMarketingEmails(e.target.checked)}
-                            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                            className="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                           />
                         </div>
                         <div className="ml-3 text-sm">
-                          <label htmlFor="marketing-emails" className="font-medium text-gray-700">
+                          <label htmlFor="marketing-emails" className="font-semibold text-gray-800">
                             Marketing emails
                           </label>
-                          <p className="text-gray-500">
+                          <p className="text-gray-600 mt-1">
                             Receive emails about new services, promotions, and recycling tips.
                           </p>
                         </div>
                       </div>
                     </div>
                     
-                    <div>
+                    <div className="pt-4">
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                        className={`inline-flex justify-center py-2.5 px-6 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors ${
                           isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
                         }`}
                       >
@@ -538,19 +543,19 @@ export default function SettingsPage() {
               {/* Account Tab */}
               {activeTab === 'account' && (
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-6">Account Settings</h2>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6">Account Settings</h2>
                   
                   <div className="border-t border-gray-200 pt-6 mt-6">
-                    <h3 className="text-lg font-medium text-red-600">Danger Zone</h3>
-                    <p className="mt-1 text-sm text-gray-500">
+                    <h3 className="text-lg font-semibold text-red-600">Danger Zone</h3>
+                    <p className="mt-1 text-sm text-gray-600">
                       Once you delete your account, there is no going back. Please be certain.
                     </p>
-                    <div className="mt-4">
+                    <div className="mt-5">
                       <button
                         type="button"
                         onClick={handleAccountDeletion}
                         disabled={isSubmitting}
-                        className={`inline-flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${
+                        className={`inline-flex items-center justify-center py-2.5 px-6 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors ${
                           isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
                         }`}
                       >
