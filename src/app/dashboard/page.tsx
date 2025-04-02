@@ -325,23 +325,6 @@ export default function DashboardPage() {
                 </h2>
               </div>
               <div className="p-6">
-                {/* Add the aluminum bottle image */}
-                <div className="mb-6">
-                  <div className="relative h-48 rounded-lg overflow-hidden">
-                    <Image
-                      src="/images/aluminum-bottle-packaging-liquids.jpg"
-                      alt="Recyclable aluminum bottles"
-                      fill
-                      style={{ objectFit: "cover" }}
-                      className="hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
-                      <p className="text-white p-4 text-sm">
-                        Aluminum bottles are 100% recyclable and can be recycled indefinitely without losing quality
-                      </p>
-                    </div>
-                  </div>
-                </div>
                 {recentActivities.length > 0 ? (
                   <div className="space-y-4">
                     {recentActivities.map((activity) => (

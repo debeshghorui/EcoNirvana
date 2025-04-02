@@ -40,7 +40,7 @@ const availableRewards = [
     description: 'Eco-friendly stainless steel water bottle', 
     points: 150, 
     category: 'eco',
-    image: '/images/rewards/aluminum-bottle-packaging-liquids.jpg',
+    image: '/images/rewards/bottle.jpg',
     stock: 15
   },
   { 
@@ -49,7 +49,7 @@ const availableRewards = [
     description: 'Digital gift card for Amazon purchases', 
     points: 250, 
     category: 'shopping',
-    image: '/images/rewards/amazon-card.jpg',
+    image: '/images/rewards/cards.jpg',
     stock: 'Unlimited'
   },
   { 
@@ -58,7 +58,7 @@ const availableRewards = [
     description: 'We\'ll plant a tree in your name through our reforestation partners', 
     points: 100, 
     category: 'planting',
-    image: '/images/rewards/plant-tree.jpg',
+    image: '/images/rewards/tree.jpg',
     stock: 'Unlimited'
   },
   { 
@@ -67,7 +67,7 @@ const availableRewards = [
     description: 'Donate your points to help clean plastic from our oceans', 
     points: 200, 
     category: 'donation',
-    image: '/images/rewards/ocean-cleanup.jpg',
+    image: '/images/rewards/ocean.jpg',
     stock: 'Unlimited'
   },
   { 
@@ -76,7 +76,7 @@ const availableRewards = [
     description: 'Portable bamboo utensil set with carrying case', 
     points: 180, 
     category: 'eco',
-    image: '/images/rewards/bamboo-cutlery.jpg',
+    image: '/images/rewards/cutlery.jpg',
     stock: 8
   },
   { 
@@ -85,7 +85,7 @@ const availableRewards = [
     description: 'Digital gift card for Starbucks purchases', 
     points: 150, 
     category: 'shopping',
-    image: '/images/rewards/starbucks-card.jpg',
+    image: '/images/rewards/coffee.jpg',
     stock: 'Unlimited'
   },
   { 
@@ -94,7 +94,7 @@ const availableRewards = [
     description: 'Mesh bags for plastic-free grocery shopping', 
     points: 120, 
     category: 'eco',
-    image: '/images/rewards/produce-bags.jpg',
+    image: '/images/rewards/bag.jpg',
     stock: 20
   },
   { 
@@ -370,8 +370,64 @@ export default function RewardsPage() {
                 <div className="h-48 bg-gray-200 relative">
                   {reward.title === 'Reusable Water Bottle' ? (
                     <Image
-                      src="/images/aluminum-bottle-packaging-liquids.jpg"
+                      src="/images/rewards/bottle.jpg"
                       alt="Reusable Water Bottle"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-300"
+                    />
+                  ) : reward.title === '$10 Amazon Gift Card' ? (
+                    <Image
+                      src="/images/rewards/cards.jpg"
+                      alt="$10 Amazon Gift Card"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-300"
+                    />
+                  ) : reward.title === 'Plant a Tree' ? (
+                    <Image
+                      src="/images/rewards/tree.jpg"
+                      alt="Plant a Tree"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-300"
+                    />
+                  ) : reward.title === 'Bamboo Cutlery Set' ? (
+                    <Image
+                      src="/images/rewards/cutlery.jpg"
+                      alt="Bamboo Cutlery Set"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-300"
+                    />
+                  ) : reward.title === 'Donate to Ocean Cleanup' ? (
+                    <Image
+                      src="/images/rewards/ocean.jpg"
+                      alt="Donate to Ocean Cleanup"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-300"
+                    />
+                  ) : reward.title === 'Donate to Wildlife Conservation' ? (
+                    <Image
+                      src="/images/rewards/wildlife.jpg"
+                      alt="Donate to Wildlife Conservation"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-300"
+                    />
+                  ) : reward.title === 'Reusable Produce Bags (Set of 5)' ? (
+                    <Image
+                      src="/images/rewards/bag.jpg"
+                      alt="Reusable Produce Bags"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-300"
+                    />
+                  ) : reward.title === '$5 Starbucks Gift Card' ? (
+                    <Image
+                      src="/images/rewards/coffee.jpg"
+                      alt="$5 Starbucks Gift Card"
                       fill
                       style={{ objectFit: "cover" }}
                       className="transition-transform duration-300"
