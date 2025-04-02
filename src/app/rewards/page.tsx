@@ -23,6 +23,7 @@ import {
   FaInfoCircle
 } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
+import { getUserPoints, redeemPoints, getUserRedemptions } from '@/lib/firebase';
 
 // Mock data for rewards
 const rewardCategories = [
@@ -108,33 +109,6 @@ const availableRewards = [
   },
 ];
 
-const redemptionHistory = [
-  { 
-    id: 1, 
-    reward: 'Plant a Tree', 
-    date: 'May 15, 2023', 
-    points: 100, 
-    status: 'Completed',
-    category: 'planting'
-  },
-  { 
-    id: 2, 
-    reward: '$10 Amazon Gift Card', 
-    date: 'April 2, 2023', 
-    points: 250, 
-    status: 'Delivered',
-    category: 'shopping'
-  },
-  { 
-    id: 3, 
-    reward: 'Reusable Water Bottle', 
-    date: 'March 10, 2023', 
-    points: 150, 
-    status: 'Shipped',
-    category: 'eco'
-  },
-];
-
 export default function RewardsPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
@@ -144,19 +118,35 @@ export default function RewardsPage() {
   const [redeemingReward, setRedeemingReward] = useState<number | null>(null);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [selectedReward, setSelectedReward] = useState<any>(null);
+  const [redemptionHistory, setRedemptionHistory] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Mock user points
-  const [userPoints, setUserPoints] = useState(450);
+  // Get user points from Firestore
+  const [userPoints, setUserPoints] = useState<number>(0);
   
-  // Load points from localStorage if available
+  // Load points from Firestore
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedPoints = localStorage.getItem('userPoints');
-      if (savedPoints) {
-        setUserPoints(parseInt(savedPoints));
+    async function loadUserPoints() {
+      if (user?.id) {
+        try {
+          const points = await getUserPoints(user.id);
+          setUserPoints(points);
+          
+          // Also load redemption history
+          const history = await getUserRedemptions(user.id);
+          setRedemptionHistory(history);
+        } catch (error) {
+          console.error("Error loading user points:", error);
+        } finally {
+          setIsLoading(false);
+        }
       }
     }
-  }, []);
+    
+    if (!loading && user) {
+      loadUserPoints();
+    }
+  }, [user, loading]);
   
   // Filter rewards based on category and search term
   const filteredRewards = availableRewards.filter(reward => {
@@ -172,24 +162,42 @@ export default function RewardsPage() {
     setConfirmationOpen(true);
   };
   
-  // Confirm redemption
-  const confirmRedemption = () => {
-    // In a real app, this would call an API to process the redemption
-    setUserPoints(prev => prev - selectedReward.points);
-    setConfirmationOpen(false);
+  // Confirm redemption using Firestore
+  const confirmRedemption = async () => {
+    if (!user?.id || !selectedReward) return;
     
-    // Show redeeming state
     setRedeemingReward(selectedReward.id);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Call Firestore to redeem points
+      const success = await redeemPoints(
+        user.id, 
+        selectedReward.points, 
+        selectedReward.title
+      );
+      
+      if (success) {
+        // Update local state to reflect the change
+        setUserPoints(prev => prev - selectedReward.points);
+        
+        // Refresh redemption history
+        const history = await getUserRedemptions(user.id);
+        setRedemptionHistory(history);
+      } else {
+        // Handle failure - possibly not enough points
+        alert("Failed to redeem reward. You may not have enough points.");
+      }
+    } catch (error) {
+      console.error("Error redeeming points:", error);
+      alert("An error occurred while redeeming your reward. Please try again.");
+    } finally {
+      setConfirmationOpen(false);
       setRedeemingReward(null);
-      // Add to redemption history in a real app
-    }, 1500);
+    }
   };
   
   // Show loading state
-  if (loading || !user) {
+  if (loading || !user || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-white">
         <div className="text-center">

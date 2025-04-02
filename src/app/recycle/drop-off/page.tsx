@@ -1,11 +1,26 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaArrowLeft, FaMapMarkerAlt, FaDirections, FaPhone, FaClock, FaInfoCircle } from 'react-icons/fa';
+import { 
+  FaArrowLeft, 
+  FaMapMarkerAlt, 
+  FaCheck, 
+  FaDirections, 
+  FaRecycle, 
+  FaQrcode, 
+  FaClock, 
+  FaPhone, 
+  FaExclamationTriangle,
+  FaMobileAlt,
+  FaLaptop,
+  FaDesktop
+} from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
+import { addPoints } from '@/lib/firebase';
 
 // Mock data for collection centers
 const collectionCenters = [
@@ -54,7 +69,100 @@ const collectionCenters = [
 export default function DropOffPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const [selectedCenter, setSelectedCenter] = useState<number | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [processingRecycle, setProcessingRecycle] = useState(false);
+  const [selectedItems, setSelectedItems] = useState({
+    small: 0,
+    medium: 0,
+    large: 0
+  });
+  
+  // Point values for each category
+  const pointValues = {
+    small: 30,
+    medium: 50,
+    large: 100
+  };
+  
+  // Calculate total points
+  const totalPoints = 
+    (selectedItems.small * pointValues.small) + 
+    (selectedItems.medium * pointValues.medium) + 
+    (selectedItems.large * pointValues.large);
+  
+  // Handle changing the number of items
+  const updateItemCount = (category: 'small' | 'medium' | 'large', change: number) => {
+    const newCount = Math.max(0, selectedItems[category] + change);
+    setSelectedItems({
+      ...selectedItems,
+      [category]: newCount
+    });
+  };
+  
+  // Handle completion of recycling
+  const handleCompleteRecycling = async () => {
+    if (!user?.id || !selectedLocation || totalPoints === 0) return;
+    
+    setProcessingRecycle(true);
+    
+    try {
+      // Track each type of item separately in Firestore
+      const promises = [];
+      
+      if (selectedItems.small > 0) {
+        promises.push(
+          addPoints(
+            user.id, 
+            selectedItems.small * pointValues.small, 
+            `${selectedItems.small} Small Electronics`, 
+            'Electronics'
+          )
+        );
+      }
+      
+      if (selectedItems.medium > 0) {
+        promises.push(
+          addPoints(
+            user.id, 
+            selectedItems.medium * pointValues.medium, 
+            `${selectedItems.medium} Medium Electronics`, 
+            'Electronics'
+          )
+        );
+      }
+      
+      if (selectedItems.large > 0) {
+        promises.push(
+          addPoints(
+            user.id, 
+            selectedItems.large * pointValues.large, 
+            `${selectedItems.large} Large Electronics`, 
+            'Electronics'
+          )
+        );
+      }
+      
+      await Promise.all(promises);
+      
+      // Show success message after points are added
+      setShowSuccessMessage(true);
+      
+      // Reset selected items
+      setSelectedItems({ small: 0, medium: 0, large: 0 });
+      
+      // Redirect to dashboard after a delay
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Error recording recycling activity:', error);
+      alert('There was an error recording your recycling. Please try again.');
+    } finally {
+      setProcessingRecycle(false);
+    }
+  };
   
   // Show loading state
   if (loading || !user) {
@@ -144,9 +252,9 @@ export default function DropOffPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
                 className={`bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all border-2 ${
-                  selectedCenter === center.id ? 'border-green-500' : 'border-transparent'
+                  selectedLocation === center.id ? 'border-green-500' : 'border-transparent'
                 }`}
-                onClick={() => setSelectedCenter(center.id === selectedCenter ? null : center.id)}
+                onClick={() => setSelectedLocation(center.id.toString())}
               >
                 <div className="p-6">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -178,7 +286,7 @@ export default function DropOffPage() {
                     </div>
                   </div>
                   
-                  {selectedCenter === center.id && (
+                  {selectedLocation === center.id.toString() && (
                     <div className="mt-4 pt-4 border-t border-gray-200">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>

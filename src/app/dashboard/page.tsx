@@ -7,41 +7,10 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTruck, FaTimes, FaTree, FaBars, FaBullhorn, FaHandsHelping, FaComments, FaCertificate } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
+import { getUserPoints, getUserActivities } from '@/lib/firebase';
 
 // Move mock data outside of the component to prevent hydration issues
-// Mock data for the dashboard
-const recyclingStats = {
-  itemsRecycled: 12,
-  co2Saved: 45.8,
-  pointsEarned: 230,
-};
-
-const recentActivities = [
-  { id: 1, type: 'Recycled', item: 'Laptop', date: '2 days ago', points: 50, category: 'Electronics' },
-  { id: 2, type: 'Recycled', item: 'Smartphone', date: '1 week ago', points: 30, category: 'Electronics' },
-  { id: 3, type: 'Recycled', item: 'Printer', date: '2 weeks ago', points: 40, category: 'Electronics' },
-];
-
-const upcomingEvents = [
-  { 
-    id: 1, 
-    title: 'Community Recycling Day', 
-    date: 'June 5, 2023', 
-    time: '10:00 AM - 2:00 PM',
-    location: 'Downtown Green City',
-    description: 'Bring your electronic waste for free recycling. All community members welcome!'
-  },
-  { 
-    id: 2, 
-    title: 'Electronics Collection Drive', 
-    date: 'July 15, 2023', 
-    time: '9:00 AM - 3:00 PM',
-    location: 'Westside Community Center',
-    description: 'Special collection event for computers, TVs, and other electronic devices.'
-  },
-];
-
-// Environmental impact data
+// Keep some mock data for visualization
 const environmentalImpact = {
   treesPlanted: 5,
   waterSaved: 120,
@@ -54,6 +23,52 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showContactModal, setShowContactModal] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // State for user stats from Firestore
+  const [recyclingStats, setRecyclingStats] = useState({
+    itemsRecycled: 0,
+    co2Saved: 0,
+    pointsEarned: 0,
+  });
+  
+  const [recentActivities, setRecentActivities] = useState<any[]>([]);
+  
+  // Fetch user data from Firestore
+  useEffect(() => {
+    async function fetchUserData() {
+      if (user?.id) {
+        try {
+          // Fetch points
+          const points = await getUserPoints(user.id);
+          
+          // Fetch activities
+          const activities = await getUserActivities(user.id);
+          
+          // Calculate stats
+          const totalItems = activities.length;
+          // Rough estimate: 2kg CO2 saved per item recycled (simplified calculation)
+          const estimatedCO2 = totalItems * 2; 
+          
+          setRecentActivities(activities.slice(0, 3)); // Get 3 most recent activities
+          
+          setRecyclingStats({
+            itemsRecycled: totalItems,
+            co2Saved: estimatedCO2,
+            pointsEarned: points
+          });
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    }
+    
+    if (hasMounted && !loading && user) {
+      fetchUserData();
+    }
+  }, [user, loading, hasMounted]);
   
   // Client-side initialization
   useEffect(() => {
@@ -79,7 +94,7 @@ export default function DashboardPage() {
   };
   
   // Show minimal loading state during SSR to prevent hydration mismatch
-  if (!hasMounted || loading || !user) {
+  if (!hasMounted || loading || !user || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white" suppressHydrationWarning={true}>
         {hasMounted && (
@@ -383,7 +398,7 @@ export default function DashboardPage() {
                 </h2>
               </div>
               <div className="p-6">
-                {upcomingEvents.length > 0 ? (
+                {/* upcomingEvents.length > 0 ? (
                   <div className="space-y-6">
                     {upcomingEvents.map((event) => (
                       <div key={event.id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
@@ -414,7 +429,7 @@ export default function DashboardPage() {
                     <FaCalendarAlt className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                     <p className="text-gray-500">No upcoming events at the moment. Check back soon!</p>
                   </div>
-                )}
+                )} */}
                 
                 <div className="mt-6 text-center">
                   <Link href="/events" className="inline-flex items-center text-green-600 font-medium hover:text-green-700">

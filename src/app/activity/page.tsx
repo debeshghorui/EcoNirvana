@@ -6,28 +6,17 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaRecycle, FaArrowLeft, FaFilter, FaCalendarAlt, FaSearch } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
-
-// Mock data for activities
-const allActivities = [
-  { id: 1, type: 'Recycled', item: 'Laptop', date: '2 days ago', points: 50, category: 'Electronics' },
-  { id: 2, type: 'Recycled', item: 'Smartphone', date: '1 week ago', points: 30, category: 'Electronics' },
-  { id: 3, type: 'Recycled', item: 'Printer', date: '2 weeks ago', points: 40, category: 'Electronics' },
-  { id: 4, type: 'Recycled', item: 'Batteries', date: '3 weeks ago', points: 15, category: 'Hazardous' },
-  { id: 5, type: 'Recycled', item: 'Glass Bottles', date: '1 month ago', points: 20, category: 'Glass' },
-  { id: 6, type: 'Recycled', item: 'Cardboard', date: '1 month ago', points: 10, category: 'Paper' },
-  { id: 7, type: 'Recycled', item: 'Plastic Containers', date: '2 months ago', points: 25, category: 'Plastic' },
-  { id: 8, type: 'Recycled', item: 'Aluminum Cans', date: '2 months ago', points: 15, category: 'Metal' },
-  { id: 9, type: 'Recycled', item: 'Old Clothing', date: '3 months ago', points: 30, category: 'Textiles' },
-  { id: 10, type: 'Recycled', item: 'CFL Bulbs', date: '3 months ago', points: 20, category: 'Hazardous' },
-];
+import { getUserActivities } from '@/lib/firebase';
 
 export default function ActivityPage() {
   const router = useRouter();
   const { user, loading, justLoggedOut } = useAuth();
-  const [activities, setActivities] = useState(allActivities);
+  const [activities, setActivities] = useState<any[]>([]);
+  const [allActivities, setAllActivities] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [sortOrder, setSortOrder] = useState('newest');
+  const [isLoading, setIsLoading] = useState(true);
   
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -35,6 +24,28 @@ export default function ActivityPage() {
       router.push('/login');
     }
   }, [user, loading, router, justLoggedOut]);
+  
+  // Load activities from Firestore
+  useEffect(() => {
+    async function loadActivities() {
+      if (user?.id) {
+        setIsLoading(true);
+        try {
+          const userActivities = await getUserActivities(user.id);
+          setAllActivities(userActivities);
+          setActivities(userActivities);
+        } catch (error) {
+          console.error("Error loading activities:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    }
+    
+    if (!loading && user) {
+      loadActivities();
+    }
+  }, [user, loading]);
   
   // Filter and sort activities
   useEffect(() => {
@@ -59,6 +70,8 @@ export default function ActivityPage() {
     // Apply sorting
     filteredActivities.sort((a, b) => {
       if (sortOrder === 'newest') {
+        // For Firestore timestamps, we're using the formatted string for display,
+        // but we'll sort by the document ID which is generated with a timestamp component
         return a.id < b.id ? 1 : -1;
       } else if (sortOrder === 'oldest') {
         return a.id > b.id ? 1 : -1;
@@ -71,13 +84,13 @@ export default function ActivityPage() {
     });
     
     setActivities(filteredActivities);
-  }, [searchTerm, filterCategory, sortOrder]);
+  }, [searchTerm, filterCategory, sortOrder, allActivities]);
   
   // Calculate total points
   const totalPoints = activities.reduce((sum, activity) => sum + activity.points, 0);
   
   // Show loading state
-  if (loading || !user) {
+  if (loading || !user || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-white">
         <div className="text-center">
