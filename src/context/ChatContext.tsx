@@ -17,6 +17,7 @@ type ChatContextType = {
   isLoading: boolean;
   sendMessage: (message: string) => Promise<void>;
   clearChat: () => void;
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 };
 
 // Create context with default values
@@ -25,6 +26,7 @@ const ChatContext = createContext<ChatContextType>({
   isLoading: false,
   sendMessage: async () => {},
   clearChat: () => {},
+  setMessages: () => {},
 });
 
 // Custom hook to use chat context
@@ -196,7 +198,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [isMounted]);
 
   return (
-    <ChatContext.Provider value={{ messages, isLoading, sendMessage, clearChat }}>
+    <ChatContext.Provider value={{ messages, isLoading, sendMessage, clearChat, setMessages }}>
       {children}
     </ChatContext.Provider>
   );

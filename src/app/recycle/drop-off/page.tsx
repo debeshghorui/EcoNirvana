@@ -17,7 +17,8 @@ import {
   FaExclamationTriangle,
   FaMobileAlt,
   FaLaptop,
-  FaDesktop
+  FaDesktop,
+  FaInfoCircle
 } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import { addPoints } from '@/lib/firebase';
@@ -69,14 +70,16 @@ const collectionCenters = [
 export default function DropOffPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [processingRecycle, setProcessingRecycle] = useState(false);
+  const [activeTab, setActiveTab] = useState('locations');
+  const [viewInstructionsFor, setViewInstructionsFor] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState({
     small: 0,
     medium: 0,
     large: 0
   });
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [processingRecycle, setProcessingRecycle] = useState(false);
   
   // Point values for each category
   const pointValues = {
@@ -248,11 +251,12 @@ export default function DropOffPage() {
             {collectionCenters.map((center) => (
               <motion.div
                 key={center.id}
-                initial={{ opacity: 0, y: 20 }}
+                whileHover={{ y: -5 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
                 className={`bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all border-2 ${
-                  selectedLocation === center.id ? 'border-green-500' : 'border-transparent'
+                  selectedLocation === center.id.toString() ? 'border-green-500' : 'border-transparent'
                 }`}
                 onClick={() => setSelectedLocation(center.id.toString())}
               >

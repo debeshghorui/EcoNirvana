@@ -23,7 +23,7 @@ import {
   FaInfoCircle
 } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
-import { getUserPoints, redeemPoints, getUserRedemptions } from '@/lib/firebase';
+import { getUserPoints, redeemPoints, getUserRedemptions, subscribeToUserPoints } from '@/lib/firebase';
 
 // Mock data for rewards
 const rewardCategories = [
@@ -124,28 +124,39 @@ export default function RewardsPage() {
   // Get user points from Firestore
   const [userPoints, setUserPoints] = useState<number>(0);
   
-  // Load points from Firestore
+  // Load points from Firestore with real-time updates
   useEffect(() => {
-    async function loadUserPoints() {
+    async function loadUserData() {
       if (user?.id) {
         try {
-          const points = await getUserPoints(user.id);
-          setUserPoints(points);
-          
-          // Also load redemption history
+          // Load redemption history (one-time)
           const history = await getUserRedemptions(user.id);
           setRedemptionHistory(history);
+          setIsLoading(false);
         } catch (error) {
-          console.error("Error loading user points:", error);
-        } finally {
+          console.error("Error loading user data:", error);
           setIsLoading(false);
         }
       }
     }
     
+    // Set up real-time points listener
+    let pointsUnsubscribe: () => void = () => {};
+    
     if (!loading && user) {
-      loadUserPoints();
+      // Initialize points listener
+      pointsUnsubscribe = subscribeToUserPoints(user.id, (points) => {
+        setUserPoints(points);
+      });
+      
+      // Load other user data
+      loadUserData();
     }
+    
+    // Clean up listener on unmount
+    return () => {
+      pointsUnsubscribe();
+    };
   }, [user, loading]);
   
   // Filter rewards based on category and search term
@@ -156,42 +167,35 @@ export default function RewardsPage() {
     return matchesCategory && matchesSearch;
   });
   
-  // Handle reward redemption
-  const handleRedeemReward = (reward: any) => {
+  // Handle reward redemption with real-time updates
+  const handleRedeemReward = async (reward: any) => {
     setSelectedReward(reward);
     setConfirmationOpen(true);
   };
   
-  // Confirm redemption using Firestore
-  const confirmRedemption = async () => {
+  // Process the reward redemption
+  const processRedemption = async () => {
     if (!user?.id || !selectedReward) return;
     
     setRedeemingReward(selectedReward.id);
+    setConfirmationOpen(false);
     
     try {
-      // Call Firestore to redeem points
-      const success = await redeemPoints(
-        user.id, 
-        selectedReward.points, 
-        selectedReward.title
-      );
+      const success = await redeemPoints(user.id, selectedReward.points, selectedReward.title);
       
       if (success) {
-        // Update local state to reflect the change
-        setUserPoints(prev => prev - selectedReward.points);
+        // Update redemption history
+        const updatedHistory = await getUserRedemptions(user.id);
+        setRedemptionHistory(updatedHistory);
         
-        // Refresh redemption history
-        const history = await getUserRedemptions(user.id);
-        setRedemptionHistory(history);
+        // No alert needed - real-time points update will show the change
       } else {
-        // Handle failure - possibly not enough points
-        alert("Failed to redeem reward. You may not have enough points.");
+        // Handle error silently or add a non-intrusive notification here if needed
+        console.error("Failed to redeem reward - insufficient points");
       }
     } catch (error) {
-      console.error("Error redeeming points:", error);
-      alert("An error occurred while redeeming your reward. Please try again.");
+      console.error("Error redeeming reward:", error);
     } finally {
-      setConfirmationOpen(false);
       setRedeemingReward(null);
     }
   };
@@ -586,7 +590,7 @@ export default function RewardsPage() {
                   Cancel
                 </button>
                 <button
-                  onClick={confirmRedemption}
+                  onClick={processRedemption}
                   className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                 >
                   Confirm Redemption

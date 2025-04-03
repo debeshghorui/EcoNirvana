@@ -11,7 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 const ChatBot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const { messages, isLoading, sendMessage, clearChat } = useChat();
+  const { messages, isLoading, sendMessage, clearChat, setMessages } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const chatWindowRef = useRef<HTMLDivElement>(null);
@@ -92,6 +92,29 @@ const ChatBot: React.FC = () => {
     setPrevMessagesLength(messages.length);
     setPrevIsLoading(isLoading);
   }, [isLoading, messages.length, isOpen, prevIsLoading, prevMessagesLength]);
+
+  // Add an immediate welcome message when opening the chat
+  const addInitialWelcomeMessage = () => {
+    if (messages.length === 0 && isOpen) {
+      // Add a welcome message immediately without waiting for API
+      const welcomeMessage: Message = {
+        id: `welcome-${Date.now()}`,
+        role: 'bot',
+        content: "I'm here to help with all your e-waste recycling questions. You can ask about our services, locations, data security measures, or environmental impact.",
+        timestamp: new Date()
+      };
+      
+      // Only add the welcome message if there are no messages yet
+      setMessages([welcomeMessage]);
+    }
+  };
+
+  // Update the useEffect to add the welcome message immediately
+  useEffect(() => {
+    if (isOpen && messages.length === 0) {
+      addInitialWelcomeMessage();
+    }
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -250,40 +273,31 @@ const ChatBot: React.FC = () => {
               
               {/* Loading indicator */}
               {isLoading && (
-                <motion.div 
+                <motion.div
                   className="flex justify-start"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  variants={chatBubbleVariants}
+                  initial="hidden"
+                  animate="visible"
                 >
-                  <div className="bg-white border border-gray-200 shadow-sm rounded-t-lg rounded-br-lg px-4 py-3 max-w-[85%]">
-                    <div className="flex items-center mb-2">
-                      <div className="bg-white rounded-full mr-2 w-5 h-5 overflow-hidden">
+                  <div className="max-w-[85%] bg-white border border-gray-200 text-gray-800 rounded-t-lg rounded-br-lg px-4 py-3 shadow-sm">
+                    <div className="flex items-center mb-1.5">
+                      <div className="bg-white rounded-full mr-2 w-5 h-5 overflow-hidden shadow-sm">
                         <Image
                           src="/chatboticon.jpg"
-                          alt="EcoBot"
+                          alt="EcoBot" 
                           width={20}
                           height={20}
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <span className="text-xs text-gray-500 font-medium">EcoBot is thinking...</span>
+                      <span className="text-xs opacity-75 font-medium">
+                        EcoBot • {formatTime(new Date())}
+                      </span>
                     </div>
-                    <div className="flex space-x-2">
-                      <motion.div 
-                        className="w-2 h-2 bg-green-500 rounded-full"
-                        animate={{ y: [0, -5, 0] }}
-                        transition={{ repeat: Infinity, duration: 0.8, delay: 0 }}
-                      />
-                      <motion.div 
-                        className="w-2 h-2 bg-green-500 rounded-full"
-                        animate={{ y: [0, -5, 0] }}
-                        transition={{ repeat: Infinity, duration: 0.8, delay: 0.2 }}
-                      />
-                      <motion.div 
-                        className="w-2 h-2 bg-green-500 rounded-full"
-                        animate={{ y: [0, -5, 0] }}
-                        transition={{ repeat: Infinity, duration: 0.8, delay: 0.4 }}
-                      />
+                    <div className="flex space-x-2 items-center">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                     </div>
                   </div>
                 </motion.div>

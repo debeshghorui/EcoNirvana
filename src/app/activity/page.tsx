@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaRecycle, FaArrowLeft, FaFilter, FaCalendarAlt, FaSearch } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
-import { getUserActivities } from '@/lib/firebase';
+import { getUserActivities, subscribeToUserPoints } from '@/lib/firebase';
 
 export default function ActivityPage() {
   const router = useRouter();
@@ -17,6 +17,7 @@ export default function ActivityPage() {
   const [filterCategory, setFilterCategory] = useState('');
   const [sortOrder, setSortOrder] = useState('newest');
   const [isLoading, setIsLoading] = useState(true);
+  const [totalPoints, setTotalPoints] = useState(0);
   
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -25,12 +26,20 @@ export default function ActivityPage() {
     }
   }, [user, loading, router, justLoggedOut]);
   
-  // Load activities from Firestore
+  // Load activities from Firestore and setup points listener
   useEffect(() => {
+    let pointsUnsubscribe: () => void = () => {};
+    
     async function loadActivities() {
       if (user?.id) {
         setIsLoading(true);
         try {
+          // Set up real-time points listener
+          pointsUnsubscribe = subscribeToUserPoints(user.id, (points) => {
+            setTotalPoints(points);
+          });
+          
+          // Fetch activities (one-time)
           const userActivities = await getUserActivities(user.id);
           setAllActivities(userActivities);
           setActivities(userActivities);
@@ -45,6 +54,11 @@ export default function ActivityPage() {
     if (!loading && user) {
       loadActivities();
     }
+    
+    // Clean up on unmount
+    return () => {
+      pointsUnsubscribe();
+    };
   }, [user, loading]);
   
   // Filter and sort activities
@@ -85,9 +99,6 @@ export default function ActivityPage() {
     
     setActivities(filteredActivities);
   }, [searchTerm, filterCategory, sortOrder, allActivities]);
-  
-  // Calculate total points
-  const totalPoints = activities.reduce((sum, activity) => sum + activity.points, 0);
   
   // Show loading state
   if (loading || !user || isLoading) {

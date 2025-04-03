@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTruck, FaTimes, FaTree, FaBars, FaBullhorn, FaHandsHelping, FaComments, FaCertificate } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
-import { getUserPoints, getUserActivities } from '@/lib/firebase';
+import { getUserPoints, getUserActivities, subscribeToUserPoints } from '@/lib/firebase';
 
 // Move mock data outside of the component to prevent hydration issues
 // Keep some mock data for visualization
@@ -36,13 +36,20 @@ export default function DashboardPage() {
   
   // Fetch user data from Firestore
   useEffect(() => {
+    let pointsUnsubscribe: () => void = () => {};
+    
     async function fetchUserData() {
       if (user?.id) {
         try {
-          // Fetch points
-          const points = await getUserPoints(user.id);
+          // Set up real-time points listener
+          pointsUnsubscribe = subscribeToUserPoints(user.id, (points) => {
+            setRecyclingStats(prev => ({
+              ...prev,
+              pointsEarned: points
+            }));
+          });
           
-          // Fetch activities
+          // Fetch activities (one-time)
           const activities = await getUserActivities(user.id);
           
           // Calculate stats
@@ -52,11 +59,11 @@ export default function DashboardPage() {
           
           setRecentActivities(activities.slice(0, 3)); // Get 3 most recent activities
           
-          setRecyclingStats({
+          setRecyclingStats(prev => ({
+            ...prev,
             itemsRecycled: totalItems,
-            co2Saved: estimatedCO2,
-            pointsEarned: points
-          });
+            co2Saved: estimatedCO2
+          }));
         } catch (error) {
           console.error("Error fetching user data:", error);
         } finally {
@@ -68,6 +75,11 @@ export default function DashboardPage() {
     if (hasMounted && !loading && user) {
       fetchUserData();
     }
+    
+    // Clean up on unmount
+    return () => {
+      pointsUnsubscribe();
+    };
   }, [user, loading, hasMounted]);
   
   // Client-side initialization

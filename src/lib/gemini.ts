@@ -3,8 +3,14 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // Get API key from environment variable
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || '';
 
-// Offline mode for development - set to true to use mock responses when API is unavailable
-const OFFLINE_MODE = true;
+// Log API key status for debugging
+console.log(`Gemini API key available: ${apiKey ? 'Yes' : 'No'}`);
+if (!apiKey) {
+  console.error("ERROR: Gemini API key is missing. Please check your .env.local file");
+}
+
+// Offline mode for development - set to false to use the actual API
+const OFFLINE_MODE = false;
 
 // Check if we're running in a development environment
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -17,8 +23,9 @@ try {
   // Only initialize if we have an API key and we're not forcing offline mode
   if (apiKey && !(isDevelopment && OFFLINE_MODE)) {
     genAI = new GoogleGenerativeAI(apiKey);
-    // Get the model
-    geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    // Get the model - using gemini-1.5-flash for better performance
+    geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    console.log("Gemini API initialized successfully with model: gemini-1.5-flash");
   } else {
     console.log("Using offline mode for Gemini API");
   }
@@ -30,34 +37,55 @@ try {
   }
 }
 
-// Function to generate a response from Gemini
-export async function generateResponse(prompt: string): Promise<string> {
-  try {
-    // In development with OFFLINE_MODE enabled, return mock response if API call fails
+// Add retries and better error handling for Gemini API
+export async function generateResponse(prompt: string, maxRetries = 2): Promise<string> {
+  let retries = 0;
+  
+  while (retries <= maxRetries) {
     try {
       if (geminiModel) {
-        const result = await geminiModel.generateContent(prompt);
-        const response = result.response;
-        return response.text();
+        try {
+          const result = await geminiModel.generateContent(prompt);
+          const response = result.response;
+          return response.text();
+        } catch (error) {
+          console.error(`Error generating response from Gemini API (attempt ${retries + 1}):`, error);
+          
+          if (retries >= maxRetries) {
+            if (!isDevelopment || !OFFLINE_MODE) {
+              throw error; // Re-throw if not in development or offline mode is disabled
+            }
+          }
+          
+          // Wait before retrying
+          await new Promise(resolve => setTimeout(resolve, 1000 * (retries + 1)));
+          retries++;
+          continue;
+        }
       }
+      
+      // Fallback to mock response in development mode with OFFLINE_MODE enabled
+      if (isDevelopment && OFFLINE_MODE) {
+        console.log("Using mock response in offline mode");
+        return generateMockResponse(prompt);
+      }
+      
+      return "Sorry, I'm having trouble connecting to my knowledge base. Please try again later.";
     } catch (error) {
-      console.error("Error generating response from Gemini API:", error);
-      if (!isDevelopment || !OFFLINE_MODE) {
-        throw error; // Re-throw if not in development or offline mode is disabled
+      console.error(`Error generating response (attempt ${retries + 1}):`, error);
+      
+      if (retries >= maxRetries) {
+        break;
       }
+      
+      // Wait before retrying
+      await new Promise(resolve => setTimeout(resolve, 1000 * (retries + 1)));
+      retries++;
     }
-    
-    // Fallback to mock response in development mode with OFFLINE_MODE enabled
-    if (isDevelopment && OFFLINE_MODE) {
-      console.log("Using mock response in offline mode");
-      return generateMockResponse(prompt);
-    }
-    
-    return "Sorry, I encountered an error. Please try again later.";
-  } catch (error) {
-    console.error("Error generating response:", error);
-    return "Sorry, I encountered an error connecting to my knowledge base. Please try again later.";
   }
+  
+  // Final fallback response after all retries
+  return "I apologize, but I'm experiencing technical difficulties. Please try again later or contact support for assistance.";
 }
 
 // Generate a mock response based on the prompt for offline development
@@ -218,53 +246,55 @@ Contact Information:
 - Website: www.econirvana.com
 `;
 
-// Function to create a chat session
-export function createChatSession() {
-  try {
-    if (!geminiModel && isDevelopment && OFFLINE_MODE) {
-      // Return a mock chat session object for offline development
-      return createMockChatSession();
-    }
-    
-    return geminiModel.startChat({
-      history: [
-        {
-          role: "user",
-          parts: [{ text: `You are EcoBot, an AI assistant for EcoNirvana, an e-waste recycling service. Your goal is to help users with information about e-waste recycling, our services, and environmental impact. Keep responses concise, friendly, and focused on e-waste recycling topics. 
-
-Here is information about our services that you should use to answer questions:
-${ewasteKnowledge}
-
-When users are on our Secure Data Destruction Services page, emphasize the following information:
-- We provide certified data destruction services that comply with NIST 800-88 guidelines, GDPR, HIPAA, and other data protection standards
-- Our data destruction methods include secure wiping to DoD 5220.22-M standards, degaussing for magnetic media, and physical destruction for devices that cannot be wiped
-- We provide a Certificate of Data Destruction for each device processed
-- Simply deleting files or formatting a drive doesn't actually remove data - it only removes the reference to the file location
-- A 2019 study found that over 40% of second-hand devices still contained personally identifiable information from previous owners
-- Our process includes secure collection, inventory, destruction, and certification
-- After data destruction, devices are responsibly recycled
-
-If asked about data destruction services, provide information about our secure data destruction services without mentioning "page" or referring to the current location. Focus on the services themselves.
-
-If you don't know the answer to a question, don't make up information. Instead, suggest that the user contact our customer service team for more specific information.` }],
+// Function to create a chat session with retry mechanism
+export function createChatSession(maxRetries = 2) {
+  let retries = 0;
+  
+  const createSession = async () => {
+    try {
+      if (!geminiModel && isDevelopment && OFFLINE_MODE) {
+        // Return a mock chat session object for offline development
+        return createMockChatSession();
+      }
+      
+      if (!geminiModel) {
+        console.error("Gemini model not initialized");
+        throw new Error("Gemini model not initialized");
+      }
+      
+      return geminiModel.startChat({
+        history: [
+          {
+            role: "user",
+            parts: [{ text: `You are EcoBot, an AI assistant for EcoNirvana, an e-waste recycling service. Your goal is to help users with information about e-waste recycling, our services, and environmental impact. Keep responses concise, friendly, and focused on e-waste recycling topics.`}],
+          },
+          {
+            role: "model",
+            parts: [{ text: "I'm here to help with all your e-waste recycling questions. You can ask about our services, locations, data security measures, or environmental impact." }],
+          }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 800,
         }
-      ],
-      generationConfig: {
-        maxOutputTokens: 500,
-        temperature: 0.2,
-      },
-    });
-  } catch (error) {
-    console.error("Error creating chat session:", error);
-    
-    // In development with OFFLINE_MODE, use mock session
-    if (isDevelopment && OFFLINE_MODE) {
-      return createMockChatSession();
+      });
+    } catch (error) {
+      console.error(`Error creating chat session (attempt ${retries + 1}):`, error);
+      
+      if (retries >= maxRetries) {
+        // Return mock session as last resort
+        console.log("Falling back to mock chat session after failed retries");
+        return createMockChatSession();
+      }
+      
+      // Wait before retrying
+      await new Promise(resolve => setTimeout(resolve, 1000 * (retries + 1)));
+      retries++;
+      return createSession(); // Recursive retry
     }
-    
-    // Otherwise, throw the error to be handled elsewhere
-    throw error;
-  }
+  };
+  
+  return createSession();
 }
 
 // Mock chat session for offline development

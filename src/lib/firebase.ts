@@ -12,7 +12,8 @@ import {
   orderBy, 
   getDocs, 
   Timestamp, 
-  addDoc 
+  addDoc,
+  onSnapshot
 } from 'firebase/firestore';
 
 // Firebase configuration
@@ -178,6 +179,34 @@ function formatTimestamp(timestamp: any): string {
   } else {
     const years = Math.floor(diffDays / 365);
     return `${years} ${years === 1 ? 'year' : 'years'} ago`;
+  }
+}
+
+// New function to listen for real-time points updates
+export function subscribeToUserPoints(userId: string, callback: (points: number) => void): () => void {
+  try {
+    const userRef = doc(db, 'users', userId);
+    
+    // Set up real-time listener
+    const unsubscribe = onSnapshot(userRef, (snapshot) => {
+      if (snapshot.exists() && snapshot.data().points !== undefined) {
+        callback(snapshot.data().points);
+      } else {
+        // Initialize points if they don't exist
+        setDoc(userRef, { points: 0 }, { merge: true })
+          .then(() => callback(0))
+          .catch((error) => console.error("Error initializing user points:", error));
+      }
+    }, (error) => {
+      console.error("Error setting up points listener:", error);
+    });
+    
+    // Return the unsubscribe function to clean up
+    return unsubscribe;
+  } catch (error) {
+    console.error("Error subscribing to user points:", error);
+    // Return empty function as fallback
+    return () => {};
   }
 }
 
