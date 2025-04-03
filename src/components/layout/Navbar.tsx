@@ -312,7 +312,7 @@ const Navbar = () => {
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                   <Link
                     href="/login"
-                    className="flex items-center border-2 border-green-200 text-white hover:border-green-500 block px-3 py-2 rounded-md text-base font-medium"
+                    className="flex items-center border-2 border-green-200 text-white hover:border-green-500 px-3 py-2 rounded-md text-base font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <FaUser className="mr-2 h-5 w-5" />
@@ -320,7 +320,7 @@ const Navbar = () => {
                   </Link>
                   <Link
                     href="/signup"
-                    className="flex items-center bg-green-500 text-white hover:bg-green-400 block px-3 py-2 rounded-md text-base font-medium mt-2 border-2 border-green-600 hover:border-green-500"
+                    className="flex items-center bg-green-500 text-white hover:bg-green-400 px-3 py-2 rounded-md text-base font-medium mt-2 border-2 border-green-600 hover:border-green-500"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <FaUser className="mr-2 h-5 w-5" />
@@ -825,7 +825,7 @@ const Navbar = () => {
                     )}
                     <Link
                       href="/dashboard"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaHome className="mr-2 h-5 w-5" />
@@ -833,7 +833,7 @@ const Navbar = () => {
                     </Link>
                     <Link
                       href="/recycle"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaRecycle className="mr-2 h-5 w-5" />
@@ -841,7 +841,7 @@ const Navbar = () => {
                     </Link>
                     <Link
                       href="/rewards"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaChartLine className="mr-2 h-5 w-5" />
@@ -856,7 +856,7 @@ const Navbar = () => {
                         </div>
                         <Link
                           href="/about"
-                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium pl-6"
+                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium pl-6"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           <FaInfoCircle className="mr-2 h-5 w-5" />
@@ -864,7 +864,7 @@ const Navbar = () => {
                         </Link>
                         <Link
                           href="/why-econirvana"
-                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium pl-6"
+                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium pl-6"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           <FaLeaf className="mr-2 h-5 w-5" />
@@ -872,7 +872,7 @@ const Navbar = () => {
                         </Link>
                         <Link
                           href="/blog"
-                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium pl-6"
+                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium pl-6"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           <FaBlog className="mr-2 h-5 w-5" />
@@ -886,7 +886,7 @@ const Navbar = () => {
                       <>
                         <Link
                           href="/about"
-                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           <FaInfoCircle className="mr-2 h-5 w-5" />
@@ -894,7 +894,7 @@ const Navbar = () => {
                         </Link>
                         <Link
                           href="/why-econirvana"
-                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           <FaLeaf className="mr-2 h-5 w-5" />
@@ -902,7 +902,7 @@ const Navbar = () => {
                         </Link>
                         <Link
                           href="/blog"
-                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                          className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           <FaBlog className="mr-2 h-5 w-5" />
@@ -914,7 +914,7 @@ const Navbar = () => {
                     {/* Mobile Quiz Link */}
                     <Link
                       href="/quiz"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaQuestionCircle className="mr-2 h-5 w-5" />
@@ -923,7 +923,7 @@ const Navbar = () => {
                     
                     <Link
                       href="/settings"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaCog className="mr-2 h-5 w-5" />
@@ -935,7 +935,7 @@ const Navbar = () => {
                         handleLogout();
                         setIsMenuOpen(false);
                       }}
-                      className="flex items-center w-full text-left text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center w-full text-left text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                     >
                       <FaSignOutAlt className="mr-2 h-5 w-5" />
                       Sign out
@@ -1001,7 +1001,7 @@ const Navbar = () => {
                     )}
                     <Link
                       href="/about"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaInfoCircle className="mr-2 h-5 w-5" />
@@ -1009,7 +1009,7 @@ const Navbar = () => {
                     </Link>
                     <Link
                       href="/why-econirvana"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaLeaf className="mr-2 h-5 w-5" />
@@ -1017,7 +1017,7 @@ const Navbar = () => {
                     </Link>
                     <Link
                       href="/blog"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaBlog className="mr-2 h-5 w-5" />
@@ -1025,7 +1025,7 @@ const Navbar = () => {
                     </Link>
                     <Link
                       href="/quiz"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaQuestionCircle className="mr-2 h-5 w-5" />
@@ -1033,7 +1033,7 @@ const Navbar = () => {
                     </Link>
                     <Link
                       href="/login"
-                      className="flex items-center border-2 border-green-200 text-white hover:border-green-500 block px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center border-2 border-green-200 text-white hover:border-green-500 px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaUser className="mr-2 h-5 w-5" />
@@ -1041,7 +1041,7 @@ const Navbar = () => {
                     </Link>
                     <Link
                       href="/signup"
-                      className="flex items-center bg-green-500 text-white hover:bg-green-400 block px-3 py-2 rounded-md text-base font-medium mt-2 border-2 border-green-600 hover:border-green-500"
+                      className="flex items-center bg-green-500 text-white hover:bg-green-400 px-3 py-2 rounded-md text-base font-medium mt-2 border-2 border-green-600 hover:border-green-500"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaUser className="mr-2 h-5 w-5" />
