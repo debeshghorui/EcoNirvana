@@ -52,21 +52,21 @@ export default function QuizPage() {
       setLoading(true);
       setError(null);
       try {
-        // Use sample questions for immediate development feedback
-        // Comment this out for production to use actual API
-        const sampleQuestions = getSampleQuestions();
-        setQuestions(sampleQuestions);
-        setSelectedOptions(new Array(sampleQuestions.length).fill(null));
-        setLoading(false);
-        return;
-        
-        // Uncomment below for production use with Gemini API
-        /*
         const prompt = `Create 5 multiple-choice quiz questions about e-waste recycling and proper electronics disposal. For each question:
         - Include the question
         - Provide 4 possible answers
         - Mark the correct answer
         - Give a brief explanation why that answer is correct
+        
+        Focus on one of these randomly selected topics:
+        - Environmental impact of e-waste
+        - Proper disposal methods for different electronics
+        - Recycling benefits and statistics
+        - Data security concerns when recycling electronics
+        - Valuable components in e-waste
+        - E-waste regulations and compliance
+        - Innovative e-waste recycling technologies
+        - E-waste reduction strategies
         
         Format your response as valid JSON with this structure:
         [
@@ -77,14 +77,7 @@ export default function QuizPage() {
             "explanation": "Brief explanation of why this answer is correct"
           },
           ...
-        ]
-        
-        Make sure the questions cover topics like:
-        - Environmental impact of e-waste
-        - Proper disposal methods
-        - Recycling benefits
-        - Data security concerns
-        - Components of e-waste`;
+        ]`;
         
         const response = await generateResponse(prompt);
         
@@ -108,7 +101,6 @@ export default function QuizPage() {
         setQuestions(questionsWithIds);
         // Initialize selectedOptions array with nulls for each question
         setSelectedOptions(new Array(questionsWithIds.length).fill(null));
-        */
       } catch (error) {
         console.error("Error fetching quiz questions:", error);
         setError("Failed to load quiz questions. Please try again.");
@@ -260,29 +252,31 @@ export default function QuizPage() {
   // Calculate points (10 points per correct answer)
   const earnedPoints = score * 10;
   
-  // Save points for logged in users - moved outside conditional render
+  // Save points for logged in users
   useEffect(() => {
     const savePoints = async () => {
       if (user && !pointsSaved && score > 0 && quizCompleted) {
         try {
-          // Simulate saving points to user account
+          // Log the attempt to save points
           console.log(`Saving ${earnedPoints} points to user account`);
-          setPointsSaved(true);
           
-          // Update the user's points in the rewards system
-          // In a production app, this would be an API call to update the database
-          if (typeof window !== 'undefined') {
-            // Get current points from localStorage or initialize to 0
-            const currentPoints = parseInt(localStorage.getItem('userPoints') || '0');
-            // Add new points from quiz
-            const newTotalPoints = currentPoints + earnedPoints;
-            // Save updated points to localStorage
-            localStorage.setItem('userPoints', newTotalPoints.toString());
-            console.log(`Updated total rewards points: ${newTotalPoints}`);
+          // Import the addPoints function from firebase.ts
+          const { addPoints } = await import('@/lib/firebase');
+          
+          // Save points to Firebase (this updates Firestore and tracks the activity)
+          const success = await addPoints(
+            user.id, 
+            earnedPoints, 
+            'Quiz Completion', 
+            'Knowledge'
+          );
+          
+          if (success) {
+            console.log(`Successfully saved ${earnedPoints} points to user's Firebase account`);
+            setPointsSaved(true);
+          } else {
+            console.error("Failed to save points to Firebase");
           }
-          
-          // In a real app, you would call an API to save points
-          // await saveUserPoints(user.id, earnedPoints);
         } catch (error) {
           console.error("Error saving points:", error);
         }

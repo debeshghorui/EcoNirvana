@@ -9,7 +9,7 @@ if (!apiKey) {
   console.error("ERROR: Gemini API key is missing. Please check your .env.local file");
 }
 
-// Offline mode for development - set to false to use the actual API
+// Offline mode for development - set to true to use mock responses instead of the actual API
 const OFFLINE_MODE = false;
 
 // Check if we're running in a development environment
