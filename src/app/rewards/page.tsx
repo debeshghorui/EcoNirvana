@@ -552,7 +552,7 @@ export default function RewardsPage() {
       
       {/* Redemption Confirmation Modal */}
       {confirmationOpen && selectedReward && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 backdrop-blur-md bg-white/30 flex items-center justify-center z-50 p-4">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -569,7 +569,7 @@ export default function RewardsPage() {
               <div className="bg-gray-50 p-4 rounded-lg mb-6">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-gray-600">Your current balance:</span>
-                  <span className="font-medium">{userPoints} points</span>
+                  <span className="font-medium text-green-600">{userPoints} points</span>
                 </div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-gray-600">Redemption cost:</span>
@@ -578,7 +578,7 @@ export default function RewardsPage() {
                 <div className="border-t border-gray-200 my-2"></div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">New balance:</span>
-                  <span className="font-medium">{userPoints - selectedReward.points} points</span>
+                  <span className="font-medium text-green-600">{userPoints - selectedReward.points} points</span>
                 </div>
               </div>
               
