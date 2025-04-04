@@ -126,230 +126,332 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white" suppressHydrationWarning={true}>
-      {/* Combined Welcome Banner and Recycling Impact */}
-      <section className="relative bg-gradient-to-r from-green-600 to-green-500 text-white overflow-hidden">
-        {/* Background pattern */}
-        <div className="absolute inset-0 overflow-hidden opacity-10">
-          <Image
-            src="/green-globe.jpg"
-            alt="Background pattern"
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-            priority
-          />
+    <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-white" suppressHydrationWarning={true}>
+      {/* Hero Section with Impact Overview */}
+      <section className="relative overflow-hidden">
+        {/* Organic wave background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-green-700 to-emerald-600 z-0">
+          <svg className="absolute bottom-0 left-0 right-0 w-full h-48 text-white transform translate-y-1" fill="currentColor" viewBox="0 0 1200 120">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"></path>
+            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" opacity=".5"></path>
+            <path d="M0,0V15.81C205.46,36.92,405.84,68,602.48,56,748.51,46.32,892.62,5.73,1032.74,3.49c58.58-1,134.5,15.82,207.08,48.16V0Z" opacity=".75"></path>
+          </svg>
         </div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 relative z-10">
-          {/* Welcome Header */}
-          <div className="md:flex md:items-center md:justify-between mb-10">
-            <div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 z-10">
+          <div className="md:flex md:items-center md:justify-between">
+            <div className="max-w-xl">
               <motion.h1 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-3xl md:text-4xl font-bold"
+                className="text-3xl md:text-4xl font-bold text-white mb-3"
               >
-                Welcome back, {user.name}!
+                Hello, {user.name}! 
               </motion.h1>
               <motion.p 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="mt-2 text-green-50 text-lg"
+                className="text-lg text-green-50"
               >
-                Your sustainable journey continues. Let's make a difference together.
+                Your sustainable journey is making a real impact. Together we're creating a cleaner future.
               </motion.p>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+                className="mt-6 flex items-center bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/20 shadow-lg inline-block"
+              >
+                <div className="bg-green-500 rounded-full p-1.5 mr-2 shadow-sm">
+                  <FaLeaf className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-green-50 font-medium">Your Impact Level: </span>
+                <span className="font-bold ml-1 text-white">Level {Math.max(1, Math.floor(recyclingStats.itemsRecycled / 5) + 1)} Recycler</span>
+              </motion.div>
             </div>
+            
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="mt-6 md:mt-0 flex flex-col sm:flex-row items-center gap-4"
+              className="mt-6 md:mt-0"
             >
-              <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 text-sm border border-white/20 shadow-lg">
-                <div className="bg-green-400 rounded-full p-1.5 mr-2 shadow-sm">
-                  <FaLeaf className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-green-50">Your Eco Impact: </span>
-                <span className="font-bold ml-1 text-white">Level 2 Recycler</span>
-              </div>
               <button
                 onClick={toggleContactModal}
-                className="bg-white text-green-700 hover:bg-green-50 px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 px-5 py-2.5 rounded-lg text-white font-medium flex items-center transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
               >
                 <FaHeadset className="mr-2" />
-                Contact Support
+                Need Help?
               </button>
             </motion.div>
           </div>
-
-          {/* Recycling Impact Metrics */}
-          <motion.div 
+          
+          {/* Impact Stats Cards */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 mb-2"
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-10 grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6"
           >
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-white">
-              <div className="flex flex-col items-center justify-center">
-                <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
-                  <FaRecycle className="h-6 w-6" />
+            {/* Items Recycled */}
+            <div className="bg-white/30 backdrop-blur-md rounded-xl border-2 border-white/40 p-6 text-center group hover:bg-white/40 transition-all duration-300 shadow-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-green-500/10 to-transparent"></div>
+              <div className="relative z-10">
+                <div className="inline-flex items-center justify-center p-3 bg-green-500 rounded-full mb-4 group-hover:-translate-y-1 transition-transform duration-300 shadow-lg border-2 border-white/40">
+                  <FaRecycle className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.itemsRecycled}</h3>
-                <p className="text-xs text-white font-medium shadow-sm">Items Recycled</p>
+                <h3 className="text-5xl font-bold text-white mb-2" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{recyclingStats.itemsRecycled}</h3>
+                <p className="text-sm font-semibold text-white uppercase tracking-wider bg-green-600/50 backdrop-blur-sm rounded-full py-1 px-4 inline-block shadow-md">Items Recycled</p>
               </div>
-              
-              <div className="flex flex-col items-center justify-center">
-                <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
-                  <FaLeaf className="h-6 w-6" />
+            </div>
+            
+            {/* CO2 Saved */}
+            <div className="bg-white/30 backdrop-blur-md rounded-xl border-2 border-white/40 p-6 text-center group hover:bg-white/40 transition-all duration-300 shadow-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-green-500/10 to-transparent"></div>
+              <div className="relative z-10">
+                <div className="inline-flex items-center justify-center p-3 bg-green-500 rounded-full mb-4 group-hover:-translate-y-1 transition-transform duration-300 shadow-lg border-2 border-white/40">
+                  <FaLeaf className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.co2Saved} kg</h3>
-                <p className="text-xs text-white font-medium shadow-sm">CO<sub>2</sub> Saved</p>
+                <h3 className="text-5xl font-bold text-white mb-2" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{recyclingStats.co2Saved} <span className="text-2xl">kg</span></h3>
+                <p className="text-sm font-semibold text-white uppercase tracking-wider bg-green-600/50 backdrop-blur-sm rounded-full py-1 px-4 inline-block shadow-md">CO<sub>2</sub> Saved</p>
               </div>
-              
-              <div className="flex flex-col items-center justify-center">
-                <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
-                  <FaTrophy className="h-6 w-6" />
+            </div>
+            
+            {/* Points Earned */}
+            <div className="bg-white/30 backdrop-blur-md rounded-xl border-2 border-white/40 p-6 text-center group hover:bg-white/40 transition-all duration-300 shadow-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-green-500/10 to-transparent"></div>
+              <div className="relative z-10">
+                <div className="inline-flex items-center justify-center p-3 bg-green-500 rounded-full mb-4 group-hover:-translate-y-1 transition-transform duration-300 shadow-lg border-2 border-white/40">
+                  <FaTrophy className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{recyclingStats.pointsEarned}</h3>
-                <p className="text-xs text-white font-medium shadow-sm">Points Earned</p>
+                <h3 className="text-5xl font-bold text-white mb-2" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{recyclingStats.pointsEarned}</h3>
+                <p className="text-sm font-semibold text-white uppercase tracking-wider bg-green-600/50 backdrop-blur-sm rounded-full py-1 px-4 inline-block shadow-md">Points Earned</p>
               </div>
-              
-              <div className="flex flex-col items-center justify-center">
-                <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
-                  <FaTree className="h-6 w-6" />
+            </div>
+            
+            {/* Trees Equivalent */}
+            <div className="bg-white/30 backdrop-blur-md rounded-xl border-2 border-white/40 p-6 text-center group hover:bg-white/40 transition-all duration-300 shadow-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-green-500/10 to-transparent"></div>
+              <div className="relative z-10">
+                <div className="inline-flex items-center justify-center p-3 bg-green-500 rounded-full mb-4 group-hover:-translate-y-1 transition-transform duration-300 shadow-lg border-2 border-white/40">
+                  <FaTree className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{environmentalImpact.treesPlanted}</h3>
-                <p className="text-xs text-white font-medium shadow-sm">Trees Equivalent</p>
+                <h3 className="text-5xl font-bold text-white mb-2" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{environmentalImpact.treesPlanted}</h3>
+                <p className="text-sm font-semibold text-white uppercase tracking-wider bg-green-600/50 backdrop-blur-sm rounded-full py-1 px-4 inline-block shadow-md">Trees Saved</p>
               </div>
-              
-              <div className="flex flex-col items-center justify-center">
-                <div className="mb-3 bg-white/20 rounded-full p-2 backdrop-blur-sm">
-                  <FaLightbulb className="h-6 w-6" />
+            </div>
+            
+            {/* Energy Saved */}
+            <div className="bg-white/30 backdrop-blur-md rounded-xl border-2 border-white/40 p-6 text-center group hover:bg-white/40 transition-all duration-300 shadow-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-green-500/10 to-transparent"></div>
+              <div className="relative z-10">
+                <div className="inline-flex items-center justify-center p-3 bg-green-500 rounded-full mb-4 group-hover:-translate-y-1 transition-transform duration-300 shadow-lg border-2 border-white/40">
+                  <FaLightbulb className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold mb-1 text-white shadow-sm">{environmentalImpact.energySaved}%</h3>
-                <p className="text-xs text-white font-medium shadow-sm">Energy Saved</p>
+                <h3 className="text-5xl font-bold text-white mb-2" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{environmentalImpact.energySaved}<span className="text-3xl">%</span></h3>
+                <p className="text-sm font-semibold text-white uppercase tracking-wider bg-green-600/50 backdrop-blur-sm rounded-full py-1 px-4 inline-block shadow-md">Energy Saved</p>
               </div>
             </div>
           </motion.div>
         </div>
         
-        {/* Wave divider */}
-        <div className="absolute -bottom-1 left-0 right-0">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" className="w-full h-auto">
-            <path fill="#ffffff" fillOpacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+        {/* Wave separator */}
+        <div className="absolute -bottom-1 left-0 w-full overflow-hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full h-auto">
+            <path fill="#ffffff" fillOpacity="1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,202.7C672,203,768,181,864,165.3C960,149,1056,139,1152,149.3C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
           </svg>
         </div>
       </section>
       
-      {/* Dashboard Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        {/* Quick Actions */}
+      {/* Main Dashboard Content */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16">
+        {/* Primary Actions - Enhanced Cards */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="mb-12"
+          className="mb-12 mt-4"
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span className="bg-green-100 p-1.5 rounded-md mr-2">
+              <FaRecycle className="h-5 w-5 text-green-600" />
+            </span>
+            Take Action
+          </h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {/* Recycle Now */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+            {/* Recycle Now - Primary CTA */}
             <motion.div 
-              whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-              className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
+              whileHover={{ y: -5, boxShadow: '0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0, 0, 0, 0.05)' }}
+              className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl shadow-lg overflow-hidden relative group transition-all duration-300"
             >
-              <Link href="/recycle" className="block">
-                <div className="p-6 flex flex-col items-center">
-                  <div className="bg-green-100 rounded-full p-4 mb-4 text-green-600">
-                    <FaRecycle className="h-6 w-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-green-600 to-green-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <Link href="/recycle" className="block relative z-10 p-6">
+                <div className="flex items-center mb-4">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 mr-4">
+                    <FaRecycle className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1 text-center">Recycle Now</h3>
-                  <p className="text-sm text-gray-500 text-center">Log your recycling</p>
+                  <h3 className="text-xl font-bold text-white">Recycle Your E-Waste</h3>
+                </div>
+                <p className="text-green-50 mb-5">Log your recycling activity and earn rewards for your environmental contributions.</p>
+                <div className="flex items-center text-white font-medium">
+                  <span>Start Now</span>
+                  <svg className="ml-2 h-5 w-5 transform group-hover:translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
                 </div>
               </Link>
             </motion.div>
             
             {/* Find Locations */}
             <motion.div 
-              whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-              className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
+              whileHover={{ y: -5, boxShadow: '0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0, 0, 0, 0.05)' }}
+              className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:border-green-200 group transition-all duration-300"
             >
-              <Link href="/locations" className="block">
-                <div className="p-6 flex flex-col items-center">
-                  <div className="bg-green-100 rounded-full p-4 mb-4 text-green-600">
+              <Link href="/locations" className="block p-6">
+                <div className="flex items-center mb-3">
+                  <div className="bg-green-100 rounded-full p-3 mr-4 text-green-600 group-hover:bg-green-500 group-hover:text-white transition-colors duration-300">
                     <FaMapMarkerAlt className="h-6 w-6" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1 text-center">Find Locations</h3>
-                  <p className="text-sm text-gray-500 text-center">Drop-off centers</p>
+                  <h3 className="text-xl font-bold text-gray-800">Find Drop-off Locations</h3>
+                </div>
+                <p className="text-gray-600 mb-5">Discover convenient e-waste recycling centers near you with our interactive map.</p>
+                <div className="flex items-center text-green-600 font-medium group-hover:text-green-700">
+                  <span>View Map</span>
+                  <svg className="ml-2 h-5 w-5 transform group-hover:translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
                 </div>
               </Link>
             </motion.div>
             
-            {/* Doorstep Collection */}
+            {/* Schedule Pickup */}
             <motion.div 
-              whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-              className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
+              whileHover={{ y: -5, boxShadow: '0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0, 0, 0, 0.05)' }}
+              className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:border-green-200 group transition-all duration-300"
             >
-              <Link href="/doorstep" className="block">
-                <div className="p-6 flex flex-col items-center">
-                  <div className="bg-green-100 rounded-full p-4 mb-4 text-green-600">
+              <Link href="/doorstep" className="block p-6">
+                <div className="flex items-center mb-3">
+                  <div className="bg-green-100 rounded-full p-3 mr-4 text-green-600 group-hover:bg-green-500 group-hover:text-white transition-colors duration-300">
                     <FaTruck className="h-6 w-6" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1 text-center">Doorstep Collection</h3>
-                  <p className="text-sm text-gray-500 text-center">Schedule a pickup</p>
+                  <h3 className="text-xl font-bold text-gray-800">Schedule a Pickup</h3>
                 </div>
-              </Link>
-            </motion.div>
-            
-            {/* My Activity */}
-            <motion.div 
-              whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-              className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
-            >
-              <Link href="/certificates" className="block">
-                <div className="p-6 flex flex-col items-center">
-                  <div className="bg-green-100 rounded-full p-4 mb-4 text-green-600">
-                    <FaCertificate className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1 text-center">My Certificates</h3>
-                  <p className="text-sm text-gray-500 text-center">View your achievements</p>
-                </div>
-              </Link>
-            </motion.div>
-            
-            {/* Rewards */}
-            <motion.div 
-              whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-              className="bg-green-50 rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300"
-            >
-              <Link href="/rewards" className="block">
-                <div className="p-6 flex flex-col items-center">
-                  <div className="bg-green-100 rounded-full p-4 mb-4 text-green-600">
-                    <FaChartLine className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1 text-center">Rewards</h3>
-                  <p className="text-sm text-gray-500 text-center">Redeem your points</p>
+                <p className="text-gray-600 mb-5">Have your e-waste collected right from your doorstep with our convenient pickup service.</p>
+                <div className="flex items-center text-green-600 font-medium group-hover:text-green-700">
+                  <span>Book Now</span>
+                  <svg className="ml-2 h-5 w-5 transform group-hover:translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
                 </div>
               </Link>
             </motion.div>
           </div>
         </motion.div>
         
-        {/* Recent Activity and Upcoming Events */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        {/* Secondary Actions */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-12"
+        >
+          <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+            <span className="bg-green-100 p-1.5 rounded-md mr-2">
+              <FaLeaf className="h-5 w-5 text-green-600" />
+            </span>
+            Explore More
+          </h2>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+            {/* Rewards */}
+            <motion.div 
+              whileHover={{ y: -3, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+              className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 transition-all duration-300"
+            >
+              <Link href="/rewards" className="block">
+                <div className="p-5 flex flex-col items-center text-center">
+                  <div className="bg-yellow-100 rounded-full p-3 mb-3 text-yellow-600">
+                    <FaTrophy className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-base font-semibold text-gray-800 mb-1">Rewards</h3>
+                  <p className="text-xs text-gray-500">Redeem your points</p>
+                </div>
+              </Link>
+            </motion.div>
+            
+            {/* My Activity */}
+            <motion.div 
+              whileHover={{ y: -3, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+              className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 transition-all duration-300"
+            >
+              <Link href="/activity" className="block">
+                <div className="p-5 flex flex-col items-center text-center">
+                  <div className="bg-blue-100 rounded-full p-3 mb-3 text-blue-600">
+                    <FaHistory className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-base font-semibold text-gray-800 mb-1">My Activity</h3>
+                  <p className="text-xs text-gray-500">View your history</p>
+                </div>
+              </Link>
+            </motion.div>
+            
+            {/* Certificates */}
+            <motion.div 
+              whileHover={{ y: -3, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+              className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 transition-all duration-300"
+            >
+              <Link href="/certificates" className="block">
+                <div className="p-5 flex flex-col items-center text-center">
+                  <div className="bg-purple-100 rounded-full p-3 mb-3 text-purple-600">
+                    <FaCertificate className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-base font-semibold text-gray-800 mb-1">Certificates</h3>
+                  <p className="text-xs text-gray-500">Your achievements</p>
+                </div>
+              </Link>
+            </motion.div>
+            
+            {/* Learn */}
+            <motion.div 
+              whileHover={{ y: -3, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+              className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 transition-all duration-300"
+            >
+              <Link href="/learn" className="block">
+                <div className="p-5 flex flex-col items-center text-center">
+                  <div className="bg-orange-100 rounded-full p-3 mb-3 text-orange-600">
+                    <FaLightbulb className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-base font-semibold text-gray-800 mb-1">Learn</h3>
+                  <p className="text-xs text-gray-500">E-waste education</p>
+                </div>
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
+        
+        {/* Recent Activity and Stats */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {/* Recent Activity */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
+            className="lg:col-span-2"
           >
-            <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-              <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+            <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h2 className="text-xl font-semibold text-gray-800 flex items-center">
                   <FaHistory className="mr-2 text-green-600" /> Recent Activity
                 </h2>
+                <Link href="/activity" className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center">
+                  View All 
+                  <svg className="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </Link>
               </div>
               <div className="p-6">
                 {recentActivities.length > 0 ? (
@@ -357,7 +459,7 @@ export default function DashboardPage() {
                     {recentActivities.map((activity) => (
                       <div 
                         key={activity.id} 
-                        className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="flex items-start justify-between p-4 bg-gray-50 rounded-xl hover:bg-green-50 hover:border-green-100 border border-transparent transition-colors"
                       >
                         <div className="flex items-start">
                           <div className="bg-green-100 rounded-full p-2 mr-3">
@@ -365,10 +467,10 @@ export default function DashboardPage() {
                           </div>
                           <div>
                             <h3 className="font-medium text-gray-900">{activity.type} {activity.item}</h3>
-                            <div className="flex items-center text-sm text-gray-500">
+                            <div className="flex items-center text-sm text-gray-500 mt-1">
                               <span>{activity.date}</span>
                               <span className="mx-2">•</span>
-                              <span>{activity.category}</span>
+                              <span className="px-2 py-0.5 bg-gray-100 rounded-full text-xs">{activity.category}</span>
                             </div>
                           </div>
                         </div>
@@ -379,132 +481,70 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center p-6">
-                    <FaRecycle className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">No recent activity yet. Start recycling to track your progress!</p>
+                  <div className="text-center py-8 px-4">
+                    <div className="bg-gray-100 rounded-full p-3 inline-flex mb-4">
+                      <FaRecycle className="h-6 w-6 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-medium text-gray-800 mb-2">No activity yet</h3>
+                    <p className="text-gray-500 mb-6">Start recycling to track your progress and earn rewards!</p>
+                    <Link 
+                      href="/recycle"
+                      className="inline-flex items-center justify-center px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300 shadow-md font-medium"
+                    >
+                      <FaRecycle className="mr-2" />
+                      Start Recycling
+                    </Link>
                   </div>
                 )}
-                
-                <div className="mt-4 text-center">
-                  <Link href="/activity" className="inline-flex items-center text-green-600 font-medium hover:text-green-700">
-                    View all activity
-                    <svg className="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </Link>
-                </div>
               </div>
             </div>
           </motion.div>
           
-          {/* Upcoming Events */}
+          {/* Data Security Card */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-              <div className="bg-gray-50 px-6 py-4 border-b border-gray-100">
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-                  <FaCalendarAlt className="mr-2 text-green-600" /> Upcoming Events
-                </h2>
-              </div>
-              <div className="p-6">
-                {/* upcomingEvents.length > 0 ? (
-                  <div className="space-y-6">
-                    {upcomingEvents.map((event) => (
-                      <div key={event.id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                        <div className="bg-green-50 px-4 py-3 border-b border-gray-200">
-                          <h3 className="font-semibold text-gray-900">{event.title}</h3>
-                        </div>
-                        <div className="p-4">
-                          <div className="flex items-start mb-3">
-                            <FaCalendarAlt className="h-5 w-5 text-green-600 mr-2 mt-0.5" />
-                            <div>
-                              <p className="text-gray-700 font-medium">{event.date}</p>
-                              <p className="text-gray-500 text-sm">{event.time}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start mb-3">
-                            <FaMapMarkerAlt className="h-5 w-5 text-green-600 mr-2 mt-0.5" />
-                            <div>
-                              <p className="text-gray-700">{event.location}</p>
-                            </div>
-                          </div>
-                          <p className="text-gray-600 text-sm">{event.description}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center p-6">
-                    <FaCalendarAlt className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">No upcoming events at the moment. Check back soon!</p>
-                  </div>
-                )} */}
-                
-                <div className="mt-6 text-center">
-                  <Link href="/events" className="inline-flex items-center text-green-600 font-medium hover:text-green-700">
-                    View all events
-                    <svg className="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </Link>
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-md overflow-hidden border border-blue-100 h-full">
+              <div className="p-6 flex flex-col h-full">
+                <div className="bg-blue-100 rounded-full p-3 mb-4 inline-flex w-fit">
+                  <FaShieldAlt className="h-6 w-6 text-blue-600" />
                 </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Secure Data Wiping</h3>
+                <p className="text-gray-700 mb-6 flex-grow">
+                  Protect your sensitive information when recycling electronics. Our certified data destruction ensures complete privacy.
+                </p>
+                <Link 
+                  href="/services/data-destruction" 
+                  className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 group"
+                >
+                  Learn more
+                  <svg className="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </Link>
               </div>
             </div>
           </motion.div>
         </div>
-        
-        {/* Secure Data Destruction Services (renamed from Data Security Reminder) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-12"
-        >
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl shadow-md overflow-hidden border border-blue-200">
-            <div className="p-6 md:p-8">
-              <div className="flex flex-col md:flex-row items-start md:items-center">
-                <div className="bg-blue-100 rounded-full p-4 mb-4 md:mb-0 md:mr-6 flex-shrink-0 shadow-sm border border-blue-200">
-                  <FaShieldAlt className="h-8 w-8 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Secure Data Destruction Services</h3>
-                  <p className="text-gray-700 mb-4 md:text-lg">
-                    Protect your sensitive information with our certified data destruction services. We ensure complete removal of personal data before recycling your devices.
-                  </p>
-                  <Link 
-                    href="/services/data-destruction" 
-                    className="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium"
-                  >
-                    Learn more
-                    <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
       
       {/* Contact Support Modal */}
       {showContactModal && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-md bg-white/30 flex items-center justify-center">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="bg-white rounded-xl shadow-xl overflow-hidden max-w-lg w-full mx-4"
+            className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-lg w-full mx-4"
           >
-            <div className="bg-green-600 px-6 py-4 flex justify-between items-center">
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-4 flex justify-between items-center">
               <h3 className="text-xl font-semibold text-white">Contact Support</h3>
               <button 
                 onClick={toggleContactModal}
-                className="text-white hover:bg-white/10 p-1 rounded"
+                className="text-white hover:bg-white/10 p-1 rounded-full"
               >
                 <FaTimes className="h-5 w-5" />
               </button>
@@ -517,7 +557,7 @@ export default function DashboardPage() {
                   </label>
                   <input 
                     type="text" 
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="How can we help you?"
                   />
                 </div>
@@ -527,7 +567,7 @@ export default function DashboardPage() {
                   </label>
                   <textarea 
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Please describe your issue in detail"
                   ></textarea>
                 </div>
@@ -535,13 +575,13 @@ export default function DashboardPage() {
                   <button 
                     type="button" 
                     onClick={toggleContactModal}
-                    className="mr-3 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50"
+                    className="mr-3 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50"
                   >
                     Cancel
                   </button>
                   <button 
                     type="button"
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    className="px-4 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                   >
                     Send Message
                   </button>
