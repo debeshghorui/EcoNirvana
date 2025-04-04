@@ -9,7 +9,7 @@ export default function WhyEcoNirvanaPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+      <section className="bg-gradient-to-r from-green-600 to-emerald-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="md:flex md:items-center md:justify-between">
             <div className="md:w-3/5">
@@ -22,7 +22,7 @@ export default function WhyEcoNirvanaPage() {
                 Why Choose EcoNirvana?
               </motion.h1>
               <motion.p 
-                className="text-xl text-blue-100 mb-8"
+                className="text-xl text-green-50 mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
@@ -42,7 +42,7 @@ export default function WhyEcoNirvanaPage() {
                   alt="EcoNirvana Difference"
                   fill
                   style={{ objectFit: "cover" }}
-                  className="rounded-lg shadow-xl"
+                  className="rounded-2xl shadow-xl border-2 border-white/20"
                 />
               </div>
             </motion.div>
@@ -63,14 +63,14 @@ export default function WhyEcoNirvanaPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {/* Benefit 1 */}
             <motion.div 
-              className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all"
+              className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
               viewport={{ once: true }}
             >
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <FaLeaf className="text-blue-600 w-8 h-8" />
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <FaLeaf className="text-green-600 w-8 h-8" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900">Eco-Conscious Process</h3>
               <p className="text-gray-600">
@@ -80,14 +80,14 @@ export default function WhyEcoNirvanaPage() {
 
             {/* Benefit 2 */}
             <motion.div 
-              className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all"
+              className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <FaShieldAlt className="text-blue-600 w-8 h-8" />
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <FaShieldAlt className="text-green-600 w-8 h-8" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900">Data Security Guarantee</h3>
               <p className="text-gray-600">
@@ -97,14 +97,14 @@ export default function WhyEcoNirvanaPage() {
 
             {/* Benefit 3 */}
             <motion.div 
-              className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all"
+              className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <FaHandshake className="text-blue-600 w-8 h-8" />
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <FaHandshake className="text-green-600 w-8 h-8" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900">Reward Program</h3>
               <p className="text-gray-600">
@@ -114,14 +114,14 @@ export default function WhyEcoNirvanaPage() {
 
             {/* Benefit 4 */}
             <motion.div 
-              className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all"
+              className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <FaGlobeAmericas className="text-blue-600 w-8 h-8" />
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <FaGlobeAmericas className="text-green-600 w-8 h-8" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900">Transparent Impact Tracking</h3>
               <p className="text-gray-600">
@@ -131,14 +131,14 @@ export default function WhyEcoNirvanaPage() {
 
             {/* Benefit 5 */}
             <motion.div 
-              className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all"
+              className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
               viewport={{ once: true }}
             >
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <FaRecycle className="text-blue-600 w-8 h-8" />
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <FaRecycle className="text-green-600 w-8 h-8" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900">Comprehensive Solutions</h3>
               <p className="text-gray-600">
@@ -148,14 +148,14 @@ export default function WhyEcoNirvanaPage() {
 
             {/* Benefit 6 */}
             <motion.div 
-              className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all"
+              className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.6 }}
               viewport={{ once: true }}
             >
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <FaTree className="text-blue-600 w-8 h-8" />
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <FaTree className="text-green-600 w-8 h-8" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900">Community Initiatives</h3>
               <p className="text-gray-600">
@@ -167,7 +167,7 @@ export default function WhyEcoNirvanaPage() {
       </section>
 
       {/* Comparison Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How We Compare</h2>
@@ -176,9 +176,9 @@ export default function WhyEcoNirvanaPage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+          <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200">
             <div className="grid grid-cols-3">
-              <div className="col-span-1 bg-gray-50 p-6 border-r border-gray-200">
+              <div className="col-span-1 bg-green-50 p-6 border-r border-gray-200">
                 <div className="h-full flex flex-col">
                   <div className="flex-grow">
                     <h3 className="text-lg font-semibold text-gray-500 mb-6">Features</h3>
@@ -197,7 +197,7 @@ export default function WhyEcoNirvanaPage() {
               <div className="col-span-1 p-6 border-r border-gray-200">
                 <div className="h-full flex flex-col">
                   <div className="flex-grow">
-                    <h3 className="text-lg font-semibold text-blue-600 mb-6">EcoNirvana</h3>
+                    <h3 className="text-lg font-semibold text-green-600 mb-6">EcoNirvana</h3>
                     <ul className="space-y-8">
                       <li className="text-green-600 font-medium">Military-grade wiping & destruction</li>
                       <li className="text-green-600 font-medium">Points for every item recycled</li>
@@ -210,7 +210,7 @@ export default function WhyEcoNirvanaPage() {
                 </div>
               </div>
               
-              <div className="col-span-1 p-6 bg-gray-50">
+              <div className="col-span-1 p-6 bg-green-50">
                 <div className="h-full flex flex-col">
                   <div className="flex-grow">
                     <h3 className="text-lg font-semibold text-gray-500 mb-6">Traditional Services</h3>
@@ -233,20 +233,20 @@ export default function WhyEcoNirvanaPage() {
       {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-blue-500 to-blue-700 rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl shadow-xl overflow-hidden">
             <div className="md:flex md:items-center md:justify-between p-8 md:p-12">
               <div className="md:w-3/5 mb-8 md:mb-0">
                 <h2 className="text-3xl font-bold text-white mb-4">
                   Ready to experience the EcoNirvana difference?
                 </h2>
-                <p className="text-xl text-blue-100 mb-0">
+                <p className="text-xl text-green-50 mb-0">
                   Join thousands of eco-conscious individuals and businesses making a positive impact.
                 </p>
               </div>
               <div className="md:w-2/5 md:text-right">
                 <Link 
                   href="/signup" 
-                  className="inline-block bg-white text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-lg font-semibold text-lg transition-colors"
+                  className="inline-block bg-white text-green-600 hover:bg-green-50 px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-md hover:-translate-y-1 hover:shadow-lg duration-300"
                 >
                   Get Started Today
                 </Link>
