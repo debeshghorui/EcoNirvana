@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine, FaCaretDown, FaQuestionCircle, FaInfoCircle, FaBlog, FaChevronRight, FaSearch, FaCalendarAlt, FaTools, FaArrowLeft } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaRecycle, FaLeaf, FaHome, FaChartLine, FaCaretDown, FaQuestionCircle, FaInfoCircle, FaBlog, FaChevronRight, FaSearch, FaCalendarAlt, FaTools, FaGraduationCap } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 
@@ -220,11 +220,6 @@ const Navbar = () => {
     }
   }, [searchTerm, router]);
 
-  // Handle navigation back
-  const handleBackNavigation = () => {
-    router.back();
-  };
-
   // Handle initial SSR render
   if (!isMounted) {
     return (
@@ -357,20 +352,6 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              {/* Back button - show on all pages except home, dashboard, and data destruction */}
-              {!isHomePage && pathname !== '/dashboard' && !isDataDestructionPage && (
-                <button
-                  onClick={handleBackNavigation}
-                  className={`mr-3 p-2 rounded-full transition-colors ${
-                    isDataDestructionPage 
-                      ? 'text-white hover:bg-[#0A1533]/80' 
-                      : 'text-white hover:bg-gray-800'
-                  }`}
-                  aria-label="Go back"
-                >
-                  <FaArrowLeft className="h-4 w-4" />
-                </button>
-              )}
               <Link href="/" className="flex-shrink-0 flex items-center">
                 <div className="w-10 h-10 relative mr-2 rounded-md overflow-hidden bg-white">
                   <Image 
@@ -721,20 +702,6 @@ const Navbar = () => {
             
             {/* Mobile menu button */}
             <div className="md:hidden flex items-center">
-              {/* Back button for mobile - show on all pages except home and dashboard */}
-              {!isHomePage && pathname !== '/dashboard' && (
-                <button
-                  onClick={handleBackNavigation}
-                  className={`mr-3 p-2 rounded-full transition-colors ${
-                    isDataDestructionPage 
-                      ? 'text-white hover:bg-[#0A1533]/80' 
-                      : 'text-white hover:bg-gray-800'
-                  }`}
-                  aria-label="Go back"
-                >
-                  <FaArrowLeft className="h-4 w-4" />
-                </button>
-              )}
               <button
                 onClick={toggleMenu}
                 className={`inline-flex items-center justify-center p-2 rounded-md ${

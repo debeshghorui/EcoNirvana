@@ -15,7 +15,7 @@ const blogPosts = [
     date: "May 15, 2023",
     author: "Jane Smith",
     category: "Environmental",
-    image: "/blog-ewaste-impact.jpg",
+    image: "/blog/blog1.jpg",
     slug: "environmental-impact-of-ewaste"
   },
   {
@@ -25,7 +25,7 @@ const blogPosts = [
     date: "April 22, 2023",
     author: "Michael Johnson",
     category: "Tips & Guides",
-    image: "/blog-prepare-devices.jpg",
+    image: "/blog/blog2.jpg",
     slug: "prepare-devices-for-recycling"
   },
   {
@@ -35,7 +35,7 @@ const blogPosts = [
     date: "March 10, 2023",
     author: "Sarah Chen",
     category: "Business",
-    image: "/blog-business-benefits.jpg",
+    image: "/blog/blog3.jpg",
     slug: "business-benefits-of-ewaste-recycling"
   },
   {
@@ -45,7 +45,7 @@ const blogPosts = [
     date: "February 28, 2023",
     author: "David Wilson",
     category: "Regulations",
-    image: "/blog-ewaste-laws.jpg",
+    image: "/blog/blog4.jpg",
     slug: "ewaste-recycling-laws-regulations"
   },
   {
@@ -55,7 +55,7 @@ const blogPosts = [
     date: "January 15, 2023",
     author: "Emily Rodriguez",
     category: "Sustainability",
-    image: "/blog-circular-economy.jpg",
+    image: "/blog/blog6.jpg",
     slug: "circular-economy-electronics"
   },
   {
@@ -65,7 +65,7 @@ const blogPosts = [
     date: "December 5, 2022",
     author: "Michael Johnson",
     category: "Data Security",
-    image: "/blog-data-security.jpg",
+    image: "/blog/blog5.jpg",
     slug: "data-security-and-ewaste"
   }
 ];

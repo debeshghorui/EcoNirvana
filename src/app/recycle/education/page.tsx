@@ -120,7 +120,7 @@ export default function EducationPage() {
     console.log(`Downloading resource: ${resourceId}`);
   };
   
-  // Show loading state
+  // Show loading state only during loading, but don't block non-authenticated users
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-white">
@@ -145,7 +145,7 @@ export default function EducationPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center">
             <button 
-              onClick={() => router.push('/recycle')}
+              onClick={() => router.back()}
               className="mr-4 text-gray-500 hover:text-gray-700 transition-colors"
             >
               <FaArrowLeft className="h-5 w-5" />

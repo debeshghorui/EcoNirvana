@@ -506,18 +506,25 @@ export default function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-md overflow-hidden border border-blue-100 h-full">
-              <div className="p-6 flex flex-col h-full">
+            <div className="relative rounded-2xl shadow-md overflow-hidden border border-blue-100 h-full">
+              <Image 
+                src="/images/blog/blog1.jpg"
+                alt="Data Security"
+                fill
+                style={{ objectFit: "cover" }}
+                className="absolute inset-0 z-0"
+              />
+              <div className="relative z-10 p-6 flex flex-col h-full bg-gradient-to-br from-blue-900/70 to-indigo-900/70 text-white">
                 <div className="bg-blue-100 rounded-full p-3 mb-4 inline-flex w-fit">
                   <FaShieldAlt className="h-6 w-6 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Secure Data Wiping</h3>
-                <p className="text-gray-700 mb-6 flex-grow">
+                <h3 className="text-xl font-bold mb-3">Secure Data Wiping</h3>
+                <p className="mb-6 flex-grow">
                   Protect your sensitive information when recycling electronics. Our certified data destruction ensures complete privacy.
                 </p>
                 <Link 
                   href="/services/data-destruction" 
-                  className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 group"
+                  className="inline-flex items-center text-white font-medium hover:text-blue-100 group"
                 >
                   Learn more
                   <svg className="ml-2 h-4 w-4 transform group-hover:translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
