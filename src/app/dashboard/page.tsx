@@ -5,9 +5,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTruck, FaTimes, FaTree, FaBars, FaBullhorn, FaHandsHelping, FaComments, FaCertificate } from 'react-icons/fa';
+import { FaRecycle, FaHistory, FaCalendarAlt, FaMapMarkerAlt, FaUserEdit, FaSignOutAlt, FaLeaf, FaChartLine, FaShieldAlt, FaHeadset, FaEnvelope, FaTrophy, FaLightbulb, FaTruck, FaTimes, FaTree, FaBars, FaBullhorn, FaHandsHelping, FaComments, FaCertificate, FaGraduationCap } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import { getUserPoints, getUserActivities, subscribeToUserPoints } from '@/lib/firebase';
+import RecyclingMeter from '@/components/dashboard/RecyclingMeter';
 
 // Move mock data outside of the component to prevent hydration issues
 // Keep some mock data for visualization
@@ -52,8 +53,12 @@ export default function DashboardPage() {
           // Fetch activities (one-time)
           const activities = await getUserActivities(user.id);
           
-          // Calculate stats
-          const totalItems = activities.length;
+          // Calculate stats - only count actual recycled items (not quizzes)
+          const recycledItems = activities.filter(activity => 
+            activity.isRecycledItem !== false && activity.type === 'Recycled'
+          );
+          const totalItems = recycledItems.length;
+          
           // Rough estimate: 2kg CO2 saved per item recycled (simplified calculation)
           const estimatedCO2 = totalItems * 2; 
           
@@ -162,13 +167,9 @@ export default function DashboardPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
-                className="mt-6 flex items-center bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/20 shadow-lg inline-block"
+                className="mt-6 w-full md:max-w-sm"
               >
-                <div className="bg-green-500 rounded-full p-1.5 mr-2 shadow-sm">
-                  <FaLeaf className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-green-50 font-medium">Your Impact Level: </span>
-                <span className="font-bold ml-1 text-white">Level {Math.max(1, Math.floor(recyclingStats.itemsRecycled / 5) + 1)} Recycler</span>
+                <RecyclingMeter itemsRecycled={recyclingStats.itemsRecycled} />
               </motion.div>
             </div>
             
@@ -392,8 +393,8 @@ export default function DashboardPage() {
                   <div className="bg-blue-100 rounded-full p-3 mb-3 text-blue-600">
                     <FaHistory className="h-5 w-5" />
                   </div>
-                  <h3 className="text-base font-semibold text-gray-800 mb-1">My Activity</h3>
-                  <p className="text-xs text-gray-500">View your history</p>
+                  <h3 className="text-base font-semibold text-gray-800 mb-1">Recycling History</h3>
+                  <p className="text-xs text-gray-500">Items, pickups & more</p>
                 </div>
               </Link>
             </motion.div>
@@ -419,10 +420,10 @@ export default function DashboardPage() {
               whileHover={{ y: -3, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
               className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 transition-all duration-300"
             >
-              <Link href="/learn" className="block">
+              <Link href="/blog" className="block">
                 <div className="p-5 flex flex-col items-center text-center">
                   <div className="bg-orange-100 rounded-full p-3 mb-3 text-orange-600">
-                    <FaLightbulb className="h-5 w-5" />
+                    <FaGraduationCap className="h-5 w-5" />
                   </div>
                   <h3 className="text-base font-semibold text-gray-800 mb-1">Learn</h3>
                   <p className="text-xs text-gray-500">E-waste education</p>
@@ -444,9 +445,9 @@ export default function DashboardPage() {
             <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-                  <FaHistory className="mr-2 text-green-600" /> Recent Activity
+                  <FaHistory className="mr-2 text-green-600" /> Points History
                 </h2>
-                <Link href="/activity" className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center">
+                <Link href="/points" className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center">
                   View All 
                   <svg className="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -485,8 +486,8 @@ export default function DashboardPage() {
                     <div className="bg-gray-100 rounded-full p-3 inline-flex mb-4">
                       <FaRecycle className="h-6 w-6 text-gray-400" />
                     </div>
-                    <h3 className="text-lg font-medium text-gray-800 mb-2">No activity yet</h3>
-                    <p className="text-gray-500 mb-6">Start recycling to track your progress and earn rewards!</p>
+                    <h3 className="text-lg font-medium text-gray-800 mb-2">No points history yet</h3>
+                    <p className="text-gray-500 mb-6">Start recycling to earn points and track your rewards!</p>
                     <Link 
                       href="/recycle"
                       className="inline-flex items-center justify-center px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300 shadow-md font-medium"

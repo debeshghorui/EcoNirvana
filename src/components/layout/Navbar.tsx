@@ -79,8 +79,9 @@ const Navbar = () => {
   const isAuthPage = pathname === '/login' || pathname === '/signup';
   // Check if we're on pages where search should be hidden for non-logged in users
   const isHideSearchPage = pathname === '/about' || pathname === '/why-econirvana' || pathname === '/blog' || pathname === '/quiz';
-  // Only show search if not on excluded pages or if user is logged in
-  const showSearch = !isHomePage && !isAuthPage && !(isHideSearchPage && !user);
+  
+  // Only show search if the user is logged in and not on home/auth pages
+  const showSearch = !isHomePage && !isAuthPage && user;
   
   // Set mounted state on client-side only
   useEffect(() => {
@@ -236,7 +237,7 @@ const Navbar = () => {
                 <Link href="/" className="flex-shrink-0 flex items-center">
                   <div className="w-10 h-10 relative mr-2 rounded-md overflow-hidden bg-white">
                     <Image 
-                      src="/logo.jpeg" 
+                      src="/newlogo.jpg" 
                       alt="EcoNirvana Logo" 
                       width={40}
                       height={40}
@@ -355,7 +356,7 @@ const Navbar = () => {
               <Link href="/" className="flex-shrink-0 flex items-center">
                 <div className="w-10 h-10 relative mr-2 rounded-md overflow-hidden bg-white">
                   <Image 
-                    src="/logo.jpeg" 
+                    src="/newlogo.jpg" 
                     alt="EcoNirvana Logo" 
                     width={40}
                     height={40}
@@ -910,97 +911,9 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
-                    {showSearch && (
-                      <div className="relative mb-2" ref={mobileSearchRef}>
-                        <form 
-                          onSubmit={handleSearch} 
-                          className="mb-2"
-                        >
-                          <div className={`relative flex items-center ${
-                            isDataDestructionPage 
-                              ? 'bg-[#0A1533]/90 rounded-lg overflow-hidden' 
-                              : 'bg-gray-800 rounded-lg overflow-hidden'
-                          }`}>
-                            <input
-                              type="text"
-                              placeholder="Search..."
-                              value={searchTerm}
-                              onChange={(e) => setSearchTerm(e.target.value)}
-                              className="flex-grow bg-transparent text-white px-3 py-2 text-sm focus:outline-none"
-                            />
-                            <button
-                              type="submit"
-                              className={`p-2 ${
-                                isDataDestructionPage 
-                                  ? 'bg-[#0A1533] hover:bg-[#0A1533]/80 text-white hover:text-white' 
-                                  : 'bg-green-600 hover:bg-green-500 text-white hover:text-white'
-                              }`}
-                              aria-label="Search"
-                            >
-                              <FaSearch className="h-4 w-4" />
-                            </button>
-                          </div>
-                          
-                          {/* Search Suggestions for Mobile */}
-                          {showSuggestions && (
-                            <div className="absolute mt-1 w-full bg-white rounded-md shadow-lg overflow-hidden z-50">
-                              <ul className="divide-y divide-gray-100">
-                                {searchSuggestions.map((result, index) => (
-                                  <li key={index}>
-                                    <Link 
-                                      href={result.path}
-                                      className="block px-4 py-2 hover:bg-gray-50 text-gray-800"
-                                      onClick={() => {
-                                        setSearchTerm('');
-                                        setShowSuggestions(false);
-                                        setIsMenuOpen(false);
-                                      }}
-                                    >
-                                      {result.title}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </form>
-                      </div>
-                    )}
-                    <Link
-                      href="/about"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <FaInfoCircle className="mr-2 h-5 w-5" />
-                      Who We Are
-                    </Link>
-                    <Link
-                      href="/why-econirvana"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <FaLeaf className="mr-2 h-5 w-5" />
-                      Why EcoNirvana
-                    </Link>
-                    <Link
-                      href="/blog"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <FaBlog className="mr-2 h-5 w-5" />
-                      Blog
-                    </Link>
-                    <Link
-                      href="/quiz"
-                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <FaQuestionCircle className="mr-2 h-5 w-5" />
-                      Quiz
-                    </Link>
                     <Link
                       href="/login"
-                      className="flex items-center border-2 border-green-200 text-white hover:border-green-500 px-3 py-2 rounded-md text-base font-medium"
+                      className="flex items-center text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FaUser className="mr-2 h-5 w-5" />

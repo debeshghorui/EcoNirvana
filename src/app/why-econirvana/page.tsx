@@ -1,16 +1,30 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { FaLeaf, FaRecycle, FaHandshake, FaGlobeAmericas, FaShieldAlt, FaTree } from 'react-icons/fa';
+import { FaLeaf, FaRecycle, FaHandshake, FaGlobeAmericas, FaShieldAlt, FaTree, FaArrowLeft } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function WhyEcoNirvanaPage() {
+  const router = useRouter();
+  
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-green-600 to-emerald-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <motion.button
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => router.back()}
+            className="mb-6 flex items-center text-white hover:text-green-200 transition-colors"
+          >
+            <FaArrowLeft className="mr-2 h-5 w-5" />
+            <span className="font-medium">Back</span>
+          </motion.button>
+          
           <div className="md:flex md:items-center md:justify-between">
             <div className="md:w-3/5">
               <motion.h1 
@@ -38,11 +52,11 @@ export default function WhyEcoNirvanaPage() {
             >
               <div className="relative h-64 md:h-80 w-full">
                 <Image
-                  src="/images/why-econirvana.jpg"
+                  src="/newlogo.jpg"
                   alt="EcoNirvana Difference"
                   fill
-                  style={{ objectFit: "cover" }}
-                  className="rounded-2xl shadow-xl border-2 border-white/20"
+                  style={{ objectFit: "contain", objectPosition: "center" }}
+                  className="rounded-2xl shadow-xl border-2 border-white/20 bg-white/10 backdrop-blur-sm p-4"
                 />
               </div>
             </motion.div>

@@ -3,19 +3,18 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaRecycle, FaFilter, FaCalendarAlt, FaSearch } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { FaRecycle, FaCalendarAlt, FaSearch, FaTrophy } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import { getUserActivities, subscribeToUserPoints } from '@/lib/firebase';
 import BackButtonHeader from '@/components/layout/BackButtonHeader';
 
-export default function ActivityPage() {
+export default function Page() {
   const router = useRouter();
   const { user, loading, justLoggedOut } = useAuth();
   const [activities, setActivities] = useState<any[]>([]);
   const [allActivities, setAllActivities] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterCategory, setFilterCategory] = useState('');
   const [sortOrder, setSortOrder] = useState('newest');
   const [isLoading, setIsLoading] = useState(true);
   const [totalPoints, setTotalPoints] = useState(0);
@@ -71,22 +70,13 @@ export default function ActivityPage() {
       filteredActivities = filteredActivities.filter(
         activity => 
           activity.item.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          activity.category.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    
-    // Apply category filter
-    if (filterCategory) {
-      filteredActivities = filteredActivities.filter(
-        activity => activity.category === filterCategory
+          activity.type.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     
     // Apply sorting
     filteredActivities.sort((a, b) => {
       if (sortOrder === 'newest') {
-        // For Firestore timestamps, we're using the formatted string for display,
-        // but we'll sort by the document ID which is generated with a timestamp component
         return a.id < b.id ? 1 : -1;
       } else if (sortOrder === 'oldest') {
         return a.id > b.id ? 1 : -1;
@@ -99,7 +89,7 @@ export default function ActivityPage() {
     });
     
     setActivities(filteredActivities);
-  }, [searchTerm, filterCategory, sortOrder, allActivities]);
+  }, [searchTerm, sortOrder, allActivities]);
   
   // Show loading state
   if (loading || !user || isLoading) {
@@ -110,10 +100,10 @@ export default function ActivityPage() {
             <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
             <div className="absolute inset-0 rounded-full border-4 border-t-green-500 animate-spin"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <FaRecycle className="h-8 w-8 text-green-500" />
+              <FaTrophy className="h-8 w-8 text-green-500" />
             </div>
           </div>
-          <p className="text-gray-600 font-medium">Loading your activity...</p>
+          <p className="text-gray-600 font-medium">Loading your points history...</p>
         </div>
       </div>
     );
@@ -123,12 +113,33 @@ export default function ActivityPage() {
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white pt-4">
       {/* Header */}
       <BackButtonHeader 
-        title="Recycling History" 
+        title="Points History" 
         destination="/dashboard"
       />
       
-      {/* Filters and Search */}
+      {/* Total Points Summary */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="bg-gradient-to-r from-green-600 to-green-500 rounded-xl shadow-lg overflow-hidden mb-6">
+          <div className="p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold mb-2">Your Points Balance</h2>
+                <p className="text-green-100">Use your points to redeem rewards</p>
+              </div>
+              <div className="flex items-center bg-white/20 rounded-lg px-4 py-3">
+                <div className="mr-3">
+                  <FaTrophy className="h-8 w-8 text-yellow-300" />
+                </div>
+                <div>
+                  <p className="text-sm text-green-100">Current Balance</p>
+                  <p className="text-2xl font-bold">{totalPoints} points</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Filters and Search */}
         <div className="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
             <div className="relative flex-grow max-w-md">
@@ -138,56 +149,34 @@ export default function ActivityPage() {
               <input
                 type="text"
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm text-gray-700"
-                placeholder="Search by item or category"
+                placeholder="Search activity"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             
-            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-              <div className="relative inline-block">
-                <div className="flex items-center">
-                  <FaFilter className="h-4 w-4 text-gray-500 mr-2" />
-                  <select
-                    className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md bg-white text-gray-700"
-                    value={filterCategory}
-                    onChange={(e) => setFilterCategory(e.target.value)}
-                  >
-                    <option value="">All Categories</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Hazardous">Hazardous</option>
-                    <option value="Glass">Glass</option>
-                    <option value="Paper">Paper</option>
-                    <option value="Plastic">Plastic</option>
-                    <option value="Metal">Metal</option>
-                    <option value="Textiles">Textiles</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div className="relative inline-block">
-                <div className="flex items-center">
-                  <FaCalendarAlt className="h-4 w-4 text-gray-500 mr-2" />
-                  <select
-                    className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md bg-white text-gray-700"
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                  >
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                    <option value="points-high">Highest Points</option>
-                    <option value="points-low">Lowest Points</option>
-                  </select>
-                </div>
+            <div className="relative inline-block">
+              <div className="flex items-center">
+                <FaCalendarAlt className="h-4 w-4 text-gray-500 mr-2" />
+                <select
+                  className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md bg-white text-gray-700"
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}
+                >
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                  <option value="points-high">Highest Points</option>
+                  <option value="points-low">Lowest Points</option>
+                </select>
               </div>
             </div>
           </div>
         </div>
         
-        {/* Activity List */}
+        {/* Points History List */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recycling History</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Points History</h2>
             
             {activities.length > 0 ? (
               <div className="space-y-4">
@@ -206,9 +195,6 @@ export default function ActivityPage() {
                       <div>
                         <p className="font-medium text-gray-900">{activity.type} {activity.item}</p>
                         <p className="text-sm text-gray-500">{activity.date}</p>
-                        <span className="inline-block mt-1 px-3 py-1 text-xs font-medium bg-green-50 text-green-800 rounded-full border border-green-300 shadow-sm">
-                          {activity.category}
-                        </span>
                       </div>
                     </div>
                     <div className="text-green-600 font-medium text-lg">+{activity.points} pts</div>
@@ -218,28 +204,36 @@ export default function ActivityPage() {
             ) : (
               <div className="text-center py-12">
                 <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                  <FaRecycle className="h-8 w-8 text-gray-400" />
+                  <FaTrophy className="h-8 w-8 text-gray-400" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-1">No activities found</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-1">No points history yet</h3>
                 <p className="text-gray-500 max-w-md mx-auto">
-                  {searchTerm || filterCategory ? 
-                    "Try adjusting your search or filter criteria." : 
-                    "Start recycling to see your activity history here."}
+                  {searchTerm ? 
+                    "Try adjusting your search criteria." : 
+                    "Start recycling to earn points and track your rewards!"}
                 </p>
-                {(searchTerm || filterCategory) && (
+                {searchTerm && (
                   <button
-                    onClick={() => {
-                      setSearchTerm('');
-                      setFilterCategory('');
-                    }}
+                    onClick={() => setSearchTerm('')}
                     className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                   >
-                    Clear Filters
+                    Clear Search
                   </button>
                 )}
               </div>
             )}
           </div>
+        </div>
+        
+        {/* Link to Rewards */}
+        <div className="mt-8 text-center">
+          <Link 
+            href="/rewards" 
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            <FaTrophy className="mr-2" />
+            Redeem Your Points
+          </Link>
         </div>
       </div>
     </div>

@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaTruck, FaCalendarAlt, FaMapMarkerAlt, FaRecycle, FaCheck, FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 export default function DoorstepCollectionPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
@@ -123,6 +125,18 @@ export default function DoorstepCollectionPage() {
     }, 1500);
   };
 
+  // Redirect if user is not authenticated
+  useEffect(() => {
+    if (!user) {
+      router.push('/login');
+    }
+  }, [user, router]);
+
+  // If not authenticated, don't render the page content
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white pt-16">
       {/* Header */}
@@ -188,7 +202,7 @@ export default function DoorstepCollectionPage() {
               <FaCheck className="h-10 w-10 text-green-600" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Pickup Scheduled Successfully!</h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-700 mb-6">
               Thank you for scheduling a doorstep collection. We'll send you a confirmation email with all the details.
               Our team will arrive at your location on the scheduled date and time.
             </p>
@@ -258,7 +272,7 @@ export default function DoorstepCollectionPage() {
                     <h2 className="text-xl font-semibold text-gray-900 mb-6">Schedule Your Pickup</h2>
                     <div className="space-y-6">
                       <div>
-                        <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="date" className="block text-sm font-medium text-gray-800 mb-1">
                           Preferred Date*
                         </label>
                         <input
@@ -268,32 +282,39 @@ export default function DoorstepCollectionPage() {
                           value={formData.date}
                           onChange={handleInputChange}
                           min={new Date().toISOString().split('T')[0]}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 bg-white cursor-pointer"
                           required
                         />
                       </div>
                       <div>
-                        <label htmlFor="timeSlot" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="timeSlot" className="block text-sm font-medium text-gray-800 mb-1">
                           Preferred Time Slot*
                         </label>
-                        <select
-                          id="timeSlot"
-                          name="timeSlot"
-                          value={formData.timeSlot}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          required
-                        >
-                          <option value="">Select a time slot</option>
-                          {timeSlots.map((slot) => (
-                            <option key={slot} value={slot}>
-                              {slot}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="relative">
+                          <select
+                            id="timeSlot"
+                            name="timeSlot"
+                            value={formData.timeSlot}
+                            onChange={handleInputChange}
+                            className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 bg-white cursor-pointer appearance-none"
+                            required
+                          >
+                            <option value="" className="text-gray-800">Select a time slot</option>
+                            {timeSlots.map((slot) => (
+                              <option key={slot} value={slot} className="text-gray-800">
+                                {slot}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                            </svg>
+                          </div>
+                        </div>
                       </div>
                       <div>
-                        <label htmlFor="specialInstructions" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="specialInstructions" className="block text-sm font-medium text-gray-800 mb-1">
                           Special Instructions (Optional)
                         </label>
                         <textarea
@@ -302,7 +323,7 @@ export default function DoorstepCollectionPage() {
                           value={formData.specialInstructions}
                           onChange={handleInputChange}
                           rows={4}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 bg-white"
                           placeholder="Any specific instructions for our collection team..."
                         ></textarea>
                       </div>
@@ -316,7 +337,7 @@ export default function DoorstepCollectionPage() {
                     <h2 className="text-xl font-semibold text-gray-900 mb-6">Contact & Address Details</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-800 mb-1">
                           Full Name*
                         </label>
                         <input
@@ -325,12 +346,12 @@ export default function DoorstepCollectionPage() {
                           name="name"
                           value={formData.name}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 bg-white"
                           required
                         />
                       </div>
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-800 mb-1">
                           Email Address*
                         </label>
                         <input
@@ -339,12 +360,12 @@ export default function DoorstepCollectionPage() {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 bg-white"
                           required
                         />
                       </div>
                       <div>
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-800 mb-1">
                           Phone Number*
                         </label>
                         <input
@@ -353,12 +374,12 @@ export default function DoorstepCollectionPage() {
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 bg-white"
                           required
                         />
                       </div>
                       <div>
-                        <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="address" className="block text-sm font-medium text-gray-800 mb-1">
                           Street Address*
                         </label>
                         <input
@@ -367,12 +388,12 @@ export default function DoorstepCollectionPage() {
                           name="address"
                           value={formData.address}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 bg-white"
                           required
                         />
                       </div>
                       <div>
-                        <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="city" className="block text-sm font-medium text-gray-800 mb-1">
                           City*
                         </label>
                         <input
@@ -381,12 +402,12 @@ export default function DoorstepCollectionPage() {
                           name="city"
                           value={formData.city}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 bg-white"
                           required
                         />
                       </div>
                       <div>
-                        <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="zipCode" className="block text-sm font-medium text-gray-800 mb-1">
                           ZIP Code*
                         </label>
                         <input
@@ -395,14 +416,14 @@ export default function DoorstepCollectionPage() {
                           name="zipCode"
                           value={formData.zipCode}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 bg-white"
                           required
                         />
                       </div>
                     </div>
                     <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-100">
                       <h3 className="font-medium text-gray-900 mb-2">Collection Summary</h3>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-gray-700">
                         <p><strong>Items:</strong> {selectedItems.map(id => itemOptions.find(item => item.id === id)?.name).join(', ')}</p>
                         <p><strong>Date:</strong> {formData.date}</p>
                         <p><strong>Time:</strong> {formData.timeSlot}</p>
@@ -466,7 +487,7 @@ export default function DoorstepCollectionPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-2xl font-bold text-gray-900">How Doorstep Collection Works</h2>
-            <p className="mt-2 text-gray-600 max-w-3xl mx-auto">
+            <p className="mt-2 text-gray-700 max-w-3xl mx-auto">
               Our doorstep collection service makes recycling e-waste convenient and hassle-free.
             </p>
           </div>
@@ -477,8 +498,8 @@ export default function DoorstepCollectionPage() {
                 <span className="text-green-600 font-bold text-xl">1</span>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Schedule a Pickup</h3>
-              <p className="text-gray-600">
-                Select your items, choose a convenient date and time, and provide your address details.
+              <p className="text-gray-700">
+                Fill out the form above with your preferred date, time, and items for collection. You'll receive a confirmation email with all details.
               </p>
             </div>
             
@@ -487,8 +508,8 @@ export default function DoorstepCollectionPage() {
                 <span className="text-green-600 font-bold text-xl">2</span>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Prepare Your Items</h3>
-              <p className="text-gray-600">
-                Gather your e-waste items and keep them ready for collection. Ensure they are accessible for our team.
+              <p className="text-gray-700">
+                Ensure your items are ready for collection. We recommend backing up and wiping your data if you're recycling devices with storage.
               </p>
             </div>
             
@@ -496,26 +517,37 @@ export default function DoorstepCollectionPage() {
               <div className="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center mb-4">
                 <span className="text-green-600 font-bold text-xl">3</span>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">We Collect & Recycle</h3>
-              <p className="text-gray-600">
-                Our team will arrive at your doorstep, collect your e-waste, and ensure it's recycled responsibly.
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Doorstep Collection</h3>
+              <p className="text-gray-700">
+                Our team will arrive at your location during the scheduled time slot. They'll collect your items and provide a receipt.
               </p>
             </div>
           </div>
           
-          <div className="mt-12 text-center">
-            <p className="text-gray-600 mb-4">
-              For bulk collections or business pickups, please contact our customer service.
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center text-green-600 hover:text-green-700 font-medium"
-            >
-              Contact Us
-              <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </Link>
+          <div className="mt-12 bg-white p-6 rounded-xl shadow-sm">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h3>
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-lg font-medium text-gray-900 mb-2">What items can I recycle through doorstep collection?</h4>
+                <p className="text-gray-700">
+                  We accept a wide range of electronic items including computers, laptops, phones, tablets, printers, monitors, small appliances, and batteries. For larger items or special requests, please mention in the special instructions.
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-medium text-gray-900 mb-2">Is there a fee for doorstep collection?</h4>
+                <p className="text-gray-700">
+                  Doorstep collection is complimentary for standard items within our service areas. For large quantities or special items, there may be a nominal fee which will be communicated to you before scheduling.
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-medium text-gray-900 mb-2">How do I prepare my devices for recycling?</h4>
+                <p className="text-gray-700">
+                  Before recycling, we recommend backing up important data, performing a factory reset, and removing any external storage devices. You can check our blog for detailed guides on preparing specific types of devices.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

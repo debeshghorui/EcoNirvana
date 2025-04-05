@@ -17,6 +17,7 @@ export default function AboutPage() {
         title="Who We Are"
         description="We're on a mission to create a sustainable future through responsible e-waste recycling and innovative environmental solutions."
         backgroundImage="/about-hero.jpg"
+        showBackButton={true}
       />
 
       {/* Our Story Section */}
@@ -46,7 +47,7 @@ export default function AboutPage() {
           >
             <div className="relative h-80 md:h-96 rounded-xl overflow-hidden shadow-lg">
               <Image 
-                src="/team-working.jpg" 
+                src="/blog3.jpg" 
                 alt="EcoNirvana team working" 
                 fill
                 style={{ objectFit: "cover" }}

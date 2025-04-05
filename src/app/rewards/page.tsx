@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FaArrowLeft, 
   FaGift, 
@@ -24,6 +24,7 @@ import {
 } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import { getUserPoints, redeemPoints, getUserRedemptions, subscribeToUserPoints } from '@/lib/firebase';
+import BackButtonHeader from '@/components/layout/BackButtonHeader';
 
 // Mock data for rewards
 const rewardCategories = [
@@ -221,25 +222,16 @@ export default function RewardsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white pt-4">
       {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <button 
-                onClick={() => router.push('/dashboard')}
-                className="mr-4 text-gray-500 hover:text-gray-700 transition-colors"
-              >
-                <FaArrowLeft className="h-5 w-5" />
-              </button>
-              <h1 className="text-2xl font-bold text-gray-900">Rewards</h1>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-500">Available Points</p>
-              <p className="text-2xl font-bold text-green-600">{userPoints} pts</p>
-            </div>
+      <BackButtonHeader 
+        title="Rewards" 
+        destination="/dashboard"
+        rightContent={
+          <div className="text-right">
+            <p className="text-sm text-gray-500">Available Points</p>
+            <p className="text-2xl font-bold text-green-600">{userPoints} pts</p>
           </div>
-        </div>
-      </div>
+        }
+      />
       
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

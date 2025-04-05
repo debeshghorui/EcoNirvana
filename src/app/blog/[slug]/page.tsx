@@ -455,7 +455,7 @@ export default function BlogPost() {
           {/* Content */}
           <div className="p-6 md:p-10">
             <div 
-              className="prose prose-lg max-w-none prose-headings:text-gray-800 prose-p:text-gray-600 prose-a:text-green-600 prose-a:no-underline hover:prose-a:text-green-700"
+              className="prose prose-lg max-w-none prose-headings:text-gray-800 prose-p:text-gray-700 prose-li:text-gray-700 prose-a:text-green-600 prose-a:no-underline hover:prose-a:text-green-700 prose-strong:text-gray-800"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </div>
@@ -469,7 +469,7 @@ export default function BlogPost() {
               <div>
                 <h3 className="text-lg font-bold text-gray-900">{post.author}</h3>
                 <p className="text-green-600 font-medium mb-2">{post.authorTitle}</p>
-                <p className="text-gray-600">{post.authorBio}</p>
+                <p className="text-gray-700">{post.authorBio}</p>
               </div>
             </div>
           </div>
@@ -483,7 +483,7 @@ export default function BlogPost() {
               <FaArrowLeft className="mr-2" /> Back to all articles
             </Link>
             
-            <button className="inline-flex items-center text-gray-600 hover:text-gray-800">
+            <button className="inline-flex items-center text-gray-700 hover:text-gray-800">
               <FaShare className="mr-2" /> Share
             </button>
           </div>
@@ -518,14 +518,14 @@ export default function BlogPost() {
                     </div>
                   </div>
                   <div className="p-6">
-                    <div className="flex items-center text-sm text-gray-500 mb-3">
+                    <div className="flex items-center text-sm text-gray-600 mb-3">
                       <FaCalendarAlt className="mr-2 h-3 w-3" />
                       <span>{relatedPost.date}</span>
                     </div>
                     <Link href={`/blog/${relatedPost.slug}`} className="block">
                       <h3 className="text-xl font-bold text-gray-900 mb-3 hover:text-green-600 transition-colors">{relatedPost.title}</h3>
                     </Link>
-                    <p className="text-gray-600 mb-4 line-clamp-3">{relatedPost.excerpt}</p>
+                    <p className="text-gray-700 mb-4 line-clamp-3">{relatedPost.excerpt}</p>
                     <Link 
                       href={`/blog/${relatedPost.slug}`} 
                       className="text-green-600 hover:text-green-700 font-medium inline-flex items-center group"

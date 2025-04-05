@@ -180,18 +180,19 @@ export default function SignupPage() {
           </div>
           
           <div className="md:w-1/2 p-8">
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
               <Link href="/" className="inline-block">
-                <Image 
-                  src="/logo.svg" 
-                  alt="EcoNirvana Logo" 
-                  width={70} 
-                  height={70} 
-                  className="mx-auto"
+                <Image
+                  src="/newlogo.jpg"
+                  alt="EcoNirvana Logo"
+                  width={60}
+                  height={60}
+                  className="mx-auto rounded-md"
+                  priority
                 />
               </Link>
-              <h2 className="mt-4 text-2xl font-bold text-gray-900">Create an account</h2>
-              <p className="mt-2 text-sm text-gray-600">
+              <h2 className="mt-3 text-2xl font-bold text-gray-900">Create your account</h2>
+              <p className="mt-1 text-sm text-gray-600">
                 Or{' '}
                 <Link href="/login" className="text-green-600 hover:text-green-500 font-medium">
                   sign in to your account

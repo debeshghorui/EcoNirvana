@@ -59,14 +59,20 @@ export async function addPoints(userId: string, points: number, item: string, ca
       points: increment(points)
     });
     
+    // Determine activity type based on item
+    const isQuiz = item === 'Quiz Completion';
+    const activityType = isQuiz ? 'Completed' : 'Recycled';
+    
     // Add activity record
     await addDoc(collection(db, 'activities'), {
       userId,
-      type: 'Recycled',
+      type: activityType, // Change type for quizzes
       item,
       category,
       points,
-      date: Timestamp.now()
+      date: Timestamp.now(),
+      // Add a flag for quizzes so they don't count as recycled items
+      isRecycledItem: !isQuiz 
     });
     
     return true;

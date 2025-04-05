@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { FaArrowLeft } from 'react-icons/fa';
 
 interface PageHeaderProps {
   title: string;
@@ -9,6 +11,8 @@ interface PageHeaderProps {
   backgroundImage?: string;
   centered?: boolean;
   wave?: boolean;
+  showBackButton?: boolean;
+  backButtonDestination?: string;
 }
 
 /**
@@ -20,8 +24,20 @@ export default function PageHeader({
   description,
   backgroundImage = "/green-globe.jpg",
   centered = true,
-  wave = true
+  wave = true,
+  showBackButton = false,
+  backButtonDestination
 }: PageHeaderProps) {
+  const router = useRouter();
+
+  const handleBack = () => {
+    if (backButtonDestination) {
+      router.push(backButtonDestination);
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <section className="relative bg-gradient-to-r from-green-800 to-green-600 text-white">
       <div className="absolute inset-0 overflow-hidden">
@@ -36,6 +52,18 @@ export default function PageHeader({
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-green-900/70"></div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 relative z-10">
+        {showBackButton && (
+          <motion.button
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={handleBack}
+            className="mb-4 flex items-center text-white hover:text-green-200 transition-colors"
+          >
+            <FaArrowLeft className="mr-2 h-5 w-5" />
+            <span className="font-medium">Back</span>
+          </motion.button>
+        )}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

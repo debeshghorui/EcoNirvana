@@ -75,6 +75,8 @@ export default function CertificatesPage() {
         title="Recycling Certificates"
         description="Earn prestigious certificates by reaching recycling milestones. The more you recycle, the higher the recognition!"
         backgroundImage="/certificates-hero.jpg"
+        showBackButton={true}
+        backButtonDestination="/dashboard"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

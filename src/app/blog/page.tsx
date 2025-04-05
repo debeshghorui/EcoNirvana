@@ -3,8 +3,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaCalendarAlt, FaUser, FaTag, FaSearch } from 'react-icons/fa';
+import { FaCalendarAlt, FaUser, FaTag, FaSearch, FaArrowLeft } from 'react-icons/fa';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import PageHeader from '@/components/layout/PageHeader';
 
 // Blog post data
 const blogPosts = [
@@ -84,6 +86,7 @@ const categories = [
 export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const router = useRouter();
 
   // Filter posts based on search term and category
   const filteredPosts = blogPosts.filter(post => {
@@ -96,38 +99,12 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-green-800 to-green-600 text-white">
-        <div className="absolute inset-0 overflow-hidden">
-          <Image 
-            src="/green-globe.jpg" 
-            alt="EcoNirvana Blog" 
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-            className="mix-blend-overlay opacity-30"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-green-900/70"></div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog & Resources</h1>
-            <p className="text-xl mb-8 text-green-50 max-w-2xl mx-auto">
-              Stay informed about e-waste recycling, sustainability practices, and industry news.
-            </p>
-          </motion.div>
-        </div>
-        {/* Wave divider */}
-        <div className="absolute -bottom-1 left-0 right-0">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" className="w-full h-auto">
-            <path fill="#ffffff" fillOpacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
-          </svg>
-        </div>
-      </section>
+      <PageHeader
+        title="Blog & Resources"
+        description="Stay informed about e-waste recycling, sustainability practices, and industry news."
+        backgroundImage="/green-globe.jpg"
+        showBackButton={true}
+      />
 
       {/* Blog Content Section */}
       <section className="py-12 md:py-16 bg-white">
@@ -168,10 +145,10 @@ export default function BlogPage() {
                 
                 {filteredPosts.length === 0 ? (
                   <div className="text-center py-12 bg-gray-100 rounded-lg">
-                    <p className="text-gray-600 text-lg">No articles found matching your criteria. Try a different search term or category.</p>
+                    <p className="text-gray-700 text-lg">No articles found matching your criteria. Try a different search term or category.</p>
                   </div>
                 ) : (
-                  <p className="text-gray-600 font-medium">Showing {filteredPosts.length} of {blogPosts.length} articles</p>
+                  <p className="text-gray-700 font-medium">Showing {filteredPosts.length} of {blogPosts.length} articles</p>
                 )}
               </div>
               
@@ -202,7 +179,7 @@ export default function BlogPage() {
                       </div>
                     </div>
                     <div className="p-6">
-                      <div className="flex items-center text-sm text-gray-500 mb-3">
+                      <div className="flex items-center text-sm text-gray-600 mb-3">
                         <FaCalendarAlt className="mr-2 h-3 w-3" />
                         <span>{post.date}</span>
                         <span className="mx-2">•</span>
@@ -212,7 +189,7 @@ export default function BlogPage() {
                       <Link href={`/blog/${post.slug}`} className="block">
                         <h2 className="text-xl font-bold text-gray-900 mb-3 hover:text-green-600 transition-colors">{post.title}</h2>
                       </Link>
-                      <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
+                      <p className="text-gray-700 mb-4 line-clamp-3">{post.excerpt}</p>
                       <Link 
                         href={`/blog/${post.slug}`} 
                         className="text-green-600 hover:text-green-700 font-medium inline-flex items-center mt-2 group"
@@ -234,10 +211,10 @@ export default function BlogPage() {
                 {/* About the Blog */}
                 <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
                   <h3 className="text-xl font-bold text-gray-900 mb-4">About Our Blog</h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-gray-700 mb-4">
                     Welcome to the EcoNirvana blog, your source for information about e-waste recycling, sustainability practices, and industry news.
                   </p>
-                  <p className="text-gray-600">
+                  <p className="text-gray-700">
                     Our team of experts shares insights, tips, and the latest developments to help you make informed decisions about electronic waste management.
                   </p>
                 </div>
@@ -254,7 +231,7 @@ export default function BlogPage() {
                           className={`flex items-center w-full text-left px-4 py-2.5 rounded-lg transition-all ${
                             selectedCategory === category
                               ? 'bg-green-100 text-green-800 font-medium'
-                              : 'text-gray-600 hover:bg-gray-100'
+                              : 'text-gray-700 hover:bg-gray-100'
                           }`}
                         >
                           <FaTag className="mr-2 h-4 w-4" />
@@ -268,7 +245,7 @@ export default function BlogPage() {
                 {/* Newsletter Signup */}
                 <div className="bg-gradient-to-br from-green-600 to-green-700 text-white rounded-xl p-6 shadow-md">
                   <h3 className="text-xl font-bold mb-4">Subscribe to Our Newsletter</h3>
-                  <p className="text-green-50 mb-4">
+                  <p className="text-white mb-4">
                     Stay up-to-date with our latest articles, events, and recycling tips.
                   </p>
                   <form className="space-y-4">
