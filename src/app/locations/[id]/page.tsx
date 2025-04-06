@@ -20,7 +20,7 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Appliances', 'Data Destruction'],
     description: 'Our flagship recycling center offering comprehensive e-waste recycling services and secure data destruction.',
-    image: '/images/locations/main-facility.jpg',
+    image: '/drop-off/EcoNirvana_Main_Facility.jpg',
     position: { lat: 22.5726, lng: 88.3639 }, // Kolkata center
     additionalInfo: {
       acceptedItems: ['Computers', 'Laptops', 'Tablets', 'Phones', 'Printers', 'TVs', 'Batteries', 'Home Appliances'],
@@ -40,7 +40,7 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Small Electronics'],
     description: 'Convenient downtown location for dropping off smaller electronic items and batteries.',
-    image: '/images/locations/downtown.jpg',
+    image: '/drop-off/Downtown_Drop-off_Center.png',
     position: { lat: 22.5557, lng: 88.3520 }, // Park Street area
     additionalInfo: {
       acceptedItems: ['Computers', 'Laptops', 'Tablets', 'Phones', 'Batteries', 'Small Appliances'],
@@ -60,7 +60,7 @@ const allLocations = [
     status: 'Closed Now',
     services: ['E-Waste', 'Appliances'],
     description: 'Specialized in larger electronic items and appliance recycling with easy drive-up access.',
-    image: '/images/locations/westside.jpg',
+    image: '/drop-off/Westside_Collection_Point.png',
     position: { lat: 22.5853, lng: 88.3425 }, // Howrah area
     additionalInfo: {
       acceptedItems: ['TVs', 'Refrigerators', 'Washing Machines', 'Air Conditioners', 'Computers', 'Large Electronics'],
@@ -80,7 +80,7 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Appliances', 'Data Destruction', 'Corporate Services'],
     description: 'Full-service recycling center with extended hours and special services for business customers.',
-    image: '/images/locations/northside.jpg',
+    image: '/drop-off/Northside_Recycling_Hub.jpg',
     position: { lat: 22.6420, lng: 88.4312 }, // Dum Dum area
     additionalInfo: {
       acceptedItems: ['All Electronics', 'IT Equipment', 'Office Equipment', 'Batteries', 'Appliances'],
@@ -100,7 +100,7 @@ const allLocations = [
     status: 'Closed Now',
     services: ['E-Waste', 'Batteries', 'Small Electronics'],
     description: 'Community-focused collection center serving the eastern neighborhoods.',
-    image: '/images/locations/eastside.jpg',
+    image: '/drop-off/Eastside_Collection_Center.jpg',
     position: { lat: 22.5236, lng: 88.4017 }, // EM Bypass area
     additionalInfo: {
       acceptedItems: ['Computers', 'Phones', 'Tablets', 'Batteries', 'Small Appliances'],
@@ -120,7 +120,7 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Appliances'],
     description: 'Easily accessible location with ample parking for dropping off larger items.',
-    image: '/images/locations/southside.jpg',
+    image: '/drop-off/Southside_Drop-off_Point.png',
     position: { lat: 22.4615, lng: 88.3922 }, // Garia area
     additionalInfo: {
       acceptedItems: ['Computers', 'TVs', 'Refrigerators', 'Air Conditioners', 'Washing Machines', 'Batteries'],
@@ -234,6 +234,15 @@ export default function LocationDetailPage() {
                 {location.status}
               </span>
             </div>
+          </div>
+          
+          {/* Location Image */}
+          <div className="mt-6 rounded-xl overflow-hidden shadow-lg h-64">
+            <img 
+              src={location.image} 
+              alt={location.name}
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </div>

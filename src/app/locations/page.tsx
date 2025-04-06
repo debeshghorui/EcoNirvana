@@ -22,7 +22,7 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Appliances', 'Data Destruction'],
     description: 'Our flagship recycling center offering comprehensive e-waste recycling services and secure data destruction.',
-    image: '/images/locations/main-facility.jpg',
+    image: '/drop-off/EcoNirvana_Main_Facility.jpg',
     position: { lat: 22.5726, lng: 88.3639 } // Kolkata center
   },
   {
@@ -35,7 +35,7 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Small Electronics'],
     description: 'Convenient downtown location for dropping off smaller electronic items and batteries.',
-    image: '/images/locations/downtown.jpg',
+    image: '/drop-off/Downtown_Drop-off_Center.png',
     position: { lat: 22.5557, lng: 88.3520 } // Park Street area
   },
   {
@@ -48,7 +48,7 @@ const allLocations = [
     status: 'Closed Now',
     services: ['E-Waste', 'Appliances'],
     description: 'Specialized in larger electronic items and appliance recycling with easy drive-up access.',
-    image: '/images/locations/westside.jpg',
+    image: '/drop-off/Westside_Collection_Point.png',
     position: { lat: 22.5853, lng: 88.3425 } // Howrah area
   },
   {
@@ -61,7 +61,7 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Appliances', 'Data Destruction', 'Corporate Services'],
     description: 'Full-service recycling center with extended hours and special services for business customers.',
-    image: '/images/locations/northside.jpg',
+    image: '/drop-off/Northside_Recycling_Hub.jpg',
     position: { lat: 22.6420, lng: 88.4312 } // Dum Dum area
   },
   {
@@ -74,7 +74,7 @@ const allLocations = [
     status: 'Closed Now',
     services: ['E-Waste', 'Batteries', 'Small Electronics'],
     description: 'Community-focused collection center serving the eastern neighborhoods.',
-    image: '/images/locations/eastside.jpg',
+    image: '/drop-off/Eastside_Collection_Center.jpg',
     position: { lat: 22.5236, lng: 88.4017 } // EM Bypass area
   },
   {
@@ -87,7 +87,7 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Appliances'],
     description: 'Easily accessible location with ample parking for dropping off larger items.',
-    image: '/images/locations/southside.jpg',
+    image: '/drop-off/Southside_Drop-off_Point.png',
     position: { lat: 22.4615, lng: 88.3922 } // Garia area
   },
 ];
@@ -424,7 +424,11 @@ export default function LocationsPage() {
                     </div>
                     
                     <div className="md:w-1/3 bg-gray-200 h-48 md:h-auto relative">
-                      {/* Placeholder for location image */}
+                      <img 
+                        src={location.image} 
+                        alt={location.name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </div>
                 </motion.div>
