@@ -216,4 +216,58 @@ export function subscribeToUserPoints(userId: string, callback: (points: number)
   }
 }
 
+// Functions for doorstep pickups
+export async function getDoorstepPickups(userId: string): Promise<any[]> {
+  try {
+    const pickupsRef = collection(db, 'doorstepPickups');
+    const q = query(
+      pickupsRef, 
+      where('userId', '==', userId),
+      orderBy('scheduledDate', 'desc')
+    );
+    
+    const querySnapshot = await getDocs(q);
+    const pickups = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      // Convert Firestore timestamps to string for display
+      scheduledDate: formatPickupDate(doc.data().scheduledDate),
+      createdAt: formatTimestamp(doc.data().createdAt)
+    }));
+    
+    return pickups;
+  } catch (error) {
+    console.error("Error getting doorstep pickups:", error);
+    return [];
+  }
+}
+
+export async function cancelDoorstepPickup(pickupId: string): Promise<boolean> {
+  try {
+    const pickupRef = doc(db, 'doorstepPickups', pickupId);
+    await updateDoc(pickupRef, {
+      status: 'Cancelled',
+      cancelledAt: Timestamp.now()
+    });
+    
+    return true;
+  } catch (error) {
+    console.error("Error cancelling doorstep pickup:", error);
+    return false;
+  }
+}
+
+// Helper function to format pickup date
+function formatPickupDate(timestamp: any): string {
+  if (!timestamp) return '';
+  
+  const date = timestamp.toDate();
+  return date.toLocaleDateString('en-US', { 
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
 export { db }; 

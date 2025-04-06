@@ -6,6 +6,8 @@ import { motion } from 'framer-motion';
 import { FaTruck, FaCalendarAlt, FaMapMarkerAlt, FaRecycle, FaCheck, FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import { Timestamp, addDoc, collection } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function DoorstepCollectionPage() {
   const router = useRouter();
@@ -100,29 +102,57 @@ export default function DoorstepCollectionPage() {
     
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
-        city: '',
-        zipCode: '',
-        date: '',
-        timeSlot: '',
-        items: [],
-        specialInstructions: '',
-      });
-      setSelectedItems([]);
-      
-      // Scroll to top
-      window.scrollTo(0, 0);
-    }, 1500);
+    // Save doorstep pickup to Firestore
+    const saveDoorstepPickup = async () => {
+      try {
+        // Create a new pickup document
+        const pickupData = {
+          userId: user?.id,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          zipCode: formData.zipCode,
+          items: selectedItems,
+          scheduledDate: new Date(formData.date),
+          timeSlot: formData.timeSlot,
+          specialInstructions: formData.specialInstructions,
+          status: 'Scheduled',
+          createdAt: Timestamp.now()
+        };
+        
+        await addDoc(collection(db, 'doorstepPickups'), pickupData);
+        
+        // Handle success
+        setIsSubmitting(false);
+        setIsSuccess(true);
+        
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          address: '',
+          city: '',
+          zipCode: '',
+          date: '',
+          timeSlot: '',
+          items: [],
+          specialInstructions: '',
+        });
+        setSelectedItems([]);
+        
+        // Scroll to top
+        window.scrollTo(0, 0);
+      } catch (error) {
+        console.error("Error saving doorstep pickup:", error);
+        setIsSubmitting(false);
+        alert('There was an error scheduling your pickup. Please try again.');
+      }
+    };
+    
+    saveDoorstepPickup();
   };
 
   // Redirect if user is not authenticated
