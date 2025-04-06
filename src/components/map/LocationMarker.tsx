@@ -17,12 +17,6 @@ const LocationMarker = ({ id, position, isActive = false, onClick }: LocationMar
     <Marker
       position={position}
       onClick={() => onClick(id)}
-      icon={{
-        url: isActive 
-          ? "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-          : "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
-        scaledSize: new window.google.maps.Size(isActive ? 42 : 38, isActive ? 42 : 38),
-      }}
       animation={isActive ? google.maps.Animation.BOUNCE : undefined}
     />
   );

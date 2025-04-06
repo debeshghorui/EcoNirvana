@@ -15,7 +15,7 @@ const allLocations = [
   {
     id: 1,
     name: 'EcoNirvana Main Facility',
-    address: '123 Recycling Way, Green City, EC 12345',
+    address: '123 Recycling Way, Salt Lake, Kolkata 700091',
     phone: '(555) 123-4567',
     hours: 'Mon-Fri: 8AM-6PM, Sat: 9AM-4PM, Sun: Closed',
     distance: 2.3,
@@ -23,12 +23,12 @@ const allLocations = [
     services: ['E-Waste', 'Batteries', 'Appliances', 'Data Destruction'],
     description: 'Our flagship recycling center offering comprehensive e-waste recycling services and secure data destruction.',
     image: '/images/locations/main-facility.jpg',
-    position: { lat: 40.7128, lng: -74.006 } // Example coordinates for NYC
+    position: { lat: 22.5726, lng: 88.3639 } // Kolkata center
   },
   {
     id: 2,
     name: 'Downtown Drop-off Center',
-    address: '456 Central Ave, Green City, EC 12346',
+    address: '456 Park Street, Kolkata 700016',
     phone: '(555) 234-5678',
     hours: 'Mon-Sat: 10AM-7PM, Sun: 11AM-4PM',
     distance: 3.7,
@@ -36,12 +36,12 @@ const allLocations = [
     services: ['E-Waste', 'Batteries', 'Small Electronics'],
     description: 'Convenient downtown location for dropping off smaller electronic items and batteries.',
     image: '/images/locations/downtown.jpg',
-    position: { lat: 40.7282, lng: -73.994 } // Near NYC
+    position: { lat: 22.5557, lng: 88.3520 } // Park Street area
   },
   {
     id: 3,
     name: 'Westside Collection Point',
-    address: '789 West Blvd, Green City, EC 12347',
+    address: '789 Howrah Bridge Road, Howrah, Kolkata 711101',
     phone: '(555) 345-6789',
     hours: 'Tue-Sat: 9AM-5PM, Sun-Mon: Closed',
     distance: 5.1,
@@ -49,12 +49,12 @@ const allLocations = [
     services: ['E-Waste', 'Appliances'],
     description: 'Specialized in larger electronic items and appliance recycling with easy drive-up access.',
     image: '/images/locations/westside.jpg',
-    position: { lat: 40.7064, lng: -74.018 } // West of NYC
+    position: { lat: 22.5853, lng: 88.3425 } // Howrah area
   },
   {
     id: 4,
     name: 'Northside Recycling Hub',
-    address: '101 North Park, Green City, EC 12348',
+    address: '101 Dum Dum Road, Kolkata 700074',
     phone: '(555) 456-7890',
     hours: 'Mon-Fri: 8AM-8PM, Sat-Sun: 10AM-6PM',
     distance: 6.8,
@@ -62,12 +62,12 @@ const allLocations = [
     services: ['E-Waste', 'Batteries', 'Appliances', 'Data Destruction', 'Corporate Services'],
     description: 'Full-service recycling center with extended hours and special services for business customers.',
     image: '/images/locations/northside.jpg',
-    position: { lat: 40.7215, lng: -73.983 } // North of NYC
+    position: { lat: 22.6420, lng: 88.4312 } // Dum Dum area
   },
   {
     id: 5,
     name: 'Eastside Collection Center',
-    address: '202 East Road, Green City, EC 12349',
+    address: '202 EM Bypass, Kolkata 700107',
     phone: '(555) 567-8901',
     hours: 'Wed-Sun: 9AM-6PM, Mon-Tue: Closed',
     distance: 7.2,
@@ -75,12 +75,12 @@ const allLocations = [
     services: ['E-Waste', 'Batteries', 'Small Electronics'],
     description: 'Community-focused collection center serving the eastern neighborhoods.',
     image: '/images/locations/eastside.jpg',
-    position: { lat: 40.7197, lng: -73.962 } // East of NYC
+    position: { lat: 22.5236, lng: 88.4017 } // EM Bypass area
   },
   {
     id: 6,
     name: 'Southside Drop-off Point',
-    address: '303 South Street, Green City, EC 12350',
+    address: '303 Garia Main Road, Kolkata 700084',
     phone: '(555) 678-9012',
     hours: 'Mon-Sat: 8AM-5PM, Sun: Closed',
     distance: 8.5,
@@ -88,7 +88,7 @@ const allLocations = [
     services: ['E-Waste', 'Batteries', 'Appliances'],
     description: 'Easily accessible location with ample parking for dropping off larger items.',
     image: '/images/locations/southside.jpg',
-    position: { lat: 40.6935, lng: -73.980 } // South of NYC
+    position: { lat: 22.4615, lng: 88.3922 } // Garia area
   },
 ];
 
@@ -108,10 +108,10 @@ const containerStyle = {
   height: '100%'
 };
 
-// NYC center for example
+// Kolkata center
 const center = {
-  lat: 40.7128,
-  lng: -74.006
+  lat: 22.5726,
+  lng: 88.3639
 };
 
 export default function LocationsPage() {
@@ -123,6 +123,7 @@ export default function LocationsPage() {
   const [filterStatus, setFilterStatus] = useState('');
   const [selectedLocation, setSelectedLocation] = useState<number | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
   
   // Get user's current location
   useEffect(() => {
@@ -133,11 +134,39 @@ export default function LocationsPage() {
             lat: position.coords.latitude,
             lng: position.coords.longitude
           });
+          setLocationError(null);
         },
         (error) => {
-          console.error("Error getting user location:", error);
+          // Handle different geolocation errors gracefully
+          let errorMessage = "";
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = "Location access was denied by the user.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = "Location information is unavailable.";
+              break;
+            case error.TIMEOUT:
+              errorMessage = "Request for location timed out.";
+              break;
+            default:
+              errorMessage = "An unknown error occurred.";
+          }
+          
+          // Set error state but don't crash the app
+          setLocationError(errorMessage);
+          
+          // Continue with default location (Kolkata)
+          console.log("Geolocation error:", errorMessage);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
         }
       );
+    } else {
+      setLocationError("Geolocation is not supported by this browser.");
     }
   }, []);
   
@@ -198,6 +227,69 @@ export default function LocationsPage() {
           </p>
         </div>
       </div>
+      
+      {/* Location Notice (show when there's a location error) */}
+      {locationError && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+            <div className="flex items-center justify-between">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-yellow-700">
+                    {locationError} Showing default locations in Kolkata.
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={() => {
+                  // Function to retry getting geolocation
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                      (position) => {
+                        setUserLocation({
+                          lat: position.coords.latitude,
+                          lng: position.coords.longitude
+                        });
+                        setLocationError(null);
+                      },
+                      (error) => {
+                        let errorMessage = "";
+                        switch (error.code) {
+                          case error.PERMISSION_DENIED:
+                            errorMessage = "Location access was denied. Please enable location services in your browser settings.";
+                            break;
+                          case error.POSITION_UNAVAILABLE:
+                            errorMessage = "Location information is unavailable.";
+                            break;
+                          case error.TIMEOUT:
+                            errorMessage = "Request for location timed out.";
+                            break;
+                          default:
+                            errorMessage = "An unknown error occurred.";
+                        }
+                        setLocationError(errorMessage);
+                      },
+                      {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                      }
+                    );
+                  }
+                }}
+                className="ml-4 px-3 py-1.5 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-md hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+              >
+                Use my location
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Filters and Search */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
