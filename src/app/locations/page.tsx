@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { InfoWindow, Marker } from '@react-google-maps/api';
 import { FaArrowLeft, FaMapMarkerAlt, FaSearch, FaPhone, FaClock, FaDirections, FaFilter } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
+import GoogleMapComponent from '@/components/map/GoogleMapComponent';
+import LocationMarker from '@/components/map/LocationMarker';
 
 // Mock data for locations
 const allLocations = [
@@ -19,7 +22,8 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Appliances', 'Data Destruction'],
     description: 'Our flagship recycling center offering comprehensive e-waste recycling services and secure data destruction.',
-    image: '/images/locations/main-facility.jpg'
+    image: '/images/locations/main-facility.jpg',
+    position: { lat: 40.7128, lng: -74.006 } // Example coordinates for NYC
   },
   {
     id: 2,
@@ -31,7 +35,8 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Small Electronics'],
     description: 'Convenient downtown location for dropping off smaller electronic items and batteries.',
-    image: '/images/locations/downtown.jpg'
+    image: '/images/locations/downtown.jpg',
+    position: { lat: 40.7282, lng: -73.994 } // Near NYC
   },
   {
     id: 3,
@@ -43,7 +48,8 @@ const allLocations = [
     status: 'Closed Now',
     services: ['E-Waste', 'Appliances'],
     description: 'Specialized in larger electronic items and appliance recycling with easy drive-up access.',
-    image: '/images/locations/westside.jpg'
+    image: '/images/locations/westside.jpg',
+    position: { lat: 40.7064, lng: -74.018 } // West of NYC
   },
   {
     id: 4,
@@ -55,7 +61,8 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Appliances', 'Data Destruction', 'Corporate Services'],
     description: 'Full-service recycling center with extended hours and special services for business customers.',
-    image: '/images/locations/northside.jpg'
+    image: '/images/locations/northside.jpg',
+    position: { lat: 40.7215, lng: -73.983 } // North of NYC
   },
   {
     id: 5,
@@ -67,7 +74,8 @@ const allLocations = [
     status: 'Closed Now',
     services: ['E-Waste', 'Batteries', 'Small Electronics'],
     description: 'Community-focused collection center serving the eastern neighborhoods.',
-    image: '/images/locations/eastside.jpg'
+    image: '/images/locations/eastside.jpg',
+    position: { lat: 40.7197, lng: -73.962 } // East of NYC
   },
   {
     id: 6,
@@ -79,7 +87,8 @@ const allLocations = [
     status: 'Open Now',
     services: ['E-Waste', 'Batteries', 'Appliances'],
     description: 'Easily accessible location with ample parking for dropping off larger items.',
-    image: '/images/locations/southside.jpg'
+    image: '/images/locations/southside.jpg',
+    position: { lat: 40.6935, lng: -73.980 } // South of NYC
   },
 ];
 
@@ -93,6 +102,18 @@ const serviceOptions = [
   'Corporate Services'
 ];
 
+// Map styles
+const containerStyle = {
+  width: '100%',
+  height: '100%'
+};
+
+// NYC center for example
+const center = {
+  lat: 40.7128,
+  lng: -74.006
+};
+
 export default function LocationsPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
@@ -100,6 +121,25 @@ export default function LocationsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterService, setFilterService] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState<number | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  
+  // Get user's current location
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    }
+  }, []);
   
   // Filter locations
   useEffect(() => {
@@ -133,6 +173,11 @@ export default function LocationsPage() {
     
     setLocations(filteredLocations);
   }, [searchTerm, filterService, filterStatus]);
+
+  // Map center based on user location or default
+  const mapCenter = useMemo(() => {
+    return userLocation || center;
+  }, [userLocation]);
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white pt-4">
@@ -332,7 +377,7 @@ export default function LocationsPage() {
               </div>
               <div>
                 <Link 
-                  href="/services/pickup" 
+                  href="/doorstep" 
                   className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-green-700 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
                 >
                   Schedule a Pickup
@@ -349,12 +394,67 @@ export default function LocationsPage() {
             <p className="text-gray-600 mb-6">
               View all our drop-off locations on an interactive map to find the one most convenient for you.
             </p>
-            <div className="bg-gray-200 h-96 rounded-lg flex items-center justify-center">
-              {/* Placeholder for map */}
-              <div className="text-center">
-                <FaMapMarkerAlt className="h-10 w-10 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500">Interactive map would be displayed here</p>
-              </div>
+            <div className="bg-gray-100 h-96 rounded-lg">
+              <GoogleMapComponent center={mapCenter}>
+                {/* User location marker */}
+                {userLocation && (
+                  <Marker
+                    position={userLocation}
+                    icon={{
+                      path: google.maps.SymbolPath.CIRCLE,
+                      scale: 7,
+                      fillColor: "#4285F4",
+                      fillOpacity: 1,
+                      strokeColor: "#ffffff",
+                      strokeWeight: 2,
+                    }}
+                    title="Your location"
+                  />
+                )}
+                
+                {/* Location markers */}
+                {locations.map((location) => (
+                  <LocationMarker
+                    key={location.id}
+                    id={location.id}
+                    position={location.position}
+                    isActive={selectedLocation === location.id}
+                    onClick={setSelectedLocation}
+                  />
+                ))}
+                
+                {/* Info window for selected location */}
+                {selectedLocation !== null && (
+                  <InfoWindow
+                    position={locations.find(loc => loc.id === selectedLocation)?.position}
+                    onCloseClick={() => setSelectedLocation(null)}
+                  >
+                    <div className="p-2 max-w-xs">
+                      <h3 className="font-bold text-gray-900 text-sm mb-1">
+                        {locations.find(loc => loc.id === selectedLocation)?.name}
+                      </h3>
+                      <p className="text-xs text-gray-600 mb-2">
+                        {locations.find(loc => loc.id === selectedLocation)?.address}
+                      </p>
+                      <div className="flex items-center text-xs text-gray-600 mb-1">
+                        <FaClock className="h-3 w-3 text-green-500 mr-1" />
+                        <span>{locations.find(loc => loc.id === selectedLocation)?.status}</span>
+                      </div>
+                      <a
+                        href={`https://maps.google.com/?q=${encodeURIComponent(
+                          locations.find(loc => loc.id === selectedLocation)?.address || ''
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-green-600 hover:text-green-800 font-medium inline-flex items-center mt-1"
+                      >
+                        <FaDirections className="mr-1 h-3 w-3" />
+                        Get Directions
+                      </a>
+                    </div>
+                  </InfoWindow>
+                )}
+              </GoogleMapComponent>
             </div>
           </div>
         </div>
