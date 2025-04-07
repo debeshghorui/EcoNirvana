@@ -64,7 +64,8 @@ e-waste-recycling/
 │   ├── context/             # React context providers
 │   │   ├── AuthContext.tsx  # Authentication context
 │   ├── lib/                 # Utility functions and libraries
-│   │   ├── gemini.ts        # EcoBot AI integration
+│   │   ├── firebase.ts      # Authentication and Database
+│   │   ├── gemini.ts        # EcoBot AI integration and Quiz 
 ├── .env.local               # Environment variables (not in repo)
 ├── next.config.mjs          # Next.js configuration
 ├── package.json             # Dependencies and scripts
