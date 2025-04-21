@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
         <div className="text-center mb-6">
           <Link href="/" className="inline-block">
             <Image
-              src="/newlogo.jpg"
+              src="/images/logo.jpg"
               alt="EcoNirvana Logo"
               width={60}
               height={60}

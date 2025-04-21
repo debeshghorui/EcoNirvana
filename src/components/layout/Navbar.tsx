@@ -237,7 +237,7 @@ const Navbar = () => {
                 <Link href="/" className="flex-shrink-0 flex items-center">
                   <div className="w-10 h-10 relative mr-2 rounded-md overflow-hidden bg-white">
                     <Image 
-                      src="/newlogo.jpg" 
+                      src="/images/logo.jpg" 
                       alt="EcoNirvana Logo" 
                       width={40}
                       height={40}
@@ -356,7 +356,7 @@ const Navbar = () => {
               <Link href="/" className="flex-shrink-0 flex items-center">
                 <div className="w-10 h-10 relative mr-2 rounded-md overflow-hidden bg-white">
                   <Image 
-                    src="/newlogo.jpg" 
+                    src="/images/logo.jpg" 
                     alt="EcoNirvana Logo" 
                     width={40}
                     height={40}

@@ -52,7 +52,7 @@ export default function WhyEcoNirvanaPage() {
             >
               <div className="relative h-64 md:h-80 w-full">
                 <Image
-                  src="/newlogo.jpg"
+                  src="/images/logo.jpg"
                   alt="EcoNirvana Difference"
                   fill
                   style={{ objectFit: "contain", objectPosition: "center" }}
