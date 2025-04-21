@@ -160,7 +160,7 @@ const ChatBot: React.FC = () => {
         ) : (
           <div className="bg-white rounded-full w-full h-full flex items-center justify-center shadow-lg overflow-hidden">
             <Image
-              src="/chatboticon.jpg"
+              src="/images/chatboticon.jpg"
               alt="Chat with EcoBot"
               width={60}
               height={60}
@@ -186,7 +186,7 @@ const ChatBot: React.FC = () => {
               <div className="flex items-center">
                 <div className="w-8 h-8 mr-2 bg-white rounded-full overflow-hidden shadow-sm">
                   <Image
-                    src="/chatboticon.jpg"
+                    src="/images/chatboticon.jpg"
                     alt="EcoBot"
                     width={32}
                     height={32}
@@ -216,7 +216,7 @@ const ChatBot: React.FC = () => {
                 <div className="h-full flex flex-col items-center justify-center text-gray-500 p-4">
                   <div className="w-16 h-16 mb-4 bg-white rounded-full overflow-hidden">
                     <Image
-                      src="/chatboticon.jpg"
+                      src="/images/chatboticon.jpg"
                       alt="EcoBot"
                       width={64}
                       height={64}
@@ -249,7 +249,7 @@ const ChatBot: React.FC = () => {
                           ) : (
                             <div className="bg-white rounded-full mr-2 w-5 h-5 overflow-hidden shadow-sm">
                               <Image
-                                src="/chatboticon.jpg"
+                                src="/images/chatboticon.jpg"
                                 alt="EcoBot" 
                                 width={20}
                                 height={20}
@@ -283,7 +283,7 @@ const ChatBot: React.FC = () => {
                     <div className="flex items-center mb-1.5">
                       <div className="bg-white rounded-full mr-2 w-5 h-5 overflow-hidden shadow-sm">
                         <Image
-                          src="/chatboticon.jpg"
+                          src="/images/chatboticon.jpg"
                           alt="EcoBot" 
                           width={20}
                           height={20}
