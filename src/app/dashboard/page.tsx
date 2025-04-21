@@ -511,7 +511,7 @@ export default function DashboardPage() {
           >
             <div className="relative rounded-2xl shadow-md overflow-hidden border border-blue-100 h-full">
               <Image 
-                src="/security.jpg"
+                src="/images/security.jpg"
                 alt="Data Security"
                 fill
                 style={{ objectFit: "cover" }}

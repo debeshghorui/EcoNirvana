@@ -45,7 +45,7 @@ export default function Home() {
         {/* Background image */}
         <div className="absolute inset-0 overflow-hidden">
           <Image
-            src="/images/143ce473-51b4-4dd3-90e0-eff11a9b9706.png"
+            src="/images/green-globe.jpg"
             alt="Digital globe with green plant sprouts"
             fill
             style={{ objectFit: "cover" }}
