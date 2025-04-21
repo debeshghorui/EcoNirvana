@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaCalendarAlt, FaUser, FaTag, FaArrowLeft, FaShare } from 'react-icons/fa';
+import BackButton from '@/components/layout/BackButton';
 
 // Import the blog posts data (in a real app, this would come from an API)
 const blogPosts = [
@@ -63,7 +64,7 @@ const blogPosts = [
     authorTitle: "Environmental Specialist",
     authorBio: "Jane has over 10 years of experience in environmental sustainability and waste management.",
     category: "Environmental",
-    image: "/blog-ewaste-impact.jpg",
+    image: "/blog/blog1.jpg",
     slug: "environmental-impact-of-ewaste",
     readTime: "6 min read"
   },
@@ -157,7 +158,7 @@ const blogPosts = [
     authorTitle: "Cybersecurity Expert",
     authorBio: "Michael specializes in data security and has advised numerous companies on safe device retirement practices.",
     category: "Tips & Guides",
-    image: "/blog-prepare-devices.jpg",
+    image: "/blog/blog2.jpg",
     slug: "prepare-devices-for-recycling",
     readTime: "8 min read"
   },
@@ -240,7 +241,7 @@ const blogPosts = [
     authorTitle: "Corporate Sustainability Director",
     authorBio: "Sarah has helped implement sustainability programs for several Fortune 500 companies.",
     category: "Business",
-    image: "/blog-business-benefits.jpg",
+    image: "/blog/blog3.jpg",
     slug: "business-benefits-of-ewaste-recycling",
     readTime: "7 min read"
   },
@@ -340,7 +341,7 @@ const blogPosts = [
     authorTitle: "Environmental Compliance Attorney",
     authorBio: "David specializes in environmental law and helps companies navigate complex regulatory requirements.",
     category: "Regulations",
-    image: "/blog-ewaste-laws.jpg",
+    image: "/blog/blog4.jpg",
     slug: "ewaste-recycling-laws-regulations",
     readTime: "9 min read"
   }
@@ -376,12 +377,10 @@ export default function BlogPost() {
         <div className="text-center p-8 max-w-lg">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">Blog Post Not Found</h1>
           <p className="text-gray-600 mb-6">The blog post you're looking for doesn't exist or has been removed.</p>
-          <Link 
-            href="/blog" 
-            className="inline-flex items-center text-green-600 font-medium hover:text-green-700"
-          >
-            <FaArrowLeft className="mr-2" /> Return to Blog
-          </Link>
+          <BackButton 
+            destination="/blog" 
+            label="Return to Blog"
+          />
         </div>
       </div>
     );
@@ -404,12 +403,11 @@ export default function BlogPost() {
         </div>
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 py-20 md:py-24">
-          <Link 
-            href="/blog" 
+          <BackButton 
+            destination="/blog" 
+            label="Back to all articles"
             className="inline-flex items-center text-green-100 hover:text-white mb-6 transition-colors"
-          >
-            <FaArrowLeft className="mr-2" /> Back to all articles
-          </Link>
+          />
           
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -476,12 +474,10 @@ export default function BlogPost() {
           
           {/* Share and Navigation */}
           <div className="border-t border-gray-100 p-6 flex justify-between items-center">
-            <Link 
-              href="/blog" 
-              className="inline-flex items-center text-green-600 font-medium hover:text-green-700"
-            >
-              <FaArrowLeft className="mr-2" /> Back to all articles
-            </Link>
+            <BackButton 
+              destination="/blog" 
+              label="Back to all articles"
+            />
             
             <button className="inline-flex items-center text-gray-700 hover:text-gray-800">
               <FaShare className="mr-2" /> Share

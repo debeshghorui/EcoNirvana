@@ -10,14 +10,6 @@ import { useAuth } from '@/context/AuthContext';
 import { getUserPoints, getUserActivities, subscribeToUserPoints } from '@/lib/firebase';
 import RecyclingMeter from '@/components/dashboard/RecyclingMeter';
 
-// Move mock data outside of the component to prevent hydration issues
-// Keep some mock data for visualization
-const environmentalImpact = {
-  treesPlanted: 5,
-  waterSaved: 120,
-  energySaved: 85,
-};
-
 export default function DashboardPage() {
   const router = useRouter();
   const { user, loading, logout, justLoggedOut } = useAuth();
@@ -31,6 +23,8 @@ export default function DashboardPage() {
     itemsRecycled: 0,
     co2Saved: 0,
     pointsEarned: 0,
+    treesPlanted: 0,
+    energySaved: 0
   });
   
   const [recentActivities, setRecentActivities] = useState<any[]>([]);
@@ -62,12 +56,20 @@ export default function DashboardPage() {
           // Rough estimate: 2kg CO2 saved per item recycled (simplified calculation)
           const estimatedCO2 = totalItems * 2; 
           
+          // Calculate trees planted based on items recycled (1 tree per 2 items)
+          const treesPlanted = Math.floor(totalItems / 2);
+          
+          // Calculate energy saved percentage (5% per item, max 95%)
+          const energySaved = Math.min(totalItems * 5, 95);
+          
           setRecentActivities(activities.slice(0, 3)); // Get 3 most recent activities
           
           setRecyclingStats(prev => ({
             ...prev,
             itemsRecycled: totalItems,
-            co2Saved: estimatedCO2
+            co2Saved: estimatedCO2,
+            treesPlanted: treesPlanted,
+            energySaved: energySaved
           }));
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -239,7 +241,7 @@ export default function DashboardPage() {
                 <div className="inline-flex items-center justify-center p-3 bg-green-500 rounded-full mb-4 group-hover:-translate-y-1 transition-transform duration-300 shadow-lg border-2 border-white/40">
                   <FaTree className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-5xl font-bold text-white mb-2" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{environmentalImpact.treesPlanted}</h3>
+                <h3 className="text-5xl font-bold text-white mb-2" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{recyclingStats.treesPlanted}</h3>
                 <p className="text-sm font-semibold text-white uppercase tracking-wider bg-green-600/50 backdrop-blur-sm rounded-full py-1 px-4 inline-block shadow-md">Trees Saved</p>
               </div>
             </div>
@@ -251,7 +253,7 @@ export default function DashboardPage() {
                 <div className="inline-flex items-center justify-center p-3 bg-green-500 rounded-full mb-4 group-hover:-translate-y-1 transition-transform duration-300 shadow-lg border-2 border-white/40">
                   <FaLightbulb className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-5xl font-bold text-white mb-2" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{environmentalImpact.energySaved}<span className="text-3xl">%</span></h3>
+                <h3 className="text-5xl font-bold text-white mb-2" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{recyclingStats.energySaved}<span className="text-3xl">%</span></h3>
                 <p className="text-sm font-semibold text-white uppercase tracking-wider bg-green-600/50 backdrop-blur-sm rounded-full py-1 px-4 inline-block shadow-md">Energy Saved</p>
               </div>
             </div>
@@ -509,13 +511,13 @@ export default function DashboardPage() {
           >
             <div className="relative rounded-2xl shadow-md overflow-hidden border border-blue-100 h-full">
               <Image 
-                src="/images/blog/blog1.jpg"
+                src="/security.jpg"
                 alt="Data Security"
                 fill
                 style={{ objectFit: "cover" }}
                 className="absolute inset-0 z-0"
               />
-              <div className="relative z-10 p-6 flex flex-col h-full bg-gradient-to-br from-blue-900/70 to-indigo-900/70 text-white">
+              <div className="relative z-10 p-6 flex flex-col h-full bg-gradient-to-br from-blue-300/70 to-indigo-900/70 text-white">
                 <div className="bg-blue-100 rounded-full p-3 mb-4 inline-flex w-fit">
                   <FaShieldAlt className="h-6 w-6 text-blue-600" />
                 </div>

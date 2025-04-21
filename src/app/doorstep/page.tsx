@@ -244,7 +244,7 @@ export default function DoorstepCollectionPage() {
                 Return to Dashboard
               </Link>
               <Link
-                href="/activity"
+                href="/activity?tab=pickups"
                 className="bg-gray-100 text-gray-700 hover:bg-gray-200 px-6 py-3 rounded-lg font-medium transition-colors"
               >
                 View My Activity

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FaRecycle, 
@@ -28,6 +28,7 @@ type ActivityTab = 'recycling' | 'pickups';
 
 export default function ActivityPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, loading, justLoggedOut } = useAuth();
   const [activeTab, setActiveTab] = useState<ActivityTab>('recycling');
   
@@ -49,6 +50,14 @@ export default function ActivityPage() {
   // Common state
   const [isLoading, setIsLoading] = useState(true);
   const [totalPoints, setTotalPoints] = useState(0);
+  
+  // Set active tab based on URL parameter
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'pickups') {
+      setActiveTab('pickups');
+    }
+  }, [searchParams]);
   
   // Redirect to login if not authenticated
   useEffect(() => {

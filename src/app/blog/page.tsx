@@ -7,6 +7,7 @@ import { FaCalendarAlt, FaUser, FaTag, FaSearch, FaArrowLeft } from 'react-icons
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PageHeader from '@/components/layout/PageHeader';
+import BackButton from '@/components/layout/BackButton';
 
 // Blog post data
 const blogPosts = [
@@ -99,12 +100,43 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <PageHeader
-        title="Blog & Resources"
-        description="Stay informed about e-waste recycling, sustainability practices, and industry news."
-        backgroundImage="/green-globe.jpg"
-        showBackButton={true}
-      />
+      <section className="relative bg-gradient-to-r from-green-800 to-green-600 text-white">
+        <div className="absolute inset-0 overflow-hidden">
+          <Image 
+            src="/green-globe.jpg"
+            alt="Blog & Resources" 
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+            className="mix-blend-overlay opacity-30"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-green-900/70"></div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 relative z-10">
+          <BackButton 
+            destination="/dashboard" 
+            label="Back"
+            className="mb-4 flex items-center text-white hover:text-green-200 transition-colors"
+          />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center max-w-3xl mx-auto"
+          >
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog & Resources</h1>
+            <p className="text-xl mb-8 text-green-50 max-w-2xl mx-auto">
+              Stay informed about e-waste recycling, sustainability practices, and industry news.
+            </p>
+          </motion.div>
+        </div>
+        {/* Wave divider */}
+        <div className="absolute -bottom-1 left-0 right-0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" className="w-full h-auto">
+            <path fill="#ffffff" fillOpacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+          </svg>
+        </div>
+      </section>
 
       {/* Blog Content Section */}
       <section className="py-12 md:py-16 bg-white">
